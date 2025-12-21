@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "alvaro-core"
+version = "0.1.0"
+description = "Núcleo de Identidade e Memória do Sistema Aurora"
+authors = ["Aurora AI"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

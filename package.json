@@ -1,6 +1,7 @@
 {
   "name": "@aurora/ozzmosis-monorepo",
   "version": "0.1.0",
+  "description": "Aurora/Elysian 2.0 canonical Node monorepo",
   "private": true,
   "type": "module",
   "workspaces": [

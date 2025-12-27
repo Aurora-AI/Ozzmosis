@@ -46,6 +46,17 @@ npm run smoke:conductor
 
 **Regra:** Se o CI estiver vermelho, não entra.
 
+### ⛔ Não Faça Isso (regressão estrutural)
+
+Para manter o contrato, existem operações **proibidas**:
+
+* ❌ Não execute `npm install` dentro de `libs/*` ou `apps/*` como fluxo principal
+* ❌ Não commite lockfiles em `libs/*` ou `apps/*` (apenas root `package-lock.json`)
+* ❌ Não rodadores de build/test em subpastas sem sincronizar com scripts raiz
+* ❌ Não mude o `package.json` raiz sem revisão (estrutura de workspace é crítica)
+
+**Rationale:** Múltiplos lockfiles ou instalações descentralizadas criam divergências que escapam do CI e causam "funciona na minha máquina". O contrato unifica tudo.
+
 ---
 
 ## Aurora Conductor (libs/aurora-conductor)

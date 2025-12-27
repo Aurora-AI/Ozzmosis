@@ -13,7 +13,8 @@
     "typecheck:conductor": "npm -w libs/aurora-conductor run typecheck",
     "lint:conductor": "npm -w libs/aurora-conductor run lint",
     "smoke:conductor": "node ./scripts/smoke/conductor-smoke.mjs",
-    "test:conductor": "npm -w libs/aurora-conductor run test"
+    "test:conductor": "npm -w libs/aurora-conductor run test",
+    "survival:conductor": "npm -w libs/aurora-conductor run test:survival"
   },
   "engines": {
     "node": ">=20.0.0",

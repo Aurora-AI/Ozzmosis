@@ -42,6 +42,7 @@ npm run build:conductor
 npm run typecheck:conductor
 npm run lint:conductor
 npm run smoke:conductor
+npm run survival:conductor
 ```
 
 **Regra:** Se o CI estiver vermelho, não entra.

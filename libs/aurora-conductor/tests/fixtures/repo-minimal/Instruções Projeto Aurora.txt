@@ -1,0 +1,4 @@
+Aurora Constitution (fixture)
+
+Regra: mantenha determinismo e segurança de filesystem.
+

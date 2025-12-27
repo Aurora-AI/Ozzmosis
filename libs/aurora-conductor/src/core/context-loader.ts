@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import type { AuroraConfig } from "./config-loader.js";
 
 export type ContextSourceKind =
   | "constitution"
@@ -19,6 +20,11 @@ export interface LoadedContext {
   productText?: string;
   techstackText?: string;
   sources: ContextSource[];
+}
+
+export interface LoadContextOptions {
+  config?: AuroraConfig;
+  logger?: Pick<Console, "warn">;
 }
 
 const CANDIDATE_PATHS: Array<{ kind: ContextSourceKind; candidates: string[] }> = [
@@ -55,30 +61,42 @@ async function readIfExists(repoRoot: string, rel: string): Promise<string | und
   return readFile(abs, "utf8");
 }
 
-export async function loadContext(repoRoot: string): Promise<LoadedContext> {
+export async function loadContext(repoRoot: string, opts: LoadContextOptions = {}): Promise<LoadedContext> {
+  const logger = opts.logger ?? console;
   const sources: ContextSource[] = [];
 
-  const constitutionRel = CANDIDATE_PATHS.find((x) => x.kind === "constitution")!.candidates
-    .find((p) => existsSync(path.resolve(repoRoot, p)));
+  const constitutionRel =
+    opts.config?.docs.constitutionPath && existsSync(path.resolve(repoRoot, opts.config.docs.constitutionPath))
+      ? opts.config.docs.constitutionPath
+      : CANDIDATE_PATHS.find((x) => x.kind === "constitution")!.candidates.find((p) =>
+          existsSync(path.resolve(repoRoot, p))
+        );
 
-  if (!constitutionRel) {
-    throw new Error(
+  const constitutionText = constitutionRel ? (await readIfExists(repoRoot, constitutionRel)) ?? "" : "";
+  if (constitutionRel && constitutionText) {
+    sources.push({ path: constitutionRel, kind: "constitution" });
+  } else {
+    logger.warn(
       [
-        "Constituição não encontrada.",
-        "Esperado: arquivo 'Instruções Projeto Aurora.txt' na raiz do repositório (ou em docs/ ou CONSTITUICAO/).",
-        "Adicione o arquivo ao repositório para habilitar o Conductor."
+        "Constituição não encontrada (modo resiliente).",
+        "Esperado: 'Instruções Projeto Aurora.txt' na raiz (ou docs/ ou CONSTITUICAO/).",
+        "Continuando com contexto mínimo."
       ].join(" ")
     );
   }
 
-  const constitutionText = (await readIfExists(repoRoot, constitutionRel))!;
-  sources.push({ path: constitutionRel, kind: "constitution" });
-
-  const manualRel = CANDIDATE_PATHS.find((x) => x.kind === "manual")!.candidates
-    .find((p) => existsSync(path.resolve(repoRoot, p)));
+  const manualRel =
+    opts.config?.docs.manualPath && existsSync(path.resolve(repoRoot, opts.config.docs.manualPath))
+      ? opts.config.docs.manualPath
+      : CANDIDATE_PATHS.find((x) => x.kind === "manual")!.candidates.find((p) =>
+          existsSync(path.resolve(repoRoot, p))
+        );
 
   const manualText = manualRel ? await readIfExists(repoRoot, manualRel) : undefined;
   if (manualRel && manualText) sources.push({ path: manualRel, kind: "manual" });
+  if (opts.config?.docs.manualPath && manualRel !== opts.config.docs.manualPath) {
+    logger.warn(`manual não encontrado em '${opts.config.docs.manualPath}' (warn-only)`);
+  }
 
   const productRel = CANDIDATE_PATHS.find((x) => x.kind === "product")!.candidates
     .find((p) => existsSync(path.resolve(repoRoot, p)));

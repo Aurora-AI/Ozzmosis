@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "ts": { "type": "string" },
+    "level": { "type": "string" },
+    "event": { "type": "string" },
+    "data": { "type": "object" }
+  },
+  "required": ["ts", "level", "event"]
+}

@@ -1,0 +1,8 @@
+# Instruções Projeto Aurora (Test)
+
+Este é um arquivo de teste para validar o Aurora Conductor.
+
+## Princípios
+- A verdade deve ser orientadora
+- O sistema decide o decidível
+- Toda mudança deve ser auditável

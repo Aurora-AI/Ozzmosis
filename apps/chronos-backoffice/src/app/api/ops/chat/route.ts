@@ -1,5 +1,4 @@
 import { convertToModelMessages, streamText } from "ai";
-import { createOllama } from "ai-sdk-ollama";
 import { createOpenAI } from "@ai-sdk/openai";
 
 export const runtime = "nodejs";
@@ -11,7 +10,7 @@ function getEnv(name: string) {
 }
 
 function getOllamaConfig() {
-  const baseUrl = getEnv("OLLAMA_BASE_URL") ?? "http://127.0.0.1:11434";
+  const baseUrl = getEnv("OLLAMA_BASE_URL") ?? "http://127.0.0.1:11434/v1";
   const model = getEnv("CHRONOS_LLM_MODEL") ?? "llama3.1";
   return { baseUrl, model };
 }
@@ -25,7 +24,13 @@ function getProviderName(): ProviderName {
 function getModelForProvider(providerName: ProviderName) {
   if (providerName === "ollama") {
     const { baseUrl, model } = getOllamaConfig();
-    const provider = createOllama({ baseURL: baseUrl });
+    const normalizedBaseUrl = baseUrl.endsWith("/v1")
+      ? baseUrl
+      : `${baseUrl.replace(/\/+$/u, "")}/v1`;
+    const provider = createOpenAI({
+      apiKey: getEnv("OLLAMA_API_KEY") ?? "ollama",
+      baseURL: normalizedBaseUrl
+    });
     return provider(model);
   }
 

@@ -9,8 +9,9 @@ Habilitar um chat interno no Chronos Backoffice usando um SLM local via Ollama, 
 
 ## Variáveis de ambiente
 - `CHRONOS_LLM_PROVIDER=ollama` (default)
-- `OLLAMA_BASE_URL=http://127.0.0.1:11434` (default)
+- `OLLAMA_BASE_URL=http://127.0.0.1:11434` (ou `http://127.0.0.1:11434/v1` para OpenAI compatibility)
 - `CHRONOS_LLM_MODEL=llama3.1` (default)
+- `OLLAMA_API_KEY=ollama` (opcional; placeholder para OpenAI compatibility local)
 
 ## DeepSeek (DEMO ONLY)
 O provider DeepSeek é suportado apenas para demonstrações (cloud, não soberano).

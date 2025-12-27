@@ -1,0 +1,22 @@
+{
+  "name": "@aurora/ozzmosis-monorepo",
+  "version": "0.1.0",
+  "description": "Aurora/Elysian 2.0 canonical Node monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "libs/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build:conductor": "npm -w libs/aurora-conductor run build",
+    "typecheck:conductor": "npm -w libs/aurora-conductor run typecheck",
+    "lint:conductor": "npm -w libs/aurora-conductor run lint",
+    "smoke:conductor": "node ./scripts/smoke/conductor-smoke.mjs",
+    "test:conductor": "npm -w libs/aurora-conductor run test"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

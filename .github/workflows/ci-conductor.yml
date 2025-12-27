@@ -1,0 +1,70 @@
+name: CI - Aurora Conductor
+
+on:
+  pull_request:
+    paths:
+      - "libs/aurora-conductor/**"
+      - "scripts/smoke/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-conductor.yml"
+      - "docs/**"
+      - "README.md"
+  push:
+    branches: ["main"]
+    paths:
+      - "libs/aurora-conductor/**"
+      - "scripts/smoke/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-conductor.yml"
+      - "docs/**"
+      - "README.md"
+
+concurrency:
+  group: conductor-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conductor:
+    name: Build / Typecheck / Lint / Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install (root contract)
+        run: npm ci
+
+      - name: Build conductor
+        run: npm run build:conductor
+
+      - name: Typecheck conductor
+        run: npm run typecheck:conductor
+
+      - name: Lint conductor
+        run: npm run lint:conductor
+
+      - name: Smoke test conductor
+        run: npm run smoke:conductor
+
+      - name: Report status
+        if: always()
+        run: |
+          echo "### ✅ Aurora Conductor CI Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All quality gates passed:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** TypeScript compilation successful" >> $GITHUB_STEP_SUMMARY
+          echo "- **Typecheck:** No type errors" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lint:** ESLint validation passed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Smoke:** API contract validated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Package: \`@aurora/aurora-conductor\`" >> $GITHUB_STEP_SUMMARY

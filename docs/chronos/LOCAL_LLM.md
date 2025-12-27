@@ -30,6 +30,31 @@ DEEPSEEK_MODEL=deepseek-chat
 NEXT_PUBLIC_CHRONOS_PROVIDER=deepseek
 ```
 
+## Setup local — `.env.local`
+
+1. Copie `apps/chronos-backoffice/.env.example` → `apps/chronos-backoffice/.env.local`
+2. Preencha com seus valores:
+
+   **Ollama (soberano, recomendado):**
+   ```env
+   CHRONOS_LLM_PROVIDER=ollama
+   OLLAMA_BASE_URL=http://127.0.0.1:11434/v1
+   CHRONOS_LLM_MODEL=llama3.1
+   OLLAMA_API_KEY=ollama
+   NEXT_PUBLIC_CHRONOS_PROVIDER=ollama
+   ```
+
+   **DeepSeek (DEMO apenas):**
+   ```env
+   CHRONOS_LLM_PROVIDER=deepseek
+   DEEPSEEK_API_KEY=sk-SUA_CHAVE_AQUI
+   DEEPSEEK_BASE_URL=https://api.deepseek.com
+   DEEPSEEK_MODEL=deepseek-chat
+   NEXT_PUBLIC_CHRONOS_PROVIDER=deepseek
+   ```
+
+**Importante:** `.env.local` **nunca é commitado** (coberto por `.gitignore`).
+
 ## Rodar o Chronos Backoffice
 ```bash
 npm ci

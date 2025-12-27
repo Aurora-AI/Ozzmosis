@@ -1,0 +1,40 @@
+name: ci-repo-contract
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  repo-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Repo contract check
+        run: npm run repo:check
+
+      - name: Conductor build
+        run: npm run build:conductor
+
+      - name: Conductor typecheck
+        run: npm run typecheck:conductor
+
+      - name: Conductor lint
+        run: npm run lint:conductor
+
+      - name: Conductor smoke
+        run: npm run smoke:conductor
+
+      - name: Conductor survival
+        run: npm run survival:conductor
+
+      - name: Repo cleanliness (post-gates)
+        run: npm run repo:clean

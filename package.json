@@ -5,8 +5,9 @@
   "private": true,
   "type": "module",
   "workspaces": [
+    "apps/*",
     "libs/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
     "build:conductor": "npm -w libs/aurora-conductor run build",
@@ -14,7 +15,12 @@
     "lint:conductor": "npm -w libs/aurora-conductor run lint",
     "smoke:conductor": "node ./scripts/smoke/conductor-smoke.mjs",
     "test:conductor": "npm -w libs/aurora-conductor run test",
-    "survival:conductor": "npm -w libs/aurora-conductor run test:survival"
+    "survival:conductor": "npm -w libs/aurora-conductor run test:survival",
+    "repo:check": "npm run -w @aurora/tooling repo:check",
+    "repo:clean": "npm run -w @aurora/tooling repo:clean",
+    "chronos:build": "npm run -w @aurora/chronos build",
+    "chronos:smoke": "npm run -w @aurora/chronos smoke",
+    "install:clean": "node ./scripts/npm/clean-install.mjs"
   },
   "engines": {
     "node": ">=20.0.0",

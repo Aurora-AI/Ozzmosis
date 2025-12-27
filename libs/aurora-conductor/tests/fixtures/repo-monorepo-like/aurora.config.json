@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "policy": { "mode": "error" },
+  "docs": { "manualPath": "docs/manual.md" }
+}
+

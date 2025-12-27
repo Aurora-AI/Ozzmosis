@@ -17,10 +17,21 @@ export { compose, type ComposeOptions } from "./core/composer.js";
 // ============================================================================
 export {
   loadContext,
+  type LoadContextOptions,
   type LoadedContext,
   type ContextSource,
   type ContextSourceKind
 } from "./core/context-loader.js";
+
+// ============================================================================
+// Config Loading
+// ============================================================================
+export {
+  loadConfig,
+  AuroraConfigSchema,
+  type AuroraConfig,
+  type LoadConfigOptions
+} from "./core/config-loader.js";
 
 // ============================================================================
 // Safe File System

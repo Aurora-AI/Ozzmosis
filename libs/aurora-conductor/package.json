@@ -9,10 +9,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node ./scripts/copy-assets.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:integration": "vitest run tests/integration",
+    "test:survival": "npm run build && vitest run --config vitest.config.ts tests/survival"
   },
   "dependencies": {
     "zod": "^3.24.1"

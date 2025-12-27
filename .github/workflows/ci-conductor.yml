@@ -27,9 +27,13 @@ concurrency:
 
 jobs:
   conductor:
-    name: Build / Typecheck / Lint / Smoke
-    runs-on: ubuntu-latest
+    name: Conductor Gates (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -56,8 +60,27 @@ jobs:
       - name: Smoke test conductor
         run: npm run smoke:conductor
 
+      - name: Survival tests conductor (3x, anti-flake) [non-Windows]
+        if: runner.os != 'Windows'
+        run: |
+          for i in 1 2 3; do
+            echo "=== survival run ${i}/3 (runner=${{ runner.os }}) ==="
+            npm run survival:conductor
+          done
+
+      - name: Survival tests conductor (3x, anti-flake) [Windows]
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          1..3 | ForEach-Object {
+            Write-Host "=== survival run $_/3 (runner=$env:RUNNER_OS) ==="
+            npm run survival:conductor
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
       - name: Report status
         if: always()
+        shell: bash
         run: |
           echo "### ✅ Aurora Conductor CI Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -66,5 +89,6 @@ jobs:
           echo "- **Typecheck:** No type errors" >> $GITHUB_STEP_SUMMARY
           echo "- **Lint:** ESLint validation passed" >> $GITHUB_STEP_SUMMARY
           echo "- **Smoke:** API contract validated" >> $GITHUB_STEP_SUMMARY
+          echo "- **Survival:** Hostile-environment invariants validated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Package: \`@aurora/aurora-conductor\`" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,4 @@
+Aurora Constitution (fixture - monorepo-like)
+
+Regra: se a policy falhar em modo ERROR, a execução deve abortar.
+

@@ -1,19 +1,25 @@
 name: CI - Aurora Conductor
 
 on:
+  pull_request:
+    paths:
+      - "libs/aurora-conductor/**"
+      - "scripts/smoke/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-conductor.yml"
+      - "docs/**"
+      - "README.md"
   push:
     branches: ["main"]
     paths:
       - "libs/aurora-conductor/**"
-      - "scripts/smoke/conductor-smoke.mjs"
-      - ".github/workflows/ci-conductor.yml"
+      - "scripts/smoke/**"
       - "package.json"
-  pull_request:
-    paths:
-      - "libs/aurora-conductor/**"
-      - "scripts/smoke/conductor-smoke.mjs"
+      - "package-lock.json"
       - ".github/workflows/ci-conductor.yml"
-      - "package.json"
+      - "docs/**"
+      - "README.md"
 
 concurrency:
   group: conductor-ci-${{ github.ref }}
@@ -35,7 +41,7 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install dependencies
+      - name: Install (root contract)
         run: npm ci
 
       - name: Build conductor
@@ -53,10 +59,12 @@ jobs:
       - name: Report status
         if: always()
         run: |
-          echo "### Aurora Conductor CI Results" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Aurora Conductor CI Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ All quality gates passed" >> $GITHUB_STEP_SUMMARY
-          echo "- Build: TypeScript compilation successful" >> $GITHUB_STEP_SUMMARY
-          echo "- Typecheck: No type errors" >> $GITHUB_STEP_SUMMARY
-          echo "- Lint: ESLint validation passed" >> $GITHUB_STEP_SUMMARY
-          echo "- Smoke: API contract validated" >> $GITHUB_STEP_SUMMARY
+          echo "All quality gates passed:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** TypeScript compilation successful" >> $GITHUB_STEP_SUMMARY
+          echo "- **Typecheck:** No type errors" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lint:** ESLint validation passed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Smoke:** API contract validated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Package: \`@aurora/aurora-conductor\`" >> $GITHUB_STEP_SUMMARY

@@ -20,6 +20,7 @@ export default function OpsChatPage() {
   });
 
   const isLoading = status === "submitted" || status === "streaming";
+  const provider = process.env.NEXT_PUBLIC_CHRONOS_PROVIDER ?? "ollama";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -46,6 +47,12 @@ export default function OpsChatPage() {
       </header>
 
       <section className="flex flex-1 flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+        {provider === "deepseek" ? (
+          <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-sm">
+            Modo demonstração — DeepSeek (cloud). Não use dados sensíveis.
+          </div>
+        ) : null}
+
         {messages.length === 0 ? (
           <div className="text-sm opacity-70">
             Dica: defina `CHRONOS_LLM_MODEL` e garanta que o Ollama está rodando em `OLLAMA_BASE_URL`.

@@ -12,6 +12,23 @@ Habilitar um chat interno no Chronos Backoffice usando um SLM local via Ollama, 
 - `OLLAMA_BASE_URL=http://127.0.0.1:11434` (default)
 - `CHRONOS_LLM_MODEL=llama3.1` (default)
 
+## DeepSeek (DEMO ONLY)
+O provider DeepSeek é suportado apenas para demonstrações (cloud, não soberano).
+- Não é usado em CI.
+- Não há fallback automático.
+- Nunca use dados sensíveis.
+
+Env:
+```bash
+CHRONOS_LLM_PROVIDER=deepseek
+DEEPSEEK_API_KEY=sk-...
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_MODEL=deepseek-chat
+
+# UI banner
+NEXT_PUBLIC_CHRONOS_PROVIDER=deepseek
+```
+
 ## Rodar o Chronos Backoffice
 ```bash
 npm ci
@@ -26,4 +43,3 @@ Abrir:
 2. Abra o `/ops/chat`.
 3. Envie uma mensagem simples (ex.: “Resuma o que é o Chronos Backoffice”).
 4. Confirme streaming e ausência de persistência local.
-

@@ -1,0 +1,13 @@
+{
+  "name": "@aurora/tooling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "repo:check": "node ./scripts/check-repo-contract.mjs",
+    "repo:clean": "node ./scripts/check-working-tree-clean.mjs",
+    "check": "npm run repo:check",
+    "clean": "npm run repo:clean"
+  }
+}

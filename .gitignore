@@ -1,3 +1,30 @@
-node_modules
-.artifacts
-dist
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Builds
+dist/
+build/
+.next/
+out/
+
+# Turborepo cache (se existir)
+.turbo/
+
+# Runtime artifacts (Trustware: side-effects opt-in)
+.artifacts/
+last-run.json
+
+# Env
+.env
+.env.*
+!.env.example
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

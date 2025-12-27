@@ -18,27 +18,31 @@ Ozzmosis é o **monorepo Node oficial e canônico** da Aurora/Elysian 2.0.
 
 - `npm ci` roda na **raiz**.
 - Existe **apenas um lockfile canônico**: `package-lock.json` na raiz.
-- É proibido manter lockfiles concorrentes em `libs/*` ou `apps/*` como contrato principal.
+- É proibido manter lockfiles concorrentes em `libs/*`, `apps/*` ou `packages/*`.
+- `npm ci` só é possível com `package-lock.json` presente; nunca remova o lockfile canônico como “correção”.
+- `install:clean` existe apenas para correção local (locks/ambiente corrompido) e nunca substitui CI (que roda `npm ci`).
+- Arquivos proibidos no repo (tracked ou untracked): `npm-shrinkwrap.json`, `yarn.lock`, `pnpm-lock.yaml` e `.npmrc`.
 
 **Rationale:** Lockfiles locais criam divergências de versão entre ambiente local e CI, causando "funciona na minha máquina". O contrato único garante reprodutibilidade.
 
 ### 2) Workspaces
 
 - O repositório usa `npm workspaces`.
-- Bibliotecas em `libs/*` e aplicações em `apps/*`.
+- Bibliotecas em `libs/*`, aplicações em `apps/*` e tooling em `packages/*`.
 
 **Estrutura:**
 ```
 libs/
   aurora-conductor/    # Governança e integridade
-  elysian-brain/       # Inteligência
-  trustware/           # Segurança e policy enforcement
+  aurora-chronos/      # Pilar (tempo operacional) em desenvolvimento
 
 apps/
   alvaro-core/         # Identidade
   mycelium-front/      # Pedagogia
-  butantan-shield/     # Imunidade
-  aurora-vision/       # Observabilidade
+
+packages/
+  tooling/             # Repo contract checks
+  tsconfig/            # Base TS compartilhada
 ```
 
 ### 3) Scripts canônicos
@@ -48,6 +52,12 @@ Scripts oficiais devem existir na raiz:
 - `typecheck:conductor` — Valida tipos sem emitir código
 - `lint:conductor` — ESLint validation
 - `smoke:conductor` — Teste funcional da API pública
+- `survival:conductor` — Survival tests (invariantes hostis)
+- `repo:check` — Verifica contrato do repo (canônicos + proibições)
+- `repo:clean` — Exige working tree limpo (rodar após gates)
+- `install:clean` — Reinstalação canônica (remove `node_modules` e executa `npm ci`)
+
+**Chronos (menção):** podem existir scripts como `chronos:build` e `chronos:smoke`, mas a evolução do Chronos deve ocorrer em OS própria.
 
 **Expansão futura:** À medida que outros pacotes forem formalizados, adicionar scripts correspondentes (`build:brain`, `smoke:alvaro`, etc.).
 
@@ -57,6 +67,7 @@ Scripts oficiais devem existir na raiz:
 - CI deve executar:
   - install (`npm ci`)
   - build / typecheck / lint / smoke do Conductor
+  - repo contract check + repo cleanliness
 
 **Gate de qualidade:** Merge bloqueado se CI falhar.
 
@@ -67,18 +78,11 @@ Para qualquer mudança no repositório:
 - [ ] `npm ci` na raiz passa em ambiente limpo
 - [ ] CI verde (todas as etapas)
 - [ ] Smoke funcional do Conductor passa (se relevante)
+- [ ] Repo contract check passa (`npm run repo:check`)
 - [ ] PR tem descrição clara de motivação e validação
 - [ ] Sem lockfiles concorrentes commitados
 
 ## Exceções e casos especiais
-
-### Apps legados (pré-formalização)
-
-Apps como `mycelium-front` ainda podem ter configurações locais (lockfile, config específico) durante período de transição. O contrato exige que:
-
-1. Seja documentado explicitamente como "legacy/em transição"
-2. Tenha plano de migração para o contrato canônico
-3. Não interfira com CI de componentes formalizados (ex: conductor)
 
 ### Workspaces externos ou forks temporários
 

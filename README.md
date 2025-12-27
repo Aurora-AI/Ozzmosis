@@ -36,3 +36,8 @@ Este repositório não é um produto final.
 - Manual do repo/fábrica: `docs/ozzmosis/MANUAL_PRODUTO_OZZMOSIS.md`
 - SSOT/Vault (espelhamento obrigatório): `docs/Vault_SSoT_MANIFEST.md`
 - Agent Skills (progressive disclosure): `agent-skills/README.md`
+
+## Chronos (pilar)
+- App: `apps/chronos-backoffice`
+- Lib: `libs/trustware`
+- Docs: `docs/chronos/`

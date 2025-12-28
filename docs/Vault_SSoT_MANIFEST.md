@@ -11,6 +11,7 @@ Este repositório contém os ativos versionados e exige espelhamento dos canôni
 - .gitignore
 - docs/CONTRACT.md
 - docs/CONSTITUICAO/*
+- docs/chronos/*
 - docs/ozzmosis/MANUAL_PRODUTO_OZZMOSIS.md
 - agent-skills/*
 - (Conductor) docs/conductor/* (se houver canônicos de governança)

@@ -18,6 +18,11 @@
     "survival:conductor": "npm -w libs/aurora-conductor run test:survival",
     "repo:check": "npm run -w @aurora/tooling repo:check",
     "repo:clean": "npm run -w @aurora/tooling repo:clean",
+    "lint:chronos": "npm run -w @aurora/chronos-backoffice lint",
+    "typecheck:chronos": "npm run -w @aurora/chronos-backoffice typecheck && tsc -p libs/trustware/tsconfig.json --noEmit",
+    "build:chronos": "npm run -w @aurora/chronos-backoffice build",
+    "test:chronos": "npm run -w @aurora/chronos-backoffice test:survival",
+    "dev:chronos": "npm run -w @aurora/chronos-backoffice dev",
     "chronos:build": "npm run -w @aurora/chronos build",
     "chronos:smoke": "npm run -w @aurora/chronos smoke",
     "install:clean": "node ./scripts/npm/clean-install.mjs"

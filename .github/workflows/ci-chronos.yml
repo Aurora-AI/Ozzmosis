@@ -1,0 +1,59 @@
+name: CI - Chronos (Backoffice + Trustware)
+
+on:
+  pull_request:
+    paths:
+      - "apps/chronos-backoffice/**"
+      - "libs/trustware/**"
+      - "docs/chronos/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-chronos.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/chronos-backoffice/**"
+      - "libs/trustware/**"
+      - "docs/chronos/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-chronos.yml"
+
+concurrency:
+  group: chronos-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chronos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install (root contract)
+        run: npm ci
+
+      - name: Repo contract check
+        run: npm run repo:check
+
+      - name: Lint chronos
+        run: npm run lint:chronos
+
+      - name: Typecheck chronos
+        run: npm run typecheck:chronos
+
+      - name: Build chronos
+        run: npm run build:chronos
+
+      - name: Test chronos (survival)
+        run: npm run test:chronos
+
+      - name: Repo cleanliness (post-gates)
+        run: npm run repo:clean

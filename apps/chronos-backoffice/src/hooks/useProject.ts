@@ -2,10 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Project, Task } from "@aurora/trustware";
-import { fetchProjects, fetchTasks } from "@/lib/api";
+import { fetchProjects, fetchTasks, type ShieldErrorCode } from "@/lib/api";
 import { tryReflectRetry } from "@/lib/retry";
 
-type Status = "loading" | "ready" | "error";
+type Status = "loading" | "ready" | "degraded" | "error";
+type Notice = { code: ShieldErrorCode; message: string };
+
+function isRetryable(code: ShieldErrorCode) {
+  return code === "shield_http_5xx" || code === "unknown";
+}
 
 export function useProject() {
   const [status, setStatus] = useState<Status>("loading");
@@ -14,6 +19,8 @@ export function useProject() {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [projectsNotice, setProjectsNotice] = useState<Notice | null>(null);
+  const [tasksNotice, setTasksNotice] = useState<Notice | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -21,27 +28,38 @@ export function useProject() {
     async function run() {
       setStatus("loading");
       setError(null);
+      setProjectsNotice(null);
+      setTasksNotice(null);
 
       try {
         setRetrying(false);
 
-        const [p, t] = await tryReflectRetry({
+        const attemptLimit = 3;
+        const [pRes, tRes] = await tryReflectRetry({
           organ: "chronos",
           action: "fetch_projects_and_tasks",
-          attemptLimit: 3,
+          attemptLimit,
           baseDelayMs: 250,
           fn: async (attempt) => {
             if (attempt > 1 && alive) setRetrying(true);
             const [pRes, tRes] = await Promise.all([fetchProjects(), fetchTasks()]);
+
+            const shouldRetry =
+              attempt < attemptLimit &&
+              ((!pRes.ok && isRetryable(pRes.code)) || (!tRes.ok && isRetryable(tRes.code)));
+
+            if (shouldRetry) throw new Error("backend_retry");
             return [pRes, tRes] as const;
           }
         });
 
         if (!alive) return;
-        setProjects(p);
-        setTasks(t);
+        setProjects(pRes.ok ? pRes.projects : []);
+        setTasks(tRes.ok ? tRes.tasks : []);
+        setProjectsNotice(pRes.ok ? null : { code: pRes.code, message: pRes.message });
+        setTasksNotice(tRes.ok ? null : { code: tRes.code, message: tRes.message });
         setRetrying(false);
-        setStatus("ready");
+        setStatus(!pRes.ok || !tRes.ok ? "degraded" : "ready");
       } catch (e) {
         if (!alive) return;
         setRetrying(false);
@@ -67,5 +85,5 @@ export function useProject() {
     [tasks]
   );
 
-  return { status, retrying, error, projects, tasks: mappedTasks };
+  return { status, retrying, error, projects, tasks: mappedTasks, projectsNotice, tasksNotice };
 }

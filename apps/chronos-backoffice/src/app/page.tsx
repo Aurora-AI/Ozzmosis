@@ -6,7 +6,7 @@ import { useProject } from "@/hooks/useProject";
 import { GanttGrid } from "@/components/gantt/GanttGrid";
 
 export default function Page() {
-  const { projects, tasks, status, error, retrying } = useProject();
+  const { projects, tasks, status, error, retrying, projectsNotice, tasksNotice } = useProject();
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
@@ -39,6 +39,14 @@ export default function Page() {
       <div className="mt-8 grid grid-cols-1 gap-6">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="text-lg font-semibold">Projetos</div>
+          {projectsNotice ? (
+            <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm">
+              <div className="font-medium">Projetos indisponíveis</div>
+              <div className="opacity-80">
+                {projectsNotice.message} <span className="opacity-70">({projectsNotice.code})</span>
+              </div>
+            </div>
+          ) : null}
           <div className="mt-3 space-y-2">
             {projects.map((p) => (
               <div key={p.id} className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
@@ -51,7 +59,7 @@ export default function Page() {
           </div>
         </div>
 
-        <GanttGrid tasks={tasks} />
+        <GanttGrid tasks={tasks} notice={tasksNotice} />
       </div>
     </main>
   );

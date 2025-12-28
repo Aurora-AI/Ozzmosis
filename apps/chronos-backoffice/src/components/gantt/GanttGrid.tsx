@@ -4,9 +4,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import type { GanttTask } from "./types";
 
-type Props = { tasks: GanttTask[] };
+type Props = { tasks: GanttTask[]; notice?: { code: string; message: string } | null };
 
-export function GanttGrid({ tasks }: Props) {
+export function GanttGrid({ tasks, notice }: Props) {
   return (
     <div className="w-full rounded-2xl border border-white/10 bg-white/5 p-4">
       <div className="flex items-center justify-between">
@@ -16,6 +16,15 @@ export function GanttGrid({ tasks }: Props) {
         </div>
         <div className="text-xs opacity-60">{tasks.length} tasks</div>
       </div>
+
+      {notice ? (
+        <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm">
+          <div className="font-medium">Tasks indisponíveis</div>
+          <div className="opacity-80">
+            {notice.message} <span className="opacity-70">({notice.code})</span>
+          </div>
+        </div>
+      ) : null}
 
       <motion.div
         initial={{ opacity: 0.6 }}

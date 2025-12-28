@@ -25,6 +25,7 @@
     "dev:chronos": "npm run -w @aurora/chronos-backoffice dev",
     "chronos:build": "npm run -w @aurora/chronos build",
     "chronos:smoke": "npm run -w @aurora/chronos smoke",
+    "chronos:guard": "npm -w libs/aurora-chronos run chronos:guard",
     "install:clean": "node ./scripts/npm/clean-install.mjs"
   },
   "engines": {

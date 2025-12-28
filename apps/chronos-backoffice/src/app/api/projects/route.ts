@@ -15,6 +15,7 @@ function isoWithOffsetNow() {
 export const runtime = "nodejs";
 
 type FetchMode = "dev_local" | "shield";
+type ErrorCode = "shield_missing" | "shield_timeout" | "shield_http_5xx" | "shield_http_4xx" | "unknown";
 
 function getMode(): FetchMode {
   const env =
@@ -25,50 +26,85 @@ function getMode(): FetchMode {
   return process.env.NODE_ENV === "production" ? "shield" : "dev_local";
 }
 
-function required(name: string, v?: string) {
-  if (!v) throw new Error(`missing_env_${name}`);
-  return v;
-}
-
 export async function GET() {
   const mode = getMode();
 
   if (mode === "dev_local") {
     const now = isoWithOffsetNow();
 
-    return NextResponse.json([
-      {
-        id: "4c3b9b7f-2f0a-4b55-9f64-7fcb84a1f0f1",
-        codeName: "Elysian Legal Lex",
-        biologicalStatus: "VIVO",
-        techStack: ["Next.js", "Trustware", "Elysian"],
-        repositoryUrl: "https://github.com/Aurora-AI/Elysian",
-        owner: "owner@aurora.local",
-        lastVitalSign: now
-      }
-    ]);
+    return NextResponse.json({
+      ok: true,
+      projects: [
+        {
+          id: "4c3b9b7f-2f0a-4b55-9f64-7fcb84a1f0f1",
+          codeName: "Elysian Legal Lex",
+          biologicalStatus: "VIVO",
+          techStack: ["Next.js", "Trustware", "Elysian"],
+          repositoryUrl: "https://github.com/Aurora-AI/Elysian",
+          owner: "owner@aurora.local",
+          lastVitalSign: now
+        }
+      ]
+    });
   }
 
   try {
-    const shieldUrl = required("SHIELD_URL", process.env.SHIELD_URL);
-    const token = required("SHIELD_TOKEN", process.env.SHIELD_TOKEN);
+    const shieldUrl = process.env.SHIELD_URL;
+    const token = process.env.SHIELD_TOKEN;
 
-    const res = await fetch(`${shieldUrl}/proxy/projects`, {
-      cache: "no-store",
-      headers: { "X-Organ": "chronos", Authorization: `Bearer ${token}` }
-    });
-
-    if (!res.ok) {
-      return NextResponse.json({ error: `shield_http_${res.status}` }, { status: res.status });
+    if (!shieldUrl || !token) {
+      return NextResponse.json(
+        {
+          ok: false,
+          code: "shield_missing" satisfies ErrorCode,
+          message: "Butantan Shield obrigatório em produção (SHIELD_URL/SHIELD_TOKEN ausentes)",
+          projects: []
+        },
+        { status: 503 }
+      );
     }
 
-    const json = await res.json();
-    const parsed = ProjectListSchema.parse(json);
-    return NextResponse.json(parsed);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    try {
+      const res = await fetch(`${shieldUrl}/proxy/projects`, {
+        cache: "no-store",
+        headers: { "X-Organ": "chronos", Authorization: `Bearer ${token}` },
+        signal: controller.signal
+      });
+
+      if (!res.ok) {
+        const code: ErrorCode = res.status >= 500 ? "shield_http_5xx" : "shield_http_4xx";
+        const status = res.status >= 500 ? 502 : res.status;
+        console.warn("[chronos][projects] shield_error", { status: res.status, code });
+
+        return NextResponse.json(
+          { ok: false, code, message: `Shield retornou HTTP ${res.status}`, projects: [] },
+          { status }
+        );
+      }
+
+      const json = await res.json();
+      const parsed = ProjectListSchema.parse(json);
+      return NextResponse.json({ ok: true, projects: parsed });
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        console.warn("[chronos][projects] shield_error", { code: "shield_timeout" satisfies ErrorCode });
+        return NextResponse.json(
+          { ok: false, code: "shield_timeout" satisfies ErrorCode, message: "Shield timeout", projects: [] },
+          { status: 504 }
+        );
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
   } catch (e) {
+    console.error("[chronos][projects] shield_error", { code: "unknown", errorName: e instanceof Error ? e.name : "unknown" });
     return NextResponse.json(
-      { error: e instanceof Error ? e.message : "shield_proxy_error" },
-      { status: 500 }
+      { ok: false, code: "unknown" satisfies ErrorCode, message: "Falha ao buscar projetos no Shield", projects: [] },
+      { status: 503 }
     );
   }
 }

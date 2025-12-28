@@ -15,7 +15,7 @@ function isoWithOffsetNow() {
 export const runtime = "nodejs";
 
 type FetchMode = "dev_local" | "shield";
-type ErrorCode = "shield_missing" | "shield_http_5xx" | "shield_http_4xx" | "unknown";
+type ErrorCode = "shield_missing" | "shield_timeout" | "shield_http_5xx" | "shield_http_4xx" | "unknown";
 
 function getMode(): FetchMode {
   const env =
@@ -64,30 +64,44 @@ export async function GET() {
       );
     }
 
-    const res = await fetch(`${shieldUrl}/proxy/projects`, {
-      cache: "no-store",
-      headers: { "X-Organ": "chronos", Authorization: `Bearer ${token}` }
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-    if (!res.ok) {
-      const code: ErrorCode = res.status >= 500 ? "shield_http_5xx" : "shield_http_4xx";
-      const status = res.status >= 500 ? 502 : res.status;
-      console.error("[chronos][projects] shield_error", { status: res.status, url: `${shieldUrl}/proxy/projects`, code });
+    try {
+      const res = await fetch(`${shieldUrl}/proxy/projects`, {
+        cache: "no-store",
+        headers: { "X-Organ": "chronos", Authorization: `Bearer ${token}` },
+        signal: controller.signal
+      });
 
-      return NextResponse.json(
-        { ok: false, code, message: `Shield retornou HTTP ${res.status}`, projects: [] },
-        { status }
-      );
+      if (!res.ok) {
+        const code: ErrorCode = res.status >= 500 ? "shield_http_5xx" : "shield_http_4xx";
+        const status = res.status >= 500 ? 502 : res.status;
+        console.warn("[chronos][projects] shield_error", { status: res.status, code });
+
+        return NextResponse.json(
+          { ok: false, code, message: `Shield retornou HTTP ${res.status}`, projects: [] },
+          { status }
+        );
+      }
+
+      const json = await res.json();
+      const parsed = ProjectListSchema.parse(json);
+      return NextResponse.json({ ok: true, projects: parsed });
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        console.warn("[chronos][projects] shield_error", { code: "shield_timeout" satisfies ErrorCode });
+        return NextResponse.json(
+          { ok: false, code: "shield_timeout" satisfies ErrorCode, message: "Shield timeout", projects: [] },
+          { status: 504 }
+        );
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
     }
-
-    const json = await res.json();
-    const parsed = ProjectListSchema.parse(json);
-    return NextResponse.json({ ok: true, projects: parsed });
   } catch (e) {
-    console.error("[chronos][projects] shield_error", {
-      code: "unknown",
-      error: e instanceof Error ? e.message : String(e)
-    });
+    console.error("[chronos][projects] shield_error", { code: "unknown", errorName: e instanceof Error ? e.name : "unknown" });
     return NextResponse.json(
       { ok: false, code: "unknown" satisfies ErrorCode, message: "Falha ao buscar projetos no Shield", projects: [] },
       { status: 503 }

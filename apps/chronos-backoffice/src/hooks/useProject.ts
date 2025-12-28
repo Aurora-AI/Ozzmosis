@@ -9,7 +9,7 @@ type Status = "loading" | "ready" | "degraded" | "error";
 type Notice = { code: ShieldErrorCode; message: string };
 
 function isRetryable(code: ShieldErrorCode) {
-  return code === "shield_http_5xx" || code === "unknown";
+  return code === "shield_timeout" || code === "shield_http_5xx" || code === "unknown";
 }
 
 export function useProject() {

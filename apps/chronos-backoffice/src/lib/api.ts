@@ -1,6 +1,6 @@
 import { ProjectListSchema, TaskListSchema } from "@aurora/trustware";
 
-export type ShieldErrorCode = "shield_missing" | "shield_http_5xx" | "shield_http_4xx" | "unknown";
+export type ShieldErrorCode = "shield_missing" | "shield_timeout" | "shield_http_5xx" | "shield_http_4xx" | "unknown";
 
 export type Projects = ReturnType<typeof ProjectListSchema.parse>;
 export type Tasks = ReturnType<typeof TaskListSchema.parse>;

@@ -1,0 +1,57 @@
+name: ozzmosis-triad
+
+services:
+  butantan-shield:
+    build:
+      context: ..
+      dockerfile: apps/butantan-shield/Dockerfile
+    environment:
+      NODE_ENV: production
+      SHIELD_PORT: "4001"
+      SHIELD_TOKEN: ${SHIELD_TOKEN:-local-dev-token}
+      # opcional: para proxy real
+      SHIELD_UPSTREAM_URL: ${SHIELD_UPSTREAM_URL:-}
+    ports:
+      - "4001:4001"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  chronos-backoffice:
+    build:
+      context: ..
+      dockerfile: apps/chronos-backoffice/Dockerfile
+      args:
+        NEXT_PUBLIC_CHRONOS_MODE: "prod"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+
+      # Chronos deve apontar para o serviço do Shield dentro da rede docker
+      SHIELD_URL: "http://butantan-shield:4001"
+      SHIELD_TOKEN: ${SHIELD_TOKEN:-local-dev-token}
+    ports:
+      - "3000:3000"
+    depends_on:
+      butantan-shield:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Conductor hoje é LIB: não é um servidor.
+  # Este serviço existe para:
+  # - validar build/typecheck/lint/smoke do Conductor dentro da rede/ambiente
+  # - permitir exec manual via `docker compose exec conductor-runner ...`
+  conductor-runner:
+    build:
+      context: ..
+      dockerfile: libs/aurora-conductor/Dockerfile
+    environment:
+      NODE_ENV: production
+    depends_on:
+      butantan-shield:
+        condition: service_healthy
+    command: ["node", "-e", "console.log('aurora-conductor runner ready'); setInterval(()=>{}, 1<<30)"]
+    restart: unless-stopped

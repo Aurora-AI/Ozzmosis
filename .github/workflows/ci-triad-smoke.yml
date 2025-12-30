@@ -1,0 +1,90 @@
+name: ci-triad-smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  triad-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker info
+        run: |
+          docker version
+          docker compose version
+
+      - name: Compose config (validate)
+        run: |
+          cat > docker/.env.triad.ci << 'EOF'
+          SHIELD_TOKEN=local-dev-token
+          CONDUCTOR_TOKEN=local-dev-conductor-token
+          CONDUCTOR_PORT=4101
+          EOF
+
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci config
+
+      - name: Build images
+        run: |
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci build
+
+      - name: Up (detached)
+        run: |
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci up -d
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci ps
+
+      - name: Wait for health
+        run: |
+          set -euo pipefail
+          deadline=$((SECONDS + 180))
+
+          while [ $SECONDS -lt $deadline ]; do
+            shield=$(docker inspect -f '{{.State.Health.Status}}' docker-butantan-shield-1 2>/dev/null || echo missing)
+            conductor=$(docker inspect -f '{{.State.Health.Status}}' docker-conductor-service-1 2>/dev/null || echo missing)
+            chronos=$(docker inspect -f '{{.State.Health.Status}}' docker-chronos-backoffice-1 2>/dev/null || echo starting)
+
+            echo "shield=$shield conductor=$conductor chronos=$chronos"
+
+            if [ "$shield" = "healthy" ] && [ "$conductor" = "healthy" ] && [ "$chronos" = "healthy" ]; then
+              exit 0
+            fi
+
+            sleep 5
+          done
+
+          echo 'Timed out waiting for services to become healthy'
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci ps
+          docker logs --tail=200 docker-butantan-shield-1 || true
+          docker logs --tail=200 docker-chronos-backoffice-1 || true
+          docker logs --tail=200 docker-conductor-service-1 || true
+          exit 1
+
+      - name: Probes (Shield/Chronos/Conductor)
+        run: |
+          set -euo pipefail
+
+          curl -fsS http://localhost:4001/health | tee /tmp/shield_health.json
+          curl -fsS -H "Authorization: Bearer local-dev-token" http://localhost:4001/proxy/projects | tee /tmp/shield_projects.json
+          curl -fsS -H "Authorization: Bearer local-dev-token" http://localhost:4001/proxy/tasks | tee /tmp/shield_tasks.json
+
+          curl -fsS http://localhost:3000/api/projects | tee /tmp/chronos_projects.json
+          curl -fsS http://localhost:3000/api/tasks | tee /tmp/chronos_tasks.json
+
+          curl -fsS http://localhost:4101/health | tee /tmp/conductor_health.json
+
+          # Hard fail if Chronos surfaces shield_missing
+          if grep -q '"shield_missing"' /tmp/chronos_projects.json || grep -q '"shield_missing"' /tmp/chronos_tasks.json; then
+            echo 'Chronos reported shield_missing'
+            exit 1
+          fi
+
+      - name: Teardown
+        if: always()
+        run: |
+          docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad.ci down --remove-orphans --volumes

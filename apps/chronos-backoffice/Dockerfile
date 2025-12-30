@@ -24,7 +24,9 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=deps /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
 COPY --from=build /repo/package.json ./package.json
+COPY --from=build /repo/libs/trustware ./libs/trustware
 COPY --from=build /repo/apps/chronos-backoffice ./apps/chronos-backoffice
 
 EXPOSE 3000

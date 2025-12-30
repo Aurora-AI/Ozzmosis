@@ -20,13 +20,17 @@ RUN npm -w libs/aurora-conductor run build || true
 RUN npm -w apps/aurora-conductor-service run build
 
 FROM node:20-alpine AS runner
-WORKDIR /app
+WORKDIR /repo
 ENV NODE_ENV=production
 ENV CONDUCTOR_PORT=4101
 
-COPY --from=build /repo/apps/aurora-conductor-service/dist ./dist
-COPY --from=build /repo/apps/aurora-conductor-service/package.json ./package.json
 COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=deps /repo/apps/aurora-conductor-service/node_modules ./apps/aurora-conductor-service/node_modules
+
+COPY --from=build /repo/package.json ./package.json
+COPY --from=build /repo/libs/aurora-conductor ./libs/aurora-conductor
+COPY --from=build /repo/apps/aurora-conductor-service/dist ./apps/aurora-conductor-service/dist
+COPY --from=build /repo/apps/aurora-conductor-service/package.json ./apps/aurora-conductor-service/package.json
 
 EXPOSE 4101
-CMD ["node", "dist/server.js"]
+CMD ["npm", "-w", "apps/aurora-conductor-service", "run", "start"]

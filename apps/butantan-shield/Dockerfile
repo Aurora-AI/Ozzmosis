@@ -18,14 +18,17 @@ COPY apps/butantan-shield apps/butantan-shield
 RUN npm -w apps/butantan-shield run build
 
 FROM node:20-slim AS runner
-WORKDIR /app
+WORKDIR /repo
 
 ENV NODE_ENV=production
 ENV SHIELD_PORT=4001
 
-COPY --from=build /repo/apps/butantan-shield/dist ./dist
-COPY --from=build /repo/apps/butantan-shield/package.json ./package.json
 COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=deps /repo/apps/butantan-shield/node_modules ./apps/butantan-shield/node_modules
+
+COPY --from=build /repo/package.json ./package.json
+COPY --from=build /repo/apps/butantan-shield/dist ./apps/butantan-shield/dist
+COPY --from=build /repo/apps/butantan-shield/package.json ./apps/butantan-shield/package.json
 
 EXPOSE 4001
-CMD ["node", "dist/server.js"]
+CMD ["npm", "-w", "apps/butantan-shield", "run", "start"]

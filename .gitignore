@@ -23,6 +23,7 @@ last-run.json
 .env
 .env.local
 .env.*.local
+**/.env.triad
 **/.env
 **/.env.local
 **/.env.*.local

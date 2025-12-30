@@ -15,6 +15,8 @@ COPY --from=deps /repo/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY libs/aurora-conductor libs/aurora-conductor
 COPY apps/aurora-conductor-service apps/aurora-conductor-service
+COPY --from=deps /repo/libs/aurora-conductor/node_modules ./libs/aurora-conductor/node_modules
+COPY --from=deps /repo/apps/aurora-conductor-service/node_modules ./apps/aurora-conductor-service/node_modules
 
 RUN npm -w libs/aurora-conductor run build || true
 RUN npm -w apps/aurora-conductor-service run build

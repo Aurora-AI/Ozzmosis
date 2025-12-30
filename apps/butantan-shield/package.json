@@ -3,18 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "echo \"lint:todo\"",
+    "test": "echo \"test:todo\""
   },
   "dependencies": {
-    "elysia": "^1.0.0",
-    "@elysiajs/node": "^1.0.0"
+    "@elysiajs/node": "^1.0.0",
+    "elysia": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.3"
   }
 }

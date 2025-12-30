@@ -5,7 +5,9 @@ const port = Number(process.env.SHIELD_PORT ?? '4001');
 const shieldToken = process.env.SHIELD_TOKEN;
 
 function requireBearer(authHeader: string | null) {
+  // Token opcional: se não definido, não bloqueia (dev/local).
   if (!shieldToken) return { ok: true as const };
+
   const token = authHeader?.startsWith('Bearer ') ? authHeader.slice('Bearer '.length) : '';
   if (token !== shieldToken) {
     return { ok: false as const, code: 'auth_invalid', message: 'Invalid or missing bearer token' };

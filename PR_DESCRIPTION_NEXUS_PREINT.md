@@ -1,33 +1,71 @@
-# Aurora Conductor — Nexus Pre-Integration (Repo Hygiene + CI Matrix + Technical Audit)
+# feat(triad): production-first compose wiring for shield+chronos+conductor
 
-## Escopo (OS-OZZMOSIS-CONDUCTOR-NEXUS-PREINT-20251227-001)
+## Resumo
+Esta PR materializa a tríade operacional no Ozzmosis em modo production-first, garantindo que:
 
-### WP1 — Higiene do repositório
+- `butantan-shield` compila e sobe em Docker “clean room” (tipagem Node explícita e adapter Node no Elysia).
+- `chronos-backoffice` roda em modo shield sem “shield_missing” (wiring de `SHIELD_URL/SHIELD_TOKEN` via compose/env).
+- `aurora-conductor-service` integra no mesmo compose e responde a health/compose.
+- Imagens Docker incluem dependências necessárias em runtime, evitando `ERR_MODULE_NOT_FOUND`.
 
-- Removeu artefato untracked em `docs/constitution/` e versionou como documentação PowerQuery em `docs/powerquery/codigo-m-arquivos-csv.md`.
-- Adicionou `.gitignore` (node + runtime) para impedir sujeira (`node_modules`, `.artifacts`, `dist`).
+## Mudanças principais
 
-### WP2 — Survival como gate definitivo (Linux + Windows)
+### 1) Shield (apps/butantan-shield)
 
-- Workflow ` .github/workflows/ci-conductor.yml` agora roda em matriz `ubuntu-latest` + `windows-latest`.
-- `npm run survival:conductor` executa **3x por OS** (anti-flake), falhando no primeiro erro.
+- Tipagem Node explícita (`@types/node` + `types:["node"]`) para build reprodutível em Docker/CI.
+- Endpoints:
+	- `GET /health`
+	- `GET /proxy/projects`
+	- `GET /proxy/tasks`
+- Autorização via Bearer token opcional (`SHIELD_TOKEN`).
 
-### WP3 — Auditoria técnica (Conductor ↔ Nexus)
+### 2) Docker/Tríade
 
-- Relatório técnico completo em `docs/conductor/RELATORIO_TECNICO_CONDUCTOR_VS_AURORA_NEXUS.md`.
+- `docker/compose.triad.dev.yml` atualizado para subir:
+	- butantan-shield
+	- chronos-backoffice
+	- aurora-conductor-service
+- `.env.triad.example` inclui `SHIELD_TOKEN` e variáveis de portas.
+- `.gitignore` garante que `docker/.env.triad` nunca seja versionado.
+
+### 3) Dockerfiles
+
+- Ajustes para garantir dependências em runtime dentro das imagens (sem assumir apenas root node_modules).
 
 ## Como validar (local)
 
+### 1) Criar env local (não versionado)
+
+- Copiar `docker/.env.triad.example` → `docker/.env.triad`
+- Preencher `SHIELD_TOKEN` (ex.: `local-dev-token`)
+
+### 2) Subir do zero
+
 ```bash
-npm ci
-npm run build:conductor
-npm run typecheck:conductor
-npm run lint:conductor
-npm run smoke:conductor
-npm run survival:conductor
+docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad down --remove-orphans --volumes
+docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad build --no-cache
+docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad up -d
+docker compose -f docker/compose.triad.dev.yml --env-file docker/.env.triad ps
 ```
 
-## Observações de contrato
+### 3) Provas
 
-- `compose()` não escreve artifacts por padrão; escrita é opt-in via `writeArtifacts: true`.
+```bash
+curl -i http://localhost:4001/health
+curl -i -H "Authorization: Bearer <SHIELD_TOKEN>" http://localhost:4001/proxy/projects
+curl -i -H "Authorization: Bearer <SHIELD_TOKEN>" http://localhost:4001/proxy/tasks
+curl -i http://localhost:3000/api/projects
+curl -i http://localhost:3000/api/tasks
+```
+
+## Critérios de aceite
+
+- `docker compose ... ps` mostra Shield e Conductor `healthy` e Chronos `up`.
+- `GET /health` do Shield retorna 200.
+- `GET /proxy/projects` e `/proxy/tasks` retorna 200 com token correto.
+- Chronos responde `/api/projects` e `/api/tasks` com `ok:true` (sem `shield_missing`).
+
+## Risco/Notas
+
+- Esta PR intentionally enrijece o contrato: build e runtime precisam ser reprodutíveis em ambiente limpo (Docker/CI), sem dependências implícitas do host.
 

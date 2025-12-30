@@ -1,11 +1,35 @@
-FROM node:20-slim
+FROM node:20-slim AS deps
+WORKDIR /repo
 
-WORKDIR /app
+COPY package.json package-lock.json ./
+COPY libs/trustware/package.json libs/trustware/package.json
+COPY apps/chronos-backoffice/package.json apps/chronos-backoffice/package.json
 
-COPY apps/chronos-backoffice/package.json ./package.json
-RUN npm install
+RUN npm ci
 
-COPY apps/chronos-backoffice/ ./
+FROM node:20-slim AS build
+WORKDIR /repo
+
+COPY --from=deps /repo/node_modules ./node_modules
+COPY package.json package-lock.json ./
+COPY libs/trustware libs/trustware
+COPY apps/chronos-backoffice apps/chronos-backoffice
+COPY --from=deps /repo/libs/trustware/node_modules ./libs/trustware/node_modules
+COPY --from=deps /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
+
+RUN npm -w apps/chronos-backoffice run build
+
+FROM node:20-slim AS runner
+WORKDIR /repo
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=deps /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
+COPY --from=build /repo/package.json ./package.json
+COPY --from=build /repo/libs/trustware ./libs/trustware
+COPY --from=build /repo/apps/chronos-backoffice ./apps/chronos-backoffice
 
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["npm", "-w", "apps/chronos-backoffice", "run", "start"]

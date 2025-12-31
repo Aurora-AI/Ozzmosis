@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Ozzmosis: Gates (npm ci + repo:check)",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts\\agents\\run-gates.ps1"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Ozzmosis: Repo Check",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "repo:check"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Ozzmosis: Triad Compose Config",
+      "type": "shell",
+      "command": "docker",
+      "args": ["compose", "-f", "docker/compose.triad.dev.yml", "config"],
+      "problemMatcher": []
+    }
+  ]
+}
+

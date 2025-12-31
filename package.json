@@ -32,6 +32,14 @@
     "chronos:guard": "npm -w libs/aurora-chronos run chronos:guard",
     "install:clean": "node ./scripts/npm/clean-install.mjs"
   },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "globals": "^14.0.0",
+    "jsonc-eslint-parser": "^2.4.2"
+  },
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"

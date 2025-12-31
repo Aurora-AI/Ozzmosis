@@ -8,4 +8,3 @@ echo "== Gates: repo:check =="
 npm run repo:check
 
 echo "Gates PASS"
-

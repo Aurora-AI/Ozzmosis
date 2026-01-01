@@ -1,0 +1,1153 @@
+C:\Aurora\_thirdparty\odoo\.github\ISSUE_TEMPLATE\1_bug_form.yml:36:        - Go to Quotations;
+C:\Aurora\_thirdparty\odoo\.github\ISSUE_TEMPLATE\1_bug_form.yml:37:        - Select one quotation and click on 'Create an Invoice';
+C:\Aurora\_thirdparty\odoo\.github\ISSUE_TEMPLATE\1_bug_form.yml:40:        Expected behaviour: it creates a draft invoice.
+C:\Aurora\_thirdparty\odoo\addons\account\__init__.py:49:        if module.state == 'uninstalled':
+C:\Aurora\_thirdparty\odoo\addons\account\controllers\portal.py:44:        return [('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', move_type)]
+C:\Aurora\_thirdparty\odoo\addons\account\controllers\portal.py:134:        if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\data\digest_data.xml:17:    <p class="tip_content">Use the “<i>Send by Post</i>” option to post invoices automatically. For the cost of a local stamp, we do all the manual work: your invoice will be printed in the right country, put in an envelop and sent by snail mail. Use this feature from the list view to post hundreds of invoices in bulk.</p>
+C:\Aurora\_thirdparty\odoo\addons\account\data\mail_template_data.xml:14:            <field name="description">Sent to customers with their invoices in attachment</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\mail_template_data.xml:75:            <field name="description">Sent manually to customer when clicking on 'Send receipt by email' in payment action</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\mail_template_data.xml:105:            <field name="description">Sent to customers with the credit note in attachment</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\onboarding_data.xml:24:            <field name="step_image" type="base64" file="base/static/img/onboarding_quotation-layout.png"></field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\onboarding_data.xml:25:            <field name="step_image_filename">onboarding_quotation-layout.png</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\onboarding_data.xml:34:            <field name="done_text">First invoice sent!</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\service_cron.xml:3:    <record id="ir_cron_auto_post_draft_entry" model="ir.cron">
+C:\Aurora\_thirdparty\odoo\addons\account\data\service_cron.xml:4:        <field name="name">Account: Post draft entries with auto_post enabled and accounting date up to today</field>
+C:\Aurora\_thirdparty\odoo\addons\account\data\service_cron.xml:11:        <field name="code">model._autopost_draft_entries()</field>
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement_line.py:194:        # we have to compute running balance for draft lines because they are visible and also
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement_line.py:196:        # we do the same for the canceled lines, in order to keep using them as anchor points
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement_line.py:253:                if state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement_line.py:293:        This field is used for display purpose (e.g. display the 'cancel' button on the statement lines).
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement_line.py:398:        # No need for the user to manage their status (from 'Draft' to 'Posted')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:128:            stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:162:            lines = stmt.line_ids.filtered(lambda x: x.state == 'posted')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:183:            stmt.is_complete = stmt.line_ids.filtered(lambda l: l.state == 'posted') and stmt.currency_id.compare_amounts(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:311:            # Check that the selected lines are contiguous (there might be canceled lines between the indexes and these should be ignored from the check)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:318:            canceled_lines = lines_between.filtered(lambda l: l.state == 'cancel')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:319:            if len(lines) != len(lines_between - canceled_lines):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_bank_statement.py:321:            lines |= canceled_lines
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_cash_rounding.py:21:        help='Represent the non-zero value smallest coinage (for example, 0.05).')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_full_reconcile.py:17:            cancel the currency difference entry on the partner account (otherwise it will still appear on the aged balance
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_full_reconcile.py:34:            moves_to_reverse._reverse_moves(default_values_list, cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:151:                       AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:271:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:384:               AND st_line_move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:491:        # DRAFTS
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:492:        query, params = sale_purchase_journals._get_draft_bills_query().select(*bills_field_list)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:494:        query_results_drafts = group_by_journal(self.env.cr.dictfetchall())
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:551:            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:558:                'number_draft': number_draft,
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:561:                'sum_draft': currency.format(sum_draft),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:605:    def _get_draft_bills_query(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:609:            ('state', '=', 'draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:703:                              AND move.state != 'cancel'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:735:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal_dashboard.py:762:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:551:    def _check_auto_post_draft_entries(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:552:        # constraint should be tested just after archiving a journal, but shouldn't be raised when unarchiving a journal containing draft entries
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:556:                ('state', '=', 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:560:                raise ValidationError(_("You can not archive a journal containing draft journal entries.\n\n"
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:563:                                        "2/ then filter on 'Draft' entries\n"
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_journal.py:996:            ('parent_state', '!=', 'cancel'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:61:    parent_state = fields.Selection(related='move_id.state', store=True)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1263:            line.id for line in self if line.parent_state == "posted"
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1350:        for line in self.filtered(lambda l: l.move_id.state == 'posted'):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1371:        be present on both the invoice and cash basis move, leading to the same
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1477:                     where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1482:                     where="amount_residual < 0 AND parent_state = 'posted'")
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1602:            if line.move_id.state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1653:            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1654:                raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1657:            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['fiscal']):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1661:            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['tax']):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1740:        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1741:            raise UserError(_("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1765:        self.move_id.filtered(lambda m: m.state == 'posted')._check_fiscalyear_lock_date()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1810:        return name or _('Draft Entry')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:1964:        as parameters, each one representing an account.move.line.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:2605:        if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:2695:                if is_cash_basis_needed(involved_amls.account_id) and not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:3155:                if all(move.state == 'posted' for move in lines.move_id):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:3260:        """ Round the analytic lines amount, and cancel the rounding error. """
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move_line.py:3495:        return self.move_id.state == 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:72:    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:73:    'application/vnd.oasis.opendocument.presentation',
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:132:    state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:134:            ('draft', 'Draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:136:            ('cancel', 'Cancelled'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:143:        default='draft',
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:211:    # when cancelling the source: it will post the inverse journal entry to
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:212:    # cancel that part too.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:479:    payment_state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:527:    is_move_sent = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:531:        help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:533:    is_being_sent = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:534:        help="Is the move being sent asynchronously",
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:535:        compute='_compute_is_being_sent'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:607:    show_reset_to_draft_button = fields.Boolean(compute='_compute_show_reset_to_draft_button')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:614:    need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:644:                              WHERE (state = 'posted' AND name != '/')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:674:    def _compute_is_being_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:676:            move.is_being_sent = bool(move.send_and_print_values)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:680:            m.state == 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:713:            record.hide_post_button = record.state != 'draft' \
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:796:            if move.state == 'cancel':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:804:                        # Reset to draft
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1018:            'legacy' if move.payment_state == 'invoicing_legacy' else
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1019:            'posted_invoice' if move.state == 'posted' and move.is_invoice(True) else
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1022:        groups.get('unpaid', self.browse()).payment_state = 'not_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1070:            new_pmt_state = 'not_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1076:                        new_pmt_state = 'paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1078:                        new_pmt_state = invoice._get_invoice_in_payment_state()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1081:                    new_pmt_state = 'paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1095:                        new_pmt_state = 'reversed'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1098:                new_pmt_state = 'partial'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1100:            invoice.payment_state = new_pmt_state
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1105:            is_draft = invoice.id != invoice._origin.id
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1111:                    if is_draft:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1234:            if move.state == 'posted' and move.is_invoice(include_receipts=True):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1403:    def _need_cancel_request(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1404:        """ Hook allowing a localization to prevent the user to reset draft an invoice that has been already sent
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1405:        to the government and thus, must remain untouched except if its cancellation is approved.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1407:        :return: True if the cancel button is displayed instead of draft button, False otherwise.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1413:    def _compute_need_cancel_request(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1415:            move.need_cancel_request = move._need_cancel_request()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1457:            move.display_inactive_currency_warning = move.state == 'draft' and move.currency_id and not move.currency_id.active
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1479:    def _compute_show_reset_to_draft_button(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1481:            move.show_reset_to_draft_button = (
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1483:                and (move.state == 'cancel' or (move.state == 'posted' and not move.need_cancel_request))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1517:            show_warning = move.state == 'draft' and \
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1542:                                            Consider the warning on a draft invoice created from a sales order.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1543:                                            After confirming the invoice the (partial) amount (on the invoice)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1639:               AND duplicate_move.state != 'cancel'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:1640:               AND (duplicate_move.state = 'posted' OR NOT %(only_posted)s)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2031:            and self.payment_state == 'not_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2446:                if 'partner_id' not in data or not self._context.get('move_reverse_cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2505:            raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2525:            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2535:            if move.state == "posted" and (
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2543:            if 'state' in vals and move.state == 'posted' and vals['state'] != 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2561:                # Reset the name of draft moves when changing the journal.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2564:                    draft_move = self.filtered(lambda m: not m.posted_before)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2565:                    draft_move.name = False
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2566:                    draft_move._compute_name()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2571:                    posted_move = self.filtered(lambda m: m.state == 'posted')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:2738:        return self.state == 'posted' and not self.quick_edit_mode
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3088:            #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3585:            * exchange_lines:   The journal items representing the exchange differences in case of multi-currencies.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3654:        :return:            A string representing the invoice.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3658:        if self.state == 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3660:                'out_invoice': _('Draft Invoice'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3661:                'out_refund': _('Draft Credit Note'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3662:                'in_invoice': _('Draft Bill'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3663:                'in_refund': _('Draft Vendor Credit Note'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3664:                'out_receipt': _('Draft Sales Receipt'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3665:                'in_receipt': _('Draft Purchase Receipt'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3666:                'entry': _('Draft Entry'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3801:    def _reconcile_reversed_moves(self, reverse_moves, move_reverse_cancel):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3803:        :param move_reverse_cancel: parameter used when lines are reconciled
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3818:                    lines.with_context(move_reverse_cancel=move_reverse_cancel).reconcile()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3822:    def _reverse_moves(self, default_values_list=None, cancel=False):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3824:        If cancel parameter is true, the reconcilable or liquidity lines
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3833:        if cancel:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3847:                move_reverse_cancel=cancel,
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3852:        reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3861:        # Reconcile moves together to cancel the previous one.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3862:        if cancel:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3863:            reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3879:        to_cancel = self.env['account.move']
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3885:                to_cancel += move
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3888:        to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3889:        to_unlink.filtered(lambda m: m.state == 'draft').unlink()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3890:        to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3891:        return to_reverse._reverse_moves(cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3925:                    "So you cannot confirm the invoice."
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3949:            if move.state in ['posted', 'cancel']:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:3950:                raise UserError(_('The entry %s (id %s) must be in draft.', move.name, move.id))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4003:        # reconcile if state is in draft and move has reversal_entry_id set
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4004:        draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id and move.reversed_entry_id.state == 'posted')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4011:        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4192:    def action_invoice_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4230:        ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4241:        ''' Called by the 'payment' widget to remove a reconciled entry to the present invoice.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4253:    def button_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4254:        if any(move.state not in ('cancel', 'posted') for move in self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4255:            raise UserError(_("Only posted/cancelled journal entries can be reset to draft."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4256:        if any(move.need_cancel_request for move in self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4257:            raise UserError(_("You can't reset to draft those journal entries. You need to request a cancellation instead."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4259:        self._check_draftable()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4263:        self.state = 'draft'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4265:    def _check_draftable(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4291:                raise UserError(_('You cannot reset to draft an exchange difference journal entry.'))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4294:                # but we still don't want to allow setting the caba entry to draft
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4298:                raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4299:            if move.restrict_mode_hash_table and move.state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4302:    def button_request_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4303:        """ Hook allowing the localizations to request a cancellation from the government before cancelling the invoice. """
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4305:        if not self.need_cancel_request:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4306:            raise UserError(_("You can only request a cancellation for invoice sent to the government."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4308:    def button_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4309:        # Shortcut to move from posted to cancelled directly. This is useful for E-invoices that must not be changed
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4310:        # when sent to the government.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4311:        moves_to_reset_draft = self.filtered(lambda x: x.state == 'posted')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4312:        if moves_to_reset_draft:
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4313:            moves_to_reset_draft.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4315:        if any(move.state != 'draft' for move in self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4316:            raise UserError(_("Only draft journal entries can be cancelled."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4318:        self.write({'auto_post': 'no', 'state': 'cancel'})
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4364:    def _autopost_draft_entries(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4370:            ('state', '=', 'draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4390:            self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4403:                    'title': _('Invoices sent') if is_success else _('Invoices in error'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4404:                    'message': _('Invoices sent successfully.') if is_success else _(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4408:                        'action_name': _('Sent invoices') if is_success else _('Invoices in error'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4507:            payment_state = 'fully_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4509:            payment_state = 'not_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4511:            payment_state = 'partially_paid'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4518:            installment_state = 'epd'
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4543:            installment_state = None
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4867:        # Search for partner that sent the mail.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4947:        if self.state != 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4949:                body=_('The invoice is not a draft, it was not updated from the attachment.'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4966:        # Unlink the unused attachments (prevents storing marketing images sent with emails)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4988:        if 'payment_state' in init_values and self.payment_state == 'paid':
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:4990:        elif 'state' in init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5051:    def _action_invoice_ready_to_be_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5052:        """ Hook allowing custom code when an invoice becomes ready to be sent by mail to the customer.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5053:        For example, when an EDI document must be sent to the government and be signed by it.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5056:    def _is_ready_to_be_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5057:        """ Helper telling if a journal entry is ready to be sent by mail to the customer.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5064:    def _can_force_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5065:        """ Hook to indicate whether it should be possible to force-cancel this invoice,
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5066:        that is, cancel it without waiting for the cancellation request to succeed.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5073:        moves_not_ready = self.filtered(lambda x: not x._is_ready_to_be_sent())
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5078:            moves_now_ready = moves_not_ready.filtered(lambda x: x._is_ready_to_be_sent())
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_move.py:5080:                moves_now_ready._action_invoice_ready_to_be_sent()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_partial_reconcile.py:130:            moves_to_reverse._reverse_moves(default_values_list, cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_partial_reconcile.py:197:                        * percentage:       The reconciled percentage represented by the partial.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_partial_reconcile.py:514:                    # This balance is a percentage representing the part of the journal entry
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:410:            payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_code in self._get_method_codes_needing_bank_account()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:557:            if pay.state in ('draft', 'posted') \
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:776:            payment.display_name = payment.move_id.name if payment.move_id.name != '/' else _('Draft Payment')
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:976:    def mark_as_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:977:        self.write({'is_move_sent': True})
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:979:    def unmark_as_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:980:        self.write({'is_move_sent': False})
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:983:        ''' draft -> posted '''
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:995:    def action_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:996:        ''' draft -> cancelled '''
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:997:        self.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:999:    def button_request_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:1000:        self.move_id.button_request_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:1002:    def action_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:1003:        ''' posted -> draft '''
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_payment.py:1004:        self.move_id.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_report.py:89:    filter_show_draft = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_report.py:90:        string="Draft Entries",
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_report.py:91:        compute=lambda x: x._compute_report_option_filter('filter_show_draft', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_tax.py:152:        help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_tax.py:413:                    21M       => 2%1%M%   where the % represents 0, 1 or multiple characters in a SQL 'LIKE' search.
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_tax.py:1072:        """ Take a tax results returned by the taxes computation method and return a dictionary representing the way
+C:\Aurora\_thirdparty\odoo\addons\account\models\account_tax.py:1101:        :return:            A python dict representing the grouping key used to update an existing tax line.
+C:\Aurora\_thirdparty\odoo\addons\account\models\chart_template.py:465:        # Remove data of unknown fields present in the company template
+C:\Aurora\_thirdparty\odoo\addons\account\models\chart_template.py:630:        # Unaffected earnings account on the company (if not present yet)
+C:\Aurora\_thirdparty\odoo\addons\account\models\chart_template.py:1301:        :param langs: the lang code to load the translations for. If one of the codes is not present,
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:315:        :return: A dictionary representing a window action.
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:339:            draft_entries = self.env['account.move'].search([
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:341:                ('state', '=', 'draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:343:            if draft_entries:
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:350:                    'domain': [('id', 'in', draft_entries.ids)],
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:360:                ('move_id.state', 'in', ('draft', 'posted')),
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:455:        """ Creates an empty opening move in 'draft' state for the current company
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:466:        return bool(self.account_opening_move_id) and self.account_opening_move_id.state == 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:523:        if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:562:        # Don't allow to modify the opening move if not in draft.
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:564:        if opening_move and opening_move.state != 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:567:                If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+C:\Aurora\_thirdparty\odoo\addons\account\models\company.py:764:            raise UserError(_("Some documents are being sent by another process already."))
+C:\Aurora\_thirdparty\odoo\addons\account\models\digest.py:31:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_attachment.py:31:        """Decodes an xml into a list of one dictionary representing an attachment.
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_attachment.py:53:        """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_attachment.py:90:        """Decodes any file into a list of one dictionary representing an attachment.
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_attachment.py:143:        dictionary each representing an attachment.
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_module.py:47:                            'installed': module.state == "installed",
+C:\Aurora\_thirdparty\odoo\addons\account\models\ir_module.py:65:        is_installed = len(self) == 1 and self.state == 'installed'
+C:\Aurora\_thirdparty\odoo\addons\account\models\kpi_provider.py:12:                [('state', '=', 'draft')],
+C:\Aurora\_thirdparty\odoo\addons\account\models\onboarding_onboarding.py:19:            if step and step.current_step_state == 'not_done':
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:423:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:455:            ('state', 'not in', ['draft', 'cancel']),
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:468:                    ('state', 'not in', ['draft', 'cancel']),
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:735:        """ Can't edit `name` if there is (non draft) issued invoices. """
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:741:        """ Can't edit `vat` if there is (non draft) issued invoices. """
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:764:        - state: all states (draft and posted)
+C:\Aurora\_thirdparty\odoo\addons\account\models\partner.py:768:            ('state', 'in', ['draft', 'posted']),
+C:\Aurora\_thirdparty\odoo\addons\account\models\product.py:114:               AND line.parent_state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\models\res_currency.py:51:        :return:        The query representing the currency table.
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report_view.xml:101:                <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report_view.xml:102:                <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report.py:31:    state = fields.Selection([
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report.py:32:        ('draft', 'Draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report.py:34:        ('cancel', 'Cancelled')
+C:\Aurora\_thirdparty\odoo\addons\account\report\account_invoice_report.py:36:    payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string='Payment Status', readonly=True)
+C:\Aurora\_thirdparty\odoo\addons\account\security\account_security.xml:251:        <field name="domain_force">[('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+C:\Aurora\_thirdparty\odoo\addons\account\security\account_security.xml:258:        <field name="domain_force">[('parent_state', 'not in', ('cancel', 'draft')), ('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('move_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+C:\Aurora\_thirdparty\odoo\addons\account\security\ir.model.access.csv:125:access_account_tour_upload_bill_email_confirm,account.tour.upload.bill.email.confirm,model_account_tour_upload_bill_email_confirm,account.group_account_manager,1,1,1,0
+C:\Aurora\_thirdparty\odoo\addons\account\tests\common.py:434:        # "invisible": "['|', ('state', '!=', 'draft'), ('auto_post', '!=', 'at_date')]"
+C:\Aurora\_thirdparty\odoo\addons\account\tests\common.py:435:        # "invisible": ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', 'no'), ('auto_post', '=', 'at_date')]
+C:\Aurora\_thirdparty\odoo\addons\account\tests\common.py:675:        :param xml_tree_str:    A string representing an xml.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_account.py:230:        self.env['account.move'].create(payable_credit_move).button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_account.py:232:        self.assertEqual(account_payable.current_balance, -100, 'Canceled invoices/bills should not be used when computing the balance')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_account.py:234:        # draft invoice
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_account.py:237:        self.assertEqual(account_payable.current_balance, -100, 'Draft invoices/bills should not be used when computing the balance')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_analytic.py:123:        # Analytic lines are deleted when resetting to draft
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_analytic.py:124:        out_invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_analytic.py:211:        out_invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_analytic.py:339:        invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:861:        line1.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:862:        line6.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:863:        line6.move_id.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1202:    def test_statement_with_canceled_lines(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1215:        # test canceling a line
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1216:        line2.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1222:        # add a line with same amount as the canceled line makes statement1 complete again
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1229:        # test adding a draft line to a statement, nothing should be changed in statement
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1231:        line4.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1232:        line4.move_id.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1239:        # test split with canceled/draft lines
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1253:        # test cancel/draft all statement lines
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1254:        # line 4 is draft, and we cancel line 3 so the statement should be empty
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1255:        line3.move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1262:        # create a statement line with already canceled lines
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1404:        # create the third statement using multi edit with canceled line in between
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_bank_statement.py:1405:        lines[2].move_id.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_inalterable_hash.py:195:        Version 2 does not take into account floating point representation issues.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_incoming_supplier_invoice.py:249:            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.supplier_partner.name, self.supplier_partner.email),
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_incoming_supplier_invoice.py:270:            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.internal_user.name, self.internal_user.email),
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard_common.py:85:    def assertDashboardPurchaseSaleData(self, journal, number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency, **kwargs):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard_common.py:87:            'number_draft': number_draft,
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard_common.py:88:            'sum_draft': format_amount(self.env, sum_draft, currency),
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:46:        # Check Draft
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:49:        self.assertEqual(dashboard_data['number_draft'], 2)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:50:        self.assertIn('68.42', dashboard_data['sum_draft'])
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:59:        self.assertEqual(dashboard_data['number_draft'], 1)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:60:        self.assertIn('-\N{ZERO WIDTH NO-BREAK SPACE}13.30', dashboard_data['sum_draft'])
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:69:        self.assertEqual(dashboard_data['number_draft'], 0)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:70:        self.assertIn('0.00', dashboard_data['sum_draft'])
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:89:        self.assertEqual(dashboard_data['number_draft'], 0)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:90:        self.assertIn('0.00', dashboard_data['sum_draft'])
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:120:            # number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:131:                _draft_bill = self.init_invoice('in_invoice', invoice_date='2017-01-01', post=False, amounts=[200], currency=bill_currency, journal=purchase_journal)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:281:        moves[:8].action_post()  # Only post 8 moves and keep 2 draft moves
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:282:        self.assertFalse(journal._query_has_sequence_holes())  # no gap, no gap warning, and draft moves shouldn't trigger the warning
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:284:        moves[2:4].button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:285:        self.assertFalse(journal._query_has_sequence_holes())  # no gap (with draft moves using sequence numbers), no gap warning
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:293:        moves[6].button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:294:        moves[6].button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_journal_dashboard.py:295:        self.assertTrue(journal._query_has_sequence_holes())  # gap due to canceled move using a sequence, gap warning
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:72:            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:73:            self.assertEqual(self.test_move.state, 'draft')  # can't be posted before its date
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:75:            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:84:        self.assertEqual(self.test_move.state, 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:98:        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # first recurrence
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:107:        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # second recurrence
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:117:        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # no more recurrences
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:229:            self.test_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:339:            self.test_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:350:    def test_misc_draft_reconciled_entries_1(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:351:        draft_moves = self.env['account.move'].create([
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:392:        draft_moves.action_post()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:393:        lines = draft_moves.mapped('line_ids').sorted('balance')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:399:            draft_moves[0].write({
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:407:        draft_moves[0].write({
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:416:            draft_moves.unlink()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:586:        # You can remove journal items if the related journal entry is draft.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:587:        self.test_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:847:        # You can remove journal items if the related journal entry is draft.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:848:        self.test_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:882:    def test_reset_draft_exchange_move(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:883:        """ Ensure you can't reset to draft an exchange journal entry """
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:929:            exchange_diff.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_entry.py:1171:        self.assertTrue(self.test_move.state == 'posted')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1163:        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1211:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1225:        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1273:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1297:        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1341:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1354:        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:1398:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:2373:        move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:2466:            if reverse_move.state == 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:2500:        if payment_state == 'in_payment' and move._get_invoice_in_payment_state() == 'paid':
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:2501:            payment_state = 'paid'
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_invoice.py:2572:                payment_state=payment_state,
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_in_refund.py:789:        # invisible="state != 'draft' or move_type != 'in_invoice'"
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1814:        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1863:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1877:        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1925:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1949:        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:1993:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:2006:        self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:2050:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:2067:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:2724:        refund = invoice._reverse_moves(cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:4116:        self.env['account.move']._autopost_draft_entries()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:4118:        self.assertEqual(invalid_invoice_1.state, 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_out_invoice.py:4124:        self.assertEqual(invalid_invoice_2.state, 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:307:                # A reversal is created to cancel the exchange difference journal entry.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:321:    def test_invoice_draft_fully_paid_if_zero(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:332:            'state': 'draft',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:1883:        reversed_move = move._reverse_moves(cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:4072:        tax_cash_basis_move_reverse = tax_cash_basis_move._reverse_moves(cancel=True)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:4584:        bill.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:5037:        line_1.move_id.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_reconcile.py:5041:        line_4.move_id.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:32:            'description': 'Sent to customers with their invoices in attachment',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:156:            self.assertFalse(test_move.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:162:        with self.mock_mail_gateway(mail_unlink_sent=False):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:181:                    'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:219:            self.assertTrue(test_move.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:234:        with self.mock_mail_gateway(mail_unlink_sent=False), \
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:260:        # tracking: is_move_sent
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:263:        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:264:        # sent email
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:267:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:306:        self.assertTrue(test_move.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:321:        with self.mock_mail_gateway(mail_unlink_sent=False), \
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:347:        # tracking: is_move_sent
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:350:        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:351:        # sent email
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:354:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:395:        self.assertTrue(test_move.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:399:        It makes sure that when an invoice is sent using a template that
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:401:        generated and sent by mail along side the invoice PDF and the
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:415:        with self.mock_mail_gateway(mail_unlink_sent=False), \
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:422:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:453:    def test_invoice_sent_to_additional_partner(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:455:        Make sure that when an invoice is sent to a partner who is not
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:475:        with self.mock_mail_gateway(mail_unlink_sent=False):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:480:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:486:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:493:            'sent',
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:498:                      "The followers should not bet sent the access token by default")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:646:        self.assertTrue(invoice1.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:647:        self.assertTrue(invoice2.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:665:        self.assertFalse(invoice1.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:666:        self.assertFalse(invoice2.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:668:        # Mix already sent invoice with a new one.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:732:        self.assertFalse(invoice1.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:733:        self.assertFalse(invoice2.is_being_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:735:        # Mix already sent invoice with a new one.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:984:    def test_with_draft_invoices(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:985:        """ Use Send & Print wizard on draft invoice(s) should raise an error. """
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:987:        invoice_draft = self.init_invoice("out_invoice", amounts=[1000], post=False)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:990:            self.create_send_and_print(invoice_draft)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:992:            self.create_send_and_print(invoice_posted + invoice_draft)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1043:        wizard.action_send_and_print()  # saves value on moves to be sent asynchronously
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1118:        self.assertTrue(self._get_mail_message(invoice))  # email was sent
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1121:    def test_is_move_sent_state(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1122:        # Post a move, nothing sent yet
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1124:        self.assertFalse(invoice.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1128:        self.assertTrue(invoice.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1129:        # Revert move to draft
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1130:        invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1131:        self.assertTrue(invoice.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_move_send.py:1136:        self.assertTrue(invoice.is_move_sent)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment_register.py:807:        # Test to register a payment for a draft journal entry.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment_register.py:808:        self.out_invoice_1.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment_register.py:826:        we shouldn't sent email notification automatically.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment_register.py:1645:        branch_invoices.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment.py:1109:        invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment.py:1110:        self.assertTrue(invoice.payment_state == 'not_paid', "Invoice should'nt be paid anymore")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_account_payment.py:1111:        self.assertTrue(invoice.state == 'draft', "Invoice should be draft")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_company_branch.py:143:        moves.filtered(lambda x: x.state != 'draft').button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_digest.py:36:        cls.env['account.move'].search([]).state = 'draft'
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_digest.py:54:        moves.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_early_payment_discount.py:462:    def test_mixed_epd_with_draft_invoice(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_early_payment_discount.py:901:        self.assertEqual(invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_fiscal_position.py:127:        self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=70))
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_invoice_tax_totals.py:87:        and purchase to create respectively a sale.order or a purchase.order. This way,
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_kpi_provider.py:16:            '|', ('state', '=', 'draft'),
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_mail_tracking_value.py:23:        account_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:60:        self.assertEqual(self.test_move.state, 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:74:        self.test_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:151:            # Subsequent moves in the same period get an empty editable name in draft mode
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:170:    def test_sequence_draft_change_date(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:171:        # When a draft entry is added to an empty period, it should get a name.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:172:        # When a draft entry with a name is moved to a period already having entries, its name should be reset to '/'.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:188:        # Not an empty period, so names should be reset to '/' (draft)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:207:        # Moves are not in empty periods, so names should be set to '/' (draft)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:229:    def test_sequence_draft_first_of_period(self):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:236:        | 4    | `A`  | Cancel      | 2023-02-01 | `2023/02/0001` | -> Assert
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:247:        move_a.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:428:        next_move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:442:        """Override the sequence regex with a year syntax not matching the draft invoice name"""
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:513:        copies[4].button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:515:        copies[5].button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:542:        self.assertEqual(copies[5].state, 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:630:        mistake.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:720:        cls.move_draft = cls.create_move('2021-02-02', journal, post=False)
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:725:        """The last element of a sequence chain should always be deletable if in draft state.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:730:        # A draft move without any name can always be deleted.
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:731:        self.move_draft.unlink()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:736:            move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:742:        all_moves.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_sequence_mixin.py:787:            moves.filtered(lambda x: x.state in ('posted', 'cancel')).button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_tour.py:17:        all_moves = all_moves.filtered(lambda m: not m.inalterable_hash and m.state in ('posted', 'cancel'))
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_tour.py:18:        # This field is only present in account_accountant
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_tour.py:21:        all_moves.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_tour.py:53:            if invoice.state in ('cancel', 'posted'):
+C:\Aurora\_thirdparty\odoo\addons\account\tests\test_tour.py:54:                invoice.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_account_views.xml:179:                Companies present their annual accounts in two main parts: the
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:60:                           title="Gaps due to canceled invoices, deleted entries or manual errors in open period.">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:305:                            <div class="row" t-if="dashboard.number_draft">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:307:                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'search_default_draft': '1'}">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:308:                                        <span title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:310:                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'search_default_draft': '1'}">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:311:                                        <span title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_journal_dashboard_view.xml:315:                                    <span class="o_kanban_monetary"><t t-out="dashboard.sum_draft"/></span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:60:                                        <field name="amount_currency" readonly="display_type != 'tax' or parent_state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:332:                    <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:464:                <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:467:                    <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:468:                    <field name="date" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:470:                    <field name="partner_id" optional="show" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:475:                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:476:                    <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:489:                      decoration-info="state == 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:490:                      decoration-muted="state == 'cancel'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:502:                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:503:                    <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'" string="Invoice Date"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:504:                    <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:505:                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:519:                    <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:525:                           decoration-danger="payment_state == 'not_paid'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:528:                           invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:530:                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:629:                                                <field name="partner_id" invisible="not partner_id" readonly="state != 'draft'" />
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:646:                                        <span><field name="currency_id" invisible="1" readonly="state in ['cancel', 'posted']"/></span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:650:                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:672:                        <button name="action_post" string="Confirm" class="oe_highlight"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:677:                        <button name="action_invoice_sent"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:680:                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund')"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:683:                        <button name="action_invoice_sent"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:686:                                invisible="state != 'posted' or not is_being_sent and not invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:698:                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:702:                                invisible="move_type != 'entry' or state != 'posted' or payment_state == 'reversed'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:706:                        <!-- Cancel -->
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:707:                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="x"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:708:                                invisible="not id or state != 'draft' or move_type != 'entry'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:709:                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:710:                                invisible="not id or state != 'draft' or move_type == 'entry'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:711:                        <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:712:                                invisible="not show_reset_to_draft_button" data-hotkey="r" />
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:713:                        <button string="Request Cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:714:                                name="button_request_cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:717:                                invisible="state != 'posted' or show_reset_to_draft_button or not need_cancel_request"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:723:                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:726:                         invisible="state != 'draft' or not duplicated_ref_ids">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:734:                    <div class="alert alert-info" role="alert" invisible="not is_being_sent">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:735:                        This invoice is being sent in the background.
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:740:                         invisible="state != 'draft' or not tax_lock_date_message">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:764:                         invisible="state != 'draft' or auto_post != 'at_date'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:768:                         invisible="state != 'draft' or auto_post == 'no' or auto_post == 'at_date'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:843:                        <field name="currency_id" invisible="1" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:848:                        <field name="show_reset_to_draft_button" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:851:                        <field name="is_move_sent" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:853:                        <field name="need_cancel_request" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:870:                        <field name="is_being_sent" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:879:                                <field name="name" invisible="name == '/' and not posted_before and not quick_edit_mode" readonly="state != 'draft'" placeholder="Draft"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:881:                                <span invisible="state != 'draft' or name != '/' or posted_before or quick_edit_mode">Draft</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:899:                                           readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:904:                                            confirm="This will update all taxes and accounts based on the currently selected fiscal position."
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:905:                                            invisible="not show_update_fpos or state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:911:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:914:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:921:                                       invisible="state != 'draft' or move_type != 'in_invoice'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:923:                                       invisible="state != 'draft' or move_type != 'in_invoice'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:937:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:940:                                       invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:941:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:949:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:963:                                          invisible="state != 'draft' or invoice_payment_term_id"> or </span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:967:                                           options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:969:                                <field name="delivery_date" invisible="not show_delivery_date" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:986:                                           readonly="state != 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:992:                                       readonly="state != 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1013:                                       }" readonly="state != 'draft'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1175:                                            invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or payment_state == 'invoicing_legacy'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1178:                                                   readonly="state != 'draft' or (move_type not in ('in_invoice', 'in_refund', 'in_receipt') and not quick_edit_mode)"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1181:                                            <field name="amount_residual" class="oe_subtotal_footer_separator" invisible="state == 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1201:                                       invisible="payment_state == 'invoicing_legacy' and move_type != 'entry'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1202:                                       readonly="state != 'draft'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1325:                                               readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1328:                                        <field name="delivery_date" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1336:                                        <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1337:                                        <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1342:                                               readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1345:                                               readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1356:                                               readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1361:                                               readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1366:                                        <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1377:                         invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'draft'" />
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1404:                                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1425:                    <filter string="Unposted" name="unposted" domain="[('state', '=', 'draft')]" help="Unposted Journal Entries"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1475:                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1477:                    <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1625:            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1762:                When the sale receipt is confirmed, you can record the customer
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_move_views.xml:1780:                When the purchase receipt is confirmed, you can record the
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:11:                <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:13:                        <button name="action_post" type="object" string="Confirm"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:18:                    <field name="date" readonly="state in ['cancel', 'posted']"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:29:                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:90:                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'secondary', 'sent': 'success'}}"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:120:                    <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:123:                    <filter string="Sent" name="state_sent" domain="[('is_move_sent', '=', True)]"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:155:                        <button name="action_post" string="Confirm" type="object" class="oe_highlight"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:156:                                invisible="state != 'draft'" data-hotkey="q"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:157:                        <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:158:                                invisible="not show_reset_to_draft_button"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:160:                        <button name="action_cancel" string="Cancel" type="object"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:161:                                invisible="not id or state != 'draft'" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:162:                        <button string="Request Cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:163:                                name="button_request_cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:166:                                invisible="state != 'posted' or show_reset_to_draft_button or not need_cancel_request"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:168:                        <button name="mark_as_sent" string="Mark as Sent" type="object" data-hotkey="v"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:169:                                invisible="state != 'posted' or is_move_sent or payment_method_code != 'manual'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:170:                        <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:171:                                invisible="state != 'posted' or not is_move_sent or payment_method_code != 'manual'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:172:                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:181:                        <field name="is_move_sent" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:182:                        <field name="need_cancel_request" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:183:                        <field name="show_reset_to_draft_button" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:255:                            <h1 invisible="state != 'draft'"><span>Draft</span></h1>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:256:                            <h1 invisible="state == 'draft'"><field name="name" readonly="1"/></h1>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:263:                                    <field name="is_internal_transfer" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:264:                                    <span invisible="paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:270:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:274:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:278:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:282:                                           readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:286:                                           readonly="state != 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:290:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:296:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:299:                                       readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:322:                                       readonly="state != 'draft'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:323:                                       required="is_internal_transfer and state == 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:439:        <!-- Action confirm_payments for multi -->
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_payment_view.xml:440:        <record id="action_account_confirm_payments" model="ir.actions.server">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:10:                <t t-else=""><em>Draft Invoice</em></t>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:66:                                <em t-else="">Draft Invoice</em>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:72:                            <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:78:                                <span t-elif="invoice.payment_state == 'reversed'"
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:88:                            <t t-elif="invoice.state == 'cancel'">
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:90:                                    <i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:91:                                    <span class="d-none d-md-inline"> Cancelled</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:120:                        <t t-set="early_payment" t-value="installment_state == 'epd'"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\account_portal_templates.xml:156:                                            Purchase Representative
+C:\Aurora\_thirdparty\odoo\addons\account\views\partner_view.xml:142:                you receive from your vendor according to the draft
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:65:                            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:66:                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:67:                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:68:                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:69:                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:70:                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
+C:\Aurora\_thirdparty\odoo\addons\account\views\report_invoice.xml:84:                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
+C:\Aurora\_thirdparty\odoo\addons\account\views\res_company_views.xml:30:                    <button string="Discard" class="btn-secondary" special="cancel"/>
+C:\Aurora\_thirdparty\odoo\addons\account\views\res_company_views.xml:62:                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+C:\Aurora\_thirdparty\odoo\addons\account\views\res_config_settings_views.xml:130:                            <setting id="invoice_delivery_addresses" documentation="/applications/sales/sales/send_quotations/different_addresses.html" help="Select specific invoice and delivery addresses">
+C:\Aurora\_thirdparty\odoo\addons\account\views\res_config_settings_views.xml:155:                            <setting id="use_invoice_terms" company_dependent="1" help="Add your terms &amp; conditions at the bottom of invoices/orders/quotations">
+C:\Aurora\_thirdparty\odoo\addons\account\views\terms_template.xml:49:                    In order for it to be admissible, <t t-out="company_name"/> must be notified of any claim by means of a letter sent by recorded delivery to its registered office within 8 days of the delivery of the goods or the provision of the services.
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_automatic_entry_wizard_views.xml:48:                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_automatic_entry_wizard.py:406:            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_automatic_entry_wizard.py:415:                'second': self._format_strings(_("cancelling {percent}%% of {amount}"), move, amount),
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal_view.xml:22:                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:9:    Account move reversal wizard, it cancel an account move by reversing it.
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:133:            [self.env['account.move'], [], True],   # Moves to be cancelled by the reverses.
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:138:            is_cancel_needed = not is_auto_post and (is_modify or self.move_type == 'entry')
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:139:            batch_index = 0 if is_cancel_needed else 1
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:145:        for moves, default_values_list, is_cancel_needed in batches:
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_reversal.py:146:            new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send_views.xml:94:                    <button string="Cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send_views.xml:96:                            special="cancel"
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send.py:94:            if any(move.state == 'draft' for move in self.env['account.move'].browse(move_ids)):
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send.py:95:                raise UserError(_("You can't Send & Print invoice(s) in draft state."))
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send.py:397:        return not invoice.invoice_pdf_report_id and invoice.state == 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send.py:467:        invoice_sudo.is_move_sent = True
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_move_send.py:811:                    'message': _('Invoices are being sent in the background.'),
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_payment_register_views.xml:99:                        <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_payment_register.py:149:        :return:                A string representing a communication to be set on payment.
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_resequence_views.xml:25:                    <button string="Confirm" name="resequence" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_resequence_views.xml:26:                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_resequence.py:93:        Sets a json string on new_values representing a dictionary thats maps account.move
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:131:            new_wizard = self.env['account.tour.upload.bill.email.confirm'].create({'email_alias': email_alias})
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:132:            view_id = self.env.ref('account.account_tour_upload_bill_email_confirm').id
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:136:                'name': _('Confirm'),
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:138:                'res_model': 'account.tour.upload.bill.email.confirm',
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:145:class AccountTourUploadBillEmailConfirm(models.TransientModel):
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:146:    _name = 'account.tour.upload.bill.email.confirm'
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.py:147:    _description = 'Account tour upload bill email confirm'
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:20:                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:26:        <record id="account_tour_upload_bill_email_confirm" model="ir.ui.view">
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:27:            <field name="name">account.tour.upload.bill.email.confirm</field>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:28:            <field name="model">account.tour.upload.bill.email.confirm</field>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:40:                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" invisible="not email_alias"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_tour_upload_bill.xml:41:                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x" invisible="email_alias"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_unreconcile_view.xml:14:                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_validate_account_move.py:14:            domain = [('id', 'in', self._context.get('active_ids', [])), ('state', '=', 'draft')]
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_validate_account_move.py:16:            domain = [('journal_id', '=', self._context.get('active_id')), ('state', '=', 'draft')]
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_validate_account_move.py:22:            raise UserError(_('There are no journal items in the draft state to post.'))
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\account_validate_move_view.xml:23:                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\accrued_orders.xml:27:                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\setup_wizards_view.xml:27:                        <button special="cancel" data-hotkey="x" string="Cancel" />
+C:\Aurora\_thirdparty\odoo\addons\account\wizard\setup_wizards_view.xml:63:                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\models\account_move.py:19:            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\models\account_move.py:23:            self.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\tests\test_audit_trail.py:46:    def test_can_unlink_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\tests\test_audit_trail.py:51:        self.move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\tests\test_audit_trail.py:82:        messages.append(r"Updated Draft Posted \(Status\)")
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\tests\test_audit_trail.py:85:        self.move.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account_audit_trail\tests\test_audit_trail.py:86:        messages.append(r"Updated Posted Draft \(Status\)")
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_journal.py:82:            ('is_move_sent','=', False),
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:90:               AND move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:91:               AND other_move.state = 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:158:        """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:198:            self.filtered(lambda r: r.state == 'draft').action_post()
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:201:    def action_unmark_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:202:        self.write({'is_move_sent': False})
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:205:        self.action_draft()
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:206:        self.action_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\models\account_payment.py:218:        self.write({'is_move_sent': True})
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\views\account_payment_views.xml:9:                    <button name="print_checks" class="oe_highlight" invisible="payment_method_code != 'check_printing' or state != 'posted' or is_move_sent" string="Print Check" type="object" data-hotkey="g" />
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\views\account_payment_views.xml:10:                    <button name="action_unmark_sent" invisible="payment_method_code != 'check_printing' or not is_move_sent" string="Unmark Sent" type="object" data-hotkey="l" />
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\views\account_payment_views.xml:11:                    <button name="action_void_check" invisible="payment_method_code != 'check_printing' or state != 'posted' or not is_move_sent" string="Void Check" type="object" data-hotkey="o" />
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\views\account_payment_views.xml:22:                    <widget name="web_ribbon" title="Sent" invisible="not is_move_sent"/>
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\views\account_payment_views.xml:34:                    <filter name="checks_to_send" string="Checks to Print" domain="[('payment_method_line_id.code', '=', 'check_printing'), ('state', '=', 'posted'), ('is_move_sent', '=', False)]"/>
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\wizard\print_prenumbered_checks_views.xml:16:                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\wizard\print_prenumbered_checks.py:25:        payments.filtered(lambda r: r.state == 'draft').action_post()
+C:\Aurora\_thirdparty\odoo\addons\account_check_printing\wizard\print_prenumbered_checks.py:26:        payments.filtered(lambda r: r.state == 'posted' and not r.is_move_sent).write({'is_move_sent': True})
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\__manifest__.py:11:or in some specific cases to cancel a credit note. 
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\tests\test_out_debit_note.py:27:        self.assertEqual(debit_note.state, 'draft', 'We should create debit notes in draft state')
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\tests\test_out_debit_note.py:36:            'reason': 'in order to cancel refund',
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\tests\test_out_debit_note.py:46:        self.assertEqual(debit_note.state, 'draft', 'We should create debit notes in draft state')
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\wizard\account_debit_note_view.xml:24:                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\account_debit_note\wizard\account_debit_note.py:11:    In some cases, also used to cancel Credit Notes
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:28:    state = fields.Selection([('to_send', 'To Send'), ('sent', 'Sent'), ('to_cancel', 'To Cancel'), ('cancelled', 'Cancelled')])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:54:            if doc.state in ('to_send', 'to_cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:74:        Each document represent a job, BUT if multiple documents have the same state, edi_format_id,
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:85:        for state, edi_flow in (('to_send', 'post'), ('to_cancel', 'cancel')):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:86:            documents = self.filtered(lambda d: d.state == state and d.blocking_level != 'error')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:109:        """Post or cancel move_id by calling the related methods on edi_format_id.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:128:                        'state': 'sent',
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:142:        def _postprocess_cancel_edi_results(documents, edi_result):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:143:            move_ids_to_cancel = set()  # Avoid duplicates
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:151:                        'state': 'cancelled',
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:157:                    if move.state == 'posted' and all(
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:158:                        doc.state == 'cancelled'
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:162:                        # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:163:                        # can be safely cancelled.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:164:                        move_ids_to_cancel.add(move.id)
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:175:            if move_ids_to_cancel:
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:176:                invoices = self.env['account.move'].browse(list(move_ids_to_cancel))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:177:                invoices.button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:178:                invoices.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:194:        state = documents[0].state
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:197:        if state == 'to_send':
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:201:        elif state == 'to_cancel':
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:203:            _postprocess_cancel_edi_results(documents, edi_result)
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:206:        """ Post and cancel all the documents that don't need a web service.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:213:        ''' Post and cancel all the documents that need a web service.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:239:                        raise UserError(_('This document is being sent by another process already. '))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:256:            ('state', 'in', ('to_send', 'to_cancel')),
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_document.py:270:        Can be overridden where e.g. a zip-file needs to be sent with the individual files instead of the entire zip
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_format.py:77:        * cancel:           function called for edi.documents with state 'to_cancel' (cancel flow)
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_edi_format.py:79:        * cancel_batching:  function returning the batching key for the cancel flow
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_journal.py:34:                ('state', 'in', ('to_cancel', 'to_send')),
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_journal.py:36:            # If the formats we are unchecking do not need a webservice, we don't need them to be correctly sent
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_journal.py:66:                WHERE doc.state IN ('to_cancel', 'to_send')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:18:    edi_state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:19:        selection=[('to_send', 'To Send'), ('sent', 'Sent'), ('to_cancel', 'To Cancel'), ('cancelled', 'Cancelled')],
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:35:    edi_show_cancel_button = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:36:        compute='_compute_edi_show_cancel_button')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:37:    edi_show_abandon_cancel_button = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:38:        compute='_compute_edi_show_abandon_cancel_button')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:39:    edi_show_force_cancel_button = fields.Boolean(
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:40:        compute='_compute_edi_show_force_cancel_button')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:46:            if all_states == {'sent'}:
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:47:                move.edi_state = 'sent'
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:48:            elif all_states == {'cancelled'}:
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:49:                move.edi_state = 'cancelled'
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:51:                move.edi_state = 'to_send'
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:52:            elif 'to_cancel' in all_states:
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:53:                move.edi_state = 'to_cancel'
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:55:                move.edi_state = False
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:58:    def _compute_edi_show_force_cancel_button(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:60:            move.edi_show_force_cancel_button = move._can_force_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:97:            to_process = move.edi_document_ids.filtered(lambda d: d.state in ['to_send', 'to_cancel'] and d.blocking_level != 'error')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:101:    def _check_edi_documents_for_reset_to_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:106:                and doc.state in ('sent', 'to_cancel') \
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:108:                and move_applicability.get('cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:113:    def _compute_show_reset_to_draft_button(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:115:        super()._compute_show_reset_to_draft_button()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:117:            if not move._check_edi_documents_for_reset_to_draft():
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:118:                move.show_reset_to_draft_button = False
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:121:    def _compute_edi_show_cancel_button(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:124:                move.edi_show_cancel_button = False
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:127:            move.edi_show_cancel_button = False
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:131:                    and doc.state == 'sent' \
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:133:                    and move_applicability.get('cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:134:                    move.edi_show_cancel_button = True
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:138:    def _compute_edi_show_abandon_cancel_button(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:140:            move.edi_show_abandon_cancel_button = False
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:144:                    and doc.state == 'to_cancel' \
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:146:                    and move_applicability.get('cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:147:                    move.edi_show_abandon_cancel_button = True
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:159:                                        representing the tax values for a single repartition line.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:237:    def _is_ready_to_be_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:239:        # Prevent a mail to be sent to the customer if the EDI document is not sent.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:240:        res = super()._is_ready_to_be_sent()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:245:        edi_documents_to_send = self.edi_document_ids.filtered(lambda x: x.state == 'to_send')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:282:    def button_force_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:283:        """ Cancel the invoice without waiting for the cancellation request to succeed.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:286:            to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:287:            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:288:        self.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:290:    def button_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:292:        # Set the electronic document to be canceled and cancel immediately for synchronous formats.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:293:        res = super().button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:295:        self.edi_document_ids.filtered(lambda doc: doc.state != 'sent').write({'state': 'cancelled', 'error': False, 'blocking_level': False})
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:296:        self.edi_document_ids.filtered(lambda doc: doc.state == 'sent').write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:302:    def _edi_allow_button_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:304:        return not self.edi_show_cancel_button
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:306:    def button_draft(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:309:            if not move._edi_allow_button_draft():
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:312:                    "sent. Please use the 'Request EDI Cancellation' button instead.",
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:315:        res = super().button_draft()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:318:        self.edi_document_ids.filtered(lambda doc: doc.state == 'to_send').unlink()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:322:    def button_cancel_posted_moves(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:323:        '''Mark the edi.document related to this move to be canceled.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:325:        to_cancel_documents = self.env['account.edi.document']
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:332:                        and doc.state == 'sent' \
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:334:                        and move_applicability.get('cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:335:                    to_cancel_documents |= doc
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:338:                move.message_post(body=_("A cancellation of the EDI has been requested."))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:340:        to_cancel_documents.write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:342:    def button_abandon_cancel_posted_posted_moves(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:343:        '''Cancel the request for cancellation of the EDI.
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:350:                if doc.state == 'to_cancel' and move_applicability and move_applicability.get('cancel'):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:354:                move.message_post(body=_("A request for cancellation of the EDI has been called off."))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:356:        documents.write({'state': 'sent', 'error': False, 'blocking_level': False})
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\account_move.py:379:        docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\ir_actions_report.py:21:            if invoice.is_sale_document() and invoice.state != 'draft':
+C:\Aurora\_thirdparty\odoo\addons\account_edi\models\ir_attachment.py:16:            raise UserError(_("You can't unlink an attachment being an EDI document sent to the government."))
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\common.py:18:        'cancel': edi_format._cancel_invoice_edi,
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\common.py:29:def _mocked_cancel_success(edi_format, invoices):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\common.py:88:        self.env['account.edi.document'].sudo().search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:75:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'sent'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:82:                'cancel': edi_format._test_edi_cancel_invoice,
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:86:             self.with_custom_method('_test_edi_cancel_invoice', lambda edi_format, inv: {inv: {'success': True}}):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:91:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'sent'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:93:            invoice.button_cancel_posted_moves()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:94:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'to_cancel'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:96:            invoice.button_abandon_cancel_posted_posted_moves()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:97:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'sent'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:99:            invoice.button_cancel_posted_moves()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:100:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'to_cancel'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:103:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'cancelled'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:131:            self.assertRecordValues(invoice.edi_document_ids, [{'state': 'sent'}])
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:162:    def test_invoice_ready_to_be_sent(self):
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:168:            self.assertFalse(invoice._is_ready_to_be_sent())
+C:\Aurora\_thirdparty\odoo\addons\account_edi\tests\test_edi.py:170:            self.assertTrue(invoice._is_ready_to_be_sent())
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:74:                            domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:84:                <xpath expr="//button[@name='button_cancel']" position="after">
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:85:                    <field name="edi_show_cancel_button" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:86:                    <field name="edi_show_abandon_cancel_button" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:87:                    <field name="edi_show_force_cancel_button" invisible="1"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:88:                    <button name="button_cancel_posted_moves"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:89:                            string="Request EDI Cancellation"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:92:                            invisible="not edi_show_cancel_button"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:93:                    <button name="button_abandon_cancel_posted_posted_moves"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:94:                            string="Call off EDI Cancellation"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:97:                            invisible="not edi_show_abandon_cancel_button"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:103:                        invisible="edi_web_services_to_process in ['', False] or state == 'draft'">
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:104:                         <div>The invoice will soon be sent to
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:113:                            <button name="button_force_cancel"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:114:                                string="Force Cancel"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:117:                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be canceled?"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:118:                                invisible="not edi_show_force_cancel_button" />
+C:\Aurora\_thirdparty\odoo\addons\account_edi\views\account_move_views.xml:139:                    <field name="edi_state" invisible="not edi_state or state == 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_edi\wizard\account_resequence.py:14:            lambda d: d.edi_format_id._needs_web_services() and d.state == "sent"
+C:\Aurora\_thirdparty\odoo\addons\account_edi\wizard\account_resequence.py:18:        edi_sent_moves = self._frozen_edi_documents()
+C:\Aurora\_thirdparty\odoo\addons\account_edi\wizard\account_resequence.py:19:        if edi_sent_moves:
+C:\Aurora\_thirdparty\odoo\addons\account_edi\wizard\account_resequence.py:20:            raise UserError(_("The following documents have already been sent and cannot be resequenced: %s")
+C:\Aurora\_thirdparty\odoo\addons\account_edi\wizard\account_resequence.py:21:                % ", ".join(set(edi_sent_moves.move_id.mapped('name')))
+C:\Aurora\_thirdparty\odoo\addons\account_edi_proxy_client\models\account_edi_proxy_user.py:33:    """Represents a user of the proxy for an electronic invoicing format.
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\__manifest__.py:18:respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_common.py:258:        # field is present
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_common.py:262:        # field is not present
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_common.py:307:            # contains move_type = 'out_invoice') then the attachment is decoded, if it represents a credit note,
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_common.py:521:        Add an invoice line representing the rounding amount given in the document.
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_cii_facturx.py:56:            # the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_cii_facturx.py:71:            # is "Intra-community supply" shall contain the Seller VAT Identifier (BT-31) or the Seller tax representative
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_ubl_20.py:120:        the Actual delivery date (BT-72) or the Invoicing period (BG-14) should be present under the form:
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_ubl_bis3.py:310:            # Non-SEPA international credit transfer, the Payment account identifier (BT-84) shall be present.
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_ubl_bis3.py:359:                # [BR-CO-09]-The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63)
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\account_edi_xml_ubl_nlcius.py:16:    Fortunately, some of these rules are already present in UBL Bis 3, but some are missing.
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\models\ir_actions_report.py:30:            if invoice.is_sale_document() and invoice.state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account_edi_ubl_cii\tests\test_ubl_cii.py:522:        if self.env['ir.module.module']._get('account_sepa_direct_debit').state == 'installed':
+C:\Aurora\_thirdparty\odoo\addons\account_fleet\models\fleet_vehicle.py:22:                ('parent_state', '!=', 'cancel'),
+C:\Aurora\_thirdparty\odoo\addons\account_fleet\views\account_move_views.xml:30:                <field name="invoice_date" optional="show" readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_payment\controllers\payment.py:16:        """ Create a draft transaction and return its processing values.
+C:\Aurora\_thirdparty\odoo\addons\account_payment\controllers\payment.py:113:            # Interrupt the payment flow if the invoice has been canceled.
+C:\Aurora\_thirdparty\odoo\addons\account_payment\controllers\payment.py:114:            if invoice_sudo.state == 'cancel':
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_move.py:29:                lambda tx: tx.state == 'authorized'
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_move.py:56:            and self.state == 'posted'
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_payment_method_line.py:18:    payment_provider_state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_payment.py:61:                # Only consider refund transactions that are confirmed by summing the amounts of
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_payment.py:142:            lambda p: p.payment_transaction_id.state == 'done'
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\account_payment.py:148:        payments_tx_not_done.action_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:94:    def _set_canceled(self, state_message=None, **kwargs):
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:95:        """ Update the transactions' state to 'cancel'.
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:97:        :param str state_message: The reason for which the transaction is set in 'cancel' state
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:101:        processed_txs = super()._set_canceled(state_message, **kwargs)
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:102:        # Cancel the existing payments
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:103:        processed_txs.payment_id.action_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:122:        # Validate invoices automatically once the transaction is confirmed
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:123:        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:127:            if not any(child.state in ['done', 'cancel'] for child in tx.child_transaction_ids):
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:198:        invoices = invoices.filtered(lambda inv: inv.state != 'cancel')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\models\payment_transaction.py:200:            invoices.filtered(lambda inv: inv.state == 'draft').action_post()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:17:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:28:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:43:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:45:        for reference_index, state in enumerate(('draft', 'pending', 'authorized')):
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:50:                state=state,
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:64:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:70:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:78:                "refund of the full amount that is confirmed (state 'done')."
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:83:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:89:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:98:                "minus the sum of the absolute amount of the refunds that are confirmed (state "
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:104:        tx = self._create_transaction('redirect', state='done')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:112:                state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:157:        source_tx = self._create_transaction(flow='direct', state='authorized')
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:167:        child_tx_2._set_canceled()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:179:            msg="source transactions with done or cancel children should not create payments.",
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:211:            copy_provider.state = 'test'
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:277:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:309:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:343:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:390:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:430:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:466:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:514:            state='done',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:526:    def test_reconcile_after_done_does_not_fail_on_cancelled_invoice(self):
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:527:        """ If the payment state is 'pending' and the invoice gets cancelled, and later the payment is confirmed,
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:542:            state='pending',
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:545:        invoice.button_cancel()
+C:\Aurora\_thirdparty\odoo\addons\account_payment\tests\test_account_payment.py:547:        # _reconcile_after_done() shouldn't raise an error even though the invoice is cancelled
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_journal_views.xml:25:                <attribute name="decoration-muted">payment_provider_state == 'disabled'</attribute>
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_move_views.xml:24:                        confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_payment_views.xml:9:            <xpath expr="//header/button[@name='action_draft']" position="after">
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_payment_views.xml:37:                    readonly="state != 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_portal_templates.xml:18:            <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'authorized'"
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_portal_templates.xml:23:            <span t-elif="invoice.payment_state in ('not_paid', 'partial') and tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
+C:\Aurora\_thirdparty\odoo\addons\account_payment\views\account_portal_templates.xml:27:            <span t-elif="invoice.payment_state in ('paid', 'in_payment') and tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
+C:\Aurora\_thirdparty\odoo\addons\account_payment\wizards\payment_refund_wizard_views.xml:11:                     id="alert_draft_refund_tx"
+C:\Aurora\_thirdparty\odoo\addons\account_payment\wizards\payment_refund_wizard_views.xml:36:                    <button string="Close" special="cancel" class="btn-secondary"/>
+C:\Aurora\_thirdparty\odoo\addons\account_payment\wizards\payment_refund_wizard.py:78:                ('state', 'in', ['draft', 'pending', 'authorized']),
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\data\mail_templates_email_layouts.xml:11:                    <t t-if="peppol_info['is_peppol_sent']">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\data\mail_templates_email_layouts.xml:13:                            This invoice has also been <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">sent via Peppol</b>.
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\data\mail_templates_email_layouts.xml:16:                    <t t-if="not peppol_info['is_peppol_sent'] and not peppol_info['partner_on_peppol']">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\data\mail_templates_email_layouts.xml:18:                            <t t-out="company.name"/> uses <a target="_blank" href="https://www.odoo.com/app/invoicing">Odoo</a> to send invoices, but this one <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">could not be sent via Peppol</b>.
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:106:                    'canceled': 'canceled',
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:107:                    # IAP-side is still draft (needs phone confirmation)
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:109:                    'draft': 'not_verified'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:113:                    user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:200:                            default_peppol_move_state=content['state'],
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:222:                    move.is_in_extractable_state = False
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:263:                    edi_user_moves.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:275:                    move.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:279:                move.peppol_move_state = content['state']
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:312:                'canceled': 'canceled',
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_edi_proxy_user.py:316:                edi_user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_journal.py:9:    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:13:    peppol_move_state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:19:            ('canceled', 'Canceled'),
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:42:    def action_cancel_peppol_documents(self):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:44:        # then it means it has been already sent to peppol proxy and we can't cancel
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:46:            raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:47:        self.peppol_move_state = 'canceled'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:59:                move.company_id.account_peppol_proxy_state == 'active',
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:61:                move.state == 'posted',
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:65:                move.peppol_move_state = 'ready'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:67:                move.state == 'draft'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:71:                move.peppol_move_state = False
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:73:                move.peppol_move_state = move.peppol_move_state
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:84:        company_on_peppol = invoice.company_id.account_peppol_proxy_state == 'active'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\account_move.py:88:                'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_company.py:64:    account_peppol_proxy_state = fields.Selection(
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_company.py:68:            ('sent_verification', 'Verification code sent'),
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_company.py:72:            ('canceled', 'Canceled'),
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:33:    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:97:        trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:175:        self.account_peppol_proxy_state = 'not_verified'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:205:        # once we sent the migration key over, we don't need it
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:246:        self.account_peppol_proxy_state = 'sent_verification'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:262:        self.account_peppol_proxy_state = 'pending'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:267:    def button_cancel_peppol_registration(self):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:269:        Sets the peppol registration to canceled
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:270:        - If the user is active on the SMP, we can't just cancel it.
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:273:        - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:275:        - Calls the IAP server first before setting the state as canceled on the client side,
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:284:        if self.account_peppol_proxy_state == 'active':
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:285:            raise UserError(_("Can't cancel an active registration. Please request a migration or deregister instead."))
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:287:        if self.account_peppol_proxy_state in {'not_registered', 'rejected', 'canceled'}:
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:289:                "Can't cancel registration with this status: %s", self.account_peppol_proxy_state
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:292:        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:293:        self.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:324:        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\models\res_config_settings.py:325:        self.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_messages.py:328:        self.env.company.account_peppol_proxy_state = 'rejected'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_messages.py:435:        so = self.env['sale.order'].create([{
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_messages.py:439:        so.action_confirm()
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:30:    def _get_mock_responses(cls, peppol_state='active'):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:158:        self.assertEqual(company.account_peppol_proxy_state, 'sent_verification')
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:173:            company.account_peppol_proxy_state = 'pending'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:183:            settings.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:207:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:222:        active_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:230:        edi_user_2.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:246:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:263:        inactive_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:285:        edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:293:        edi_user_2.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:304:    def test_restore_user_in_draft_state(self):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:312:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:314:        # mock IAP returning draft state (thus still in KYC)
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:315:        with self._set_context({'peppol_state': 'draft'}):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:347:        (edi_user_1 | edi_user_2).company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:364:        edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:382:            company_2.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:393:            company_2.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:415:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:435:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:450:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:465:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:483:        edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:503:        edi_user_2.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:553:        edi_user.company_id.account_peppol_proxy_state = 'pending'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tests\test_peppol_participant.py:569:        edi_user.company_id.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tools\demo_utils.py:89:    # Set documents sent in demo to a state where they can be re-sent
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\tools\demo_utils.py:111:    self.account_peppol_proxy_state = 'not_registered'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:10:                <button name="action_cancel_peppol_documents"
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:13:                        string="Cancel PEPPOL"
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:14:                        invisible="peppol_move_state != 'to_send' or state == 'draft'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:19:                       invisible="not peppol_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:22:                     invisible="not peppol_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\account_move_views.xml:28:                        The invoice will be sent automatically to PEPPOL
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:49:                                       required="account_peppol_proxy_state == 'not_verified'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:52:                                 invisible="account_peppol_proxy_state in ('rejected', 'canceled', 'sent_verification')">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:72:                                     invisible="account_peppol_proxy_state in ('rejected', 'not_registered', 'canceled', 'not_verified', 'sent_verification')">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:78:                                               required="account_peppol_proxy_state not in ('rejected', 'canceled', 'not_verified', 'not_registered', 'sent_verification')"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:82:                                     invisible="account_peppol_proxy_state != 'sent_verification'">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:84:                                        We sent a verification code to
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:87:                                               readonly="account_peppol_proxy_state == 'sent_verification'"/>.
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:94:                                     invisible="account_peppol_proxy_state == 'not_registered'">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:100:                                               decoration-danger="account_peppol_proxy_state == 'rejected'"
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:101:                                               decoration-info="account_peppol_proxy_state == 'active'"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:113:                                        The rejection reason has been sent to you via email.
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:123:                                           readonly="account_peppol_proxy_state == 'active' and account_peppol_migration_key"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:146:                                            invisible="account_peppol_proxy_state not in ('not_registered', 'not_verified', 'sent_verification', 'pending', 'manually_approved', 'active')"/>
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:148:                                         invisible="account_peppol_proxy_state in ('not_registered', 'active', 'rejected', 'canceled')">
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:149:                                        <button name="button_cancel_peppol_registration"
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\views\res_config_settings_views.xml:151:                                                string="Cancel registration"
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:91:                wizard.company_id.account_peppol_proxy_state == 'active'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:139:                if not move.peppol_move_state or move.peppol_move_state == 'ready':
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:140:                    move.sudo().peppol_move_state = 'to_send'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:147:        # because those moves that failed XML/PDF files generation are not sent via Peppol
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:153:        moves_failed_file_generation.peppol_move_state = 'skipped'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:169:                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:173:                    invoice.peppol_move_state = 'skipped'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:178:                    invoice.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:183:                    invoice.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:211:                invoice.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:217:                    invoice.peppol_move_state = 'error'
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:222:                attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:223:                attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
+C:\Aurora\_thirdparty\odoo\addons\account_peppol\wizard\account_move_send.py:226:                    invoice.peppol_move_state = 'processing'
+C:\Aurora\_thirdparty\odoo\addons\account_qr_code_emv\__manifest__.py:8:Bridge module addings support for EMV Merchant-Presented QR-code generation for Payment System.
+C:\Aurora\_thirdparty\odoo\addons\account_qr_code_emv\models\res_bank.py:112:        rslt.append(('emv_qr', _("EMV Merchant-Presented QR-code"), 30))
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:35:    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False, taxes=None, state=None):
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:65:        if state == 'cancel':
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:66:            invoice.write({'state': 'cancel'})
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:67:        elif auto_validate or state == 'posted':
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:295:        move_states = ('posted', 'cancel', 'draft')
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:296:        moves = [self._create_invoice(partner_id=self.partner_a.id, taxes=self.tax_1, state=state) for state in move_states]
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\tests\test_account_update_tax_tags_wizard.py:364:        invoice = self._create_invoice(taxes=tax, state='posted')
+C:\Aurora\_thirdparty\odoo\addons\account_update_tax_tags\wizard\account_update_tax_tags_wizard.xml:25:                    <button string="Discard" special="cancel" data-hotkey="z"/>
+C:\Aurora\_thirdparty\odoo\addons\analytic\models\analytic_line.py:51:    # Magic column that represents all the plans at the same time, except for the compute
+C:\Aurora\_thirdparty\odoo\addons\analytic\tests\test_analytic_mixin.py:24:            with a string representing the analytic account name :
+C:\Aurora\_thirdparty\odoo\addons\analytic\tests\test_plan_operations.py:36:        with self.assertRaisesRegex(UserError, 'still present in views'):
+C:\Aurora\_thirdparty\odoo\addons\auth_ldap\models\res_company_ldap.py:50:    arbitrary LDAP filter in string representation. Any `%s` placeholder\
+C:\Aurora\_thirdparty\odoo\addons\auth_ldap\tests\test_auth_ldap.py:59:            self.assertFalse(cr.rowcount, "User should not be present")
+C:\Aurora\_thirdparty\odoo\addons\auth_ldap\tests\test_auth_ldap.py:86:            self.assertTrue(cr.rowcount, "User should be present")
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:62:            state = self.get_state(provider)
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:68:                state=json.dumps(state),
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:78:        state = dict(
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:92:            # Redirect if already logged in and redirect param is present
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:125:        state = json.loads(kw['state'])
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:163:            _logger.error("auth_signup not installed on database %s: oauth sign up cancelled.", dbname)
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\controllers\main.py:200:        state = {
+C:\Aurora\_thirdparty\odoo\addons\auth_oauth\models\res_users.py:111:            state = json.loads(params['state'])
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\controllers\main.py:28:                # Redirect if already logged in and redirect param is present
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\controllers\main.py:31:            if response.location == '/web/login_successful' and kw.get('confirm_password'):
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\controllers\main.py:55:                # Send an account creation confirmation email
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\controllers\main.py:104:                    qcontext['message'] = _("Password reset instructions sent to your email")
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\controllers\main.py:154:        if values.get('password') != qcontext.get('confirm_password'):
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\data\mail_template_data.xml:11:            <field name="description">Sent to new user after you invited them</field>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\data\mail_template_data.xml:107:            <field name="description">Sent automatically to admin if new user haven't responded to the invitation</field>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\data\mail_template_data.xml:159:            <field name="description">Sent to portal user who registered themselves</field>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_partner.py:142:    def signup_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:25:    state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:26:                 selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:55:            user.state = 'active' if user.login_date else 'new'
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:241:            _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:293:            _logger.info("New device alert email sent for user <%s> to <%s>", self.login, self.email)
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:346:                    users_with_email.partner_id.with_context(create_user=True).signup_cancel()
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:351:            self.partner_id.signup_cancel()
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:355:    def _ondelete_signup_cancel(self):
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:356:        # Cancel pending partner signup when the user is deleted.
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\models\res_users.py:359:                user.partner_id.signup_cancel()
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\tests\test_auth_signup.py:25:    def test_confirmation_mail_free_signup(self):
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\tests\test_auth_signup.py:43:            'confirm_password': 'mypassword',
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\tests\test_auth_signup.py:52:            # Check if an email is sent to the new userw
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\auth_signup_login_templates.xml:33:            <div class="mb-3 field-confirm_password">
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\auth_signup_login_templates.xml:34:                <label for="confirm_password">Confirm Password</label>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\auth_signup_login_templates.xml:35:                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-sm" required="required"/>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\res_users_views.xml:24:                            <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\res_users_views.xml:27:                            <strong>An invitation email containing the following subscription link has been sent:</strong>
+C:\Aurora\_thirdparty\odoo\addons\auth_signup\views\res_users_views.xml:43:                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\models\res_users.py:45:        """ Determine if an alert should be sent to the user regarding a new device
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\tests\test_totp.py:101:        # to disable module_sale_quotation_builder and raise an issue
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\views\res_users_views.xml:58:                                        confirm="Are you sure? The user may be asked to enter two-factor codes again on those devices"/>
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\views\res_users_views.xml:101:                                    confirm="Are you sure? You may be asked to enter two-factor codes again on those devices"/>
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\views\templates.xml:43:                            Cancel
+C:\Aurora\_thirdparty\odoo\addons\auth_totp\wizard\auth_totp_wizard_views.xml:71:                    <button string="Cancel" special="cancel" data-hotkey="x"/>
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail\models\res_users.py:33:            Whether or not to suggest the end-user to turn on 2FA authentication in the email sent.
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail\models\res_users.py:64:        # Display a confirmation toaster
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail\models\res_users.py:71:                'message': _("Invitation to use two-factor authentication sent for the following user(s): %s",
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail\tests\test_notify_security_update_totp.py:41:        self.assertNotSentEmail(recipients)
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail\tests\test_totp.py:17:        # to disable module_sale_quotation_builder and raise an issue
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail_enforce\models\res_users.py:130:                'send_email': _('You reached the limit of authentication mails sent for your account'),
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail_enforce\tests\test_auth_signup.py:42:            'confirm_password': 'mypassword',
+C:\Aurora\_thirdparty\odoo\addons\auth_totp_mail_enforce\views\templates.xml:9:                To login, enter below the six-digit authentication code just sent via email to <t t-out="user.email"/>.
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:56:MAIL_TRIGGERS = ("on_message_received", "on_message_sent")
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:130:            ("on_message_sent", "On outgoing message"),
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:161:                If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:184:        help="If present, this condition must be satisfied before the update of the record. "
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:188:        help="If present, this condition must be satisfied before executing the automation rule.",
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\base_automation.py:866:                mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
+C:\Aurora\_thirdparty\odoo\addons\base_automation\models\ir_actions_server.py:89:        if action and action.state == "code":

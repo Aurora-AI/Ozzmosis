@@ -35,16 +35,6 @@ __pycache__/
 *.pyo
 .pytest_cache/
 
-# Local / scratch artifacts (do not version)
-pyrightconfig.json
-apps/crm-core/pyrightconfig.json
-apps/crm-core/tests/test_authorize.py
-docs/security/
-scripts/regen_corteza_fallback.ps1
-scripts/regen_corteza_hits.ps1
-scripts/wp2-wp3_evidences.ps1
-scripts/wp2-wp3_fix_and_collect.ps1
-
 # OS/editor
 .DS_Store
 Thumbs.db

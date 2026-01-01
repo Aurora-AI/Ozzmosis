@@ -29,6 +29,12 @@ last-run.json
 **/.env.*.local
 !.env.example
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
 # OS/editor
 .DS_Store
 Thumbs.db

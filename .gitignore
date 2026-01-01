@@ -35,6 +35,10 @@ __pycache__/
 *.pyo
 .pytest_cache/
 
+# Local type-checker configs (IDE-only)
+pyrightconfig.json
+apps/crm-core/pyrightconfig.json
+
 # OS/editor
 .DS_Store
 Thumbs.db

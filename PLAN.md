@@ -261,6 +261,12 @@ Restrições:
    - Next Action (decisão de liderança):
      - Autorizar instalação local via venv/pip, OU rodar pytest em CI/runner provisionado
 
+### WP3 — Evidence & Checks (Trustware-safe)
+
+- scripts/wp2-wp3_evidences.ps1 (read-only evidence collection; writes to artifacts/wp3/evidence/)
+- scripts/wp2-wp3_fix_and_collect.ps1 (read-only checks; writes to artifacts/wp3/checks/)
+- apps/crm-core/tests/quarantine/* (legacy artifacts, non-discoverable)
+
 4) WP4 — Routers v1 (RBAC/Inbox/Pipeline/Health)
    - Mudancas:
      - `apps/crm-core/src/api/v1/health.py`

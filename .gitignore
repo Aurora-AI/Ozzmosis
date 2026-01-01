@@ -18,6 +18,7 @@ out/
 # Runtime artifacts (Trustware: side-effects opt-in)
 .artifacts/
 last-run.json
+artifacts/
 
 # Env files (never commit secrets)
 .env

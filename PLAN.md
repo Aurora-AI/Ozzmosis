@@ -256,10 +256,12 @@ Restrições:
      - `require_permission` nega por default (401/403) e permite bootstrap controlado
      - Helper de auditoria é único e reutilizável por routers
      - Prova A (importabilidade): PASS
-     - Prova B (pytest): BLOCKED — `No module named pytest` (pip/venv fora do allowlist, requer decisão explícita)
-     - Prova C (gates): DEFERRED — somente após Prova B destravada
-   - Next Action (decisão de liderança):
-     - Autorizar instalação local via venv/pip, OU rodar pytest em CI/runner provisionado
+     - Prova B (pytest): CI-ENFORCED (Trustware, runner-only) — ver `.github/workflows/ci-crm-core.yml`
+       - deps: `apps/crm-core/requirements-test.txt`
+       - comando no runner: `cd apps/crm-core && python -m pytest -q`
+     - Prova C (gates): CI inclui gate “CI - crm-core (pytest)” como fonte de verdade para WP3
+   - Policy:
+     - Installs locais continuam proibidos; testes rodam apenas no runner (CI)
 
 ### WP3 — Evidence & Checks (Trustware-safe)
 

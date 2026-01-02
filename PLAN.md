@@ -199,6 +199,108 @@ Objetivo: produzir especificações implementáveis (sem copiar código) para In
 
 ---
 
+# PLAN — OS-CODEX-CHRONOS-POINT-TO-VAULT-20260102-003
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Conectar o Chronos ao Vault Ademicon para navegacao e indexacao SSOT, sem duplicar conteudo.
+
+## Escopo
+Inclui:
+- Descobrir onde o Chronos vive e como indexa.
+- Conectar o Vault Ademicon como root (preferencial) ou via stubs.
+- Expor item de navegacao "Ademicon (Vault)".
+- Rodar o index/build do Chronos para prova de indexacao.
+- Registrar evidencias em `CHRONOS_LINK_STATUS.md`.
+Nao inclui:
+- Criar features novas.
+- Alterar logica de negocio.
+- Copiar a verdade para fora do Vault.
+- Remediacao do erro npm EBUSY (OS humana separada).
+
+## Riscos
+- R1: Alterar configuracoes do Chronos sem conhecer o indexador pode quebrar a navegacao.
+- R2: Duplicar conteudo (copiar arquivos) viola SSOT.
+- R3: Gates nao executados apos cada passo podem violar o processo do repo.
+
+## Passos (executar 1 por vez)
+1) Descoberta do Chronos e indexador (somente leitura)
+   - Comandos:
+     - `dir apps`
+     - `Get-ChildItem -Recurse apps | Select-Object -First 200`
+     - `rg -n "index\\.json|frontmatter|yaml|metadata|generate.*index|build.*index|library" -S .`
+     - `rg -n "Chronos" -S .`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Nenhum (somente leitura).
+   - Criterios de aceite:
+     - Identificar a pasta raiz do Chronos.
+     - Identificar o script/rota que gera index/busca.
+     - Gates passam.
+
+2) Conectar Vault Ademicon ao Chronos (roots ou stubs)
+   - Comandos:
+     - `apply_patch` (ajustar config/roots ou criar stubs conforme achado)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Arquivos de config do Chronos (a definir na descoberta)
+     - Possiveis stubs em `apps/<chronos>/content/vault/ademicon/**` (se necessario)
+   - Criterios de aceite:
+     - Chronos referencia o Vault Ademicon sem copiar conteudo.
+     - Gates passam.
+
+3) Expor navegacao minima (menu "Ademicon (Vault)")
+   - Comandos:
+     - `apply_patch` (ajustar nav do Chronos)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Arquivo(s) de navegacao do Chronos (a definir na descoberta)
+   - Criterios de aceite:
+     - Menu inclui item "Ademicon (Vault)" com link para `SSOT_STATES.md`.
+     - Gates passam.
+
+4) Prova de indexacao (smoke)
+   - Comandos:
+     - `<comando real do Chronos>` (ex.: `npm -w <chronos> run build` ou `npm -w <chronos> run index`)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Artefato de index/manifest do Chronos (gerado pelo build).
+   - Criterios de aceite:
+     - Index/manifest inclui ao menos 4 docs do Vault Ademicon.
+     - Gates passam.
+
+5) Registrar evidencias (CHRONOS_LINK_STATUS.md)
+   - Comandos:
+     - `apply_patch` (criar arquivo de status com evidencias)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ademicon/CHRONOS_LINK_STATUS.md`
+   - Criterios de aceite:
+     - Arquivo criado com data, caminho do Chronos, metodo de consumo, comandos e local do index.
+     - Gates passam.
+
+6) Commit e push (mudancas do Chronos + status)
+   - Comandos:
+     - `git add <arquivos alterados>`
+     - `git status -sb`
+     - `git commit -m "chore(chronos): link Ademicon vault to Chronos SSOT"`
+     - `git push`
+   - Arquivos:
+     - Arquivos alterados do Chronos e `CHRONOS_LINK_STATUS.md`.
+   - Criterios de aceite:
+     - `git status -sb` limpo apos commit.
+     - Commit criado com a mensagem especificada.
+
+## Gates
+- `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
 # PLAN — OS-CRMCORE-IMPLEMENT-SPECS-20260101-001 (FastAPI + DB + RBAC)
 
 Objetivo: implementar `apps/crm-core` conforme `docs/specs/*.md` (commit 63d698c) com:
@@ -294,5 +396,196 @@ Restrições:
    - Criterios de aceite:
      - Tests implementados conforme OS; deny-by-default provado via inspeção de rotas
 
+---
 
+# PLAN — OS-CRMCORE-WP4-API-20260101-005 (Inbox + Pipeline endpoints mínimos)
+Data: 2026-01-01
+Autor: agent
+Status: IN PROGRESS
 
+## Objetivo
+Expor endpoints REST mínimos de Inbox e Pipeline com RBAC + Audit, mantendo CI como fonte de verdade e sem ampliar escopo.
+
+## Escopo
+Inclui:
+- Permissões RBAC WP4 em `policy.py` e bootstrap controlado em `dependencies.py`
+- Endpoints Inbox e Pipeline v1 com auditoria obrigatória
+- Testes pytest (CI runner) para inbox create/read e pipeline state transitions (válida e inválida)
+- Nota Chronos OS-CRMCORE-WP4-API-20260101-005
+Nao inclui:
+- UI, integrações externas, WebSocket/streaming, autenticação externa, multi-tenant avançado
+
+## Riscos
+- R1: Bootstrap RBAC permissivo demais; mitigação: liberar apenas permissões listadas em `ALL_PERMISSIONS`.
+- R2: Auditoria sem DB real; mitigação: usar sessão stub (duck-typed) apenas para registrar payloads em memória.
+
+## Passos (executar 1 por vez)
+1) Ajustar permissões RBAC WP4 + bootstrap controlado
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/crm-core/src/security/policy.py`
+     - `apps/crm-core/src/security/dependencies.py`
+     - `apps/crm-core/requirements-test.txt`
+   - Criterios de aceite:
+     - Constantes `inbox:*` e `pipeline:*` compatíveis com WP4
+     - Bootstrap permite apenas permissões em `ALL_PERMISSIONS`
+     - `requirements-test.txt` inclui `SQLAlchemy` se necessário para importar `audit.py`
+     - Gates passam
+
+2) Implementar endpoints Inbox + testes
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/crm-core/src/api/v1/inbox.py`
+     - `apps/crm-core/src/main.py`
+     - `apps/crm-core/tests/test_inbox_api.py`
+   - Criterios de aceite:
+     - RBAC `inbox:read`/`inbox:write` aplicado em todas as rotas
+     - Auditoria registrada em cada rota
+     - Testes cobrem create/read/list (CI runner)
+     - Gates passam
+
+3) Commit Inbox
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status`
+     - `git add apps/crm-core/src/api/v1/inbox.py apps/crm-core/src/main.py apps/crm-core/tests/test_inbox_api.py apps/crm-core/src/security/policy.py apps/crm-core/src/security/dependencies.py`
+     - `git commit -m "feat(crm-core): add inbox endpoints (WP4)"`
+     - `git log -1 --oneline`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - Commit criado com as mudancas do Inbox
+     - Gates passam
+
+4) Implementar endpoints Pipeline + testes
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/crm-core/src/api/v1/pipeline.py`
+     - `apps/crm-core/src/main.py`
+     - `apps/crm-core/tests/test_pipeline_api.py`
+   - Criterios de aceite:
+     - RBAC `pipeline:create`/`pipeline:advance`/`pipeline:read` aplicado em todas as rotas
+     - Transicoes invalidas retornam 403 + audit
+     - Testes cobrem transicao valida e invalida (CI runner)
+     - Gates passam
+
+5) Commit Pipeline
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status`
+     - `git add apps/crm-core/src/api/v1/pipeline.py apps/crm-core/src/main.py apps/crm-core/tests/test_pipeline_api.py`
+     - `git commit -m "feat(crm-core): add pipeline endpoints (WP4)"`
+     - `git log -1 --oneline`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - Commit criado com as mudancas do Pipeline
+     - Gates passam
+
+6) Atualizar PLAN + Chronos
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `PLAN.md`
+     - `docs/chronos/OS-CRMCORE-WP4-API-20260101-005.md`
+   - Criterios de aceite:
+     - Status do WP4 em `PLAN.md` marcado como PASS
+     - Nota Chronos criada
+     - Gates passam
+
+## Gates
+- `scripts\agents\run-gates.ps1`
+
+## Rollback
+- `git revert <sha>` para cada commit do WP4
+- `scripts\agents\run-gates.ps1`
+# PLAN — OS-CODEX-VAULT-ADEMICON-GENESIS-20260102-001
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Materializar o Vault Ademicon como SSOT em disco, criando a estrutura e os arquivos mestres exatamente como especificado na OS, sem criar features.
+
+## Escopo
+Inclui:
+- Criar a estrutura `apps/ozzmosis/data/vault/ademicon/` com subpastas 00..04.
+- Criar os arquivos `.md` e `.json` do Vault com o conteudo fornecido na OS.
+- Garantir .gitkeep em `02_MOCKS`.
+Nao inclui:
+- Criacao de dados mock reais.
+- Integracao com Chronos.
+- Alteracoes fora do Vault Ademicon.
+
+## Riscos
+- R1: Comandos fora do allowlist (git checkout/pull/add/commit/push, run-gates) exigem execucao humana.
+- R2: Conteudo divergente do texto fornecido na OS invalida o SSOT.
+- R3: Gates nao executados apos passos invalidam o processo do repo.
+
+## Passos (executar 1 por vez)
+1) Sincronizar o repo na branch main
+   - Comandos:
+     - `git checkout main`
+     - `git pull --rebase`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Nenhum.
+   - Criterios de aceite:
+     - Branch em `main` e sem conflitos.
+     - Gates passam.
+
+2) Criar estrutura do Vault Ademicon e arquivos mestres (conteudo exato da OS)
+   - Comandos:
+     - `apply_patch` (criar pastas/arquivos e inserir os conteudos exatamente como especificado)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ademicon/README.md`
+     - `apps/ozzmosis/data/vault/ademicon/00_MANIFESTO/DOCTRINE_WEALTH.md`
+     - `apps/ozzmosis/data/vault/ademicon/01_STATES/SSOT_STATES.md`
+     - `apps/ozzmosis/data/vault/ademicon/02_MOCKS/SCHEMA_DEF.md`
+     - `apps/ozzmosis/data/vault/ademicon/02_MOCKS/.gitkeep`
+     - `apps/ozzmosis/data/vault/ademicon/03_POLICIES/risk_policy.md`
+     - `apps/ozzmosis/data/vault/ademicon/04_DASHBOARD/wireframe_spec.md`
+   - Criterios de aceite:
+     - Todos os arquivos existem com conteudo idêntico ao especificado.
+     - Gates passam.
+
+3) Verificacao rapida (sanity)
+   - Comandos:
+     - `dir apps/ozzmosis/data/vault/ademicon`
+     - `dir apps/ozzmosis/data/vault/ademicon/00_MANIFESTO/DOCTRINE_WEALTH.md`
+     - `dir apps/ozzmosis/data/vault/ademicon/01_STATES/SSOT_STATES.md`
+     - `dir apps/ozzmosis/data/vault/ademicon/02_MOCKS/SCHEMA_DEF.md`
+     - `dir apps/ozzmosis/data/vault/ademicon/03_POLICIES/risk_policy.md`
+     - `dir apps/ozzmosis/data/vault/ademicon/04_DASHBOARD/wireframe_spec.md`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Nenhum (somente verificacao).
+   - Criterios de aceite:
+     - Todos os arquivos listados aparecem no `dir`.
+     - Gates passam.
+
+4) Commit unico do Vault Ademicon
+   - Comandos:
+     - `git add apps/ozzmosis/data/vault/ademicon`
+     - `git status -sb`
+     - `git commit -m "chore(vault): genesis Ademicon SSOT vault (wealth doctrine + states + policies)"`
+     - `git push`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ademicon/**`
+   - Criterios de aceite:
+     - `git status -sb` sem pendencias apos commit.
+     - Commit unico criado com a mensagem especificada.
+
+## Gates
+- `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---

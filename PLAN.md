@@ -129,6 +129,55 @@ Nao inclui:
 - `git revert <sha>`
 - `scripts\agents\run-gates.ps1`
 
+---
+
+# PLAN — OS-OZZMOSIS-STT-MD-EXPORT-20260102-005
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Exportar o texto bruto das transcricoes para `.md` (sem `id/start/end`) automaticamente, e gerar `.md` para os 5 arquivos de teste atuais.
+
+## Escopo
+Inclui:
+- Atualizar o ToolBelt STT para escrever `<stem>.md` com texto bruto por default
+- Adicionar opcao de desligar export (`--no-md`) para casos especiais
+Nao inclui:
+- Commitar outputs de transcricao no repo (devem permanecer ignorados)
+
+## Passos (executar 1 por vez)
+1) Implementar export Markdown (texto bruto) no toolbelt
+   - Mudancas:
+     - Atualizar `libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/batch_subtitles.py`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `.\.venv\Scripts\python.exe -m pytest libs\elysian-brain\tests -q`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - CLI gera `<stem>.md` junto com `.srt/.vtt/*_transcript.json`
+     - Testes e gates passam
+
+2) Gerar `.md` para os 5 transcripts atuais (local-only)
+   - Mudancas:
+     - Nenhuma em arquivos versionados (somente gerar `.md` em `_runs/`)
+   - Comandos:
+     - Rodar conversao dos 5 `*_transcript.json` em `.md` na mesma pasta
+   - Criterios de aceite:
+     - Para cada arquivo: existe `<stem>.md` com texto bruto
+     - `git status -sb` continua limpo
+
+3) Commit e push (unico) do export `.md`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/batch_subtitles.py`
+     - `git commit -m "feat(stt): export raw transcript to markdown"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Criterios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 # PLAN — WP5 RBAC Clean-Room (crm-core)
 
 Objetivo: implementar RBAC clean-room em `apps/crm-core` com motor determinístico deny-wins, auditoria mínima e pontos de integração (tests + FastAPI opcional), sem adicionar dependências novas no Node.

@@ -270,6 +270,12 @@ def write_json(segments: List[SegmentOut], out_path: pathlib.Path, metadata: Dic
     }
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
+def write_markdown_raw_text(segments: List[SegmentOut], out_path: pathlib.Path) -> None:
+    text = "\n".join(s.text for s in segments if (s.text or "").strip()).strip()
+    if text:
+        text += "\n"
+    out_path.write_text(text, encoding="utf-8")
+
 
 def cleanup_temp_dir(tmp_dir: pathlib.Path, keep_temp: bool) -> None:
     if keep_temp:
@@ -298,6 +304,7 @@ def transcrever_midias_em_lote(
     initial_prompt: Optional[str] = None,
     keep_temp: bool = False,
     cache_dir: Optional[str] = None,
+    emit_md: bool = True,
 ) -> dict:
     ensure_ffmpeg_available()
 
@@ -347,6 +354,7 @@ def transcrever_midias_em_lote(
         srt_path = target_dir / (f.stem + ".srt")
         vtt_path = target_dir / (f.stem + ".vtt")
         json_path = target_dir / (f.stem + "_transcript.json")
+        md_path = target_dir / (f.stem + ".md")
 
         wants_srt = output_format in ("srt", "all")
         wants_vtt = output_format in ("vtt", "all")
@@ -359,6 +367,8 @@ def transcrever_midias_em_lote(
             if wants_vtt and vtt_path.exists():
                 already = True
             if wants_json and json_path.exists():
+                already = True
+            if emit_md and md_path.exists():
                 already = True
             if already:
                 skipped += 1
@@ -420,6 +430,8 @@ def transcrever_midias_em_lote(
                 write_vtt(segs, vtt_path)
             if wants_json:
                 write_json(segs, json_path, metadata)
+            if emit_md:
+                write_markdown_raw_text(segs, md_path)
 
             processed += 1
             results.append(
@@ -480,6 +492,7 @@ def main() -> int:
     p.add_argument("--initial-prompt", default="")
     p.add_argument("--keep-temp", action="store_true")
     p.add_argument("--cache-dir", default="")
+    p.add_argument("--no-md", action="store_true", help="Nao gerar <stem>.md com texto bruto.")
     p.add_argument("--verbose", action="store_true")
     args = p.parse_args()
 
@@ -508,6 +521,7 @@ def main() -> int:
         initial_prompt=args.initial_prompt or None,
         keep_temp=args.keep_temp,
         cache_dir=args.cache_dir or None,
+        emit_md=not args.no_md,
     )
 
     print(json.dumps(report, ensure_ascii=False, indent=2))

@@ -18,6 +18,7 @@ out/
 # Runtime artifacts (Trustware: side-effects opt-in)
 .artifacts/
 last-run.json
+artifacts/
 
 # Env files (never commit secrets)
 .env
@@ -28,6 +29,16 @@ last-run.json
 **/.env.local
 **/.env.*.local
 !.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Local type-checker configs (IDE-only)
+pyrightconfig.json
+apps/crm-core/pyrightconfig.json
 
 # OS/editor
 .DS_Store

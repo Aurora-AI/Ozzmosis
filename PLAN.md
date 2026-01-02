@@ -377,6 +377,120 @@ Nao inclui:
 
 ---
 
+# PLAN — OS-JULES-ELYBI-MIGRATION-PLAN-AND-STT-TOOLBELT-20260102-001
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Localizar o Elysian Brain no repo Elysian, decidir a integracao com Ozzmosis e entregar o ToolBelt STT como lib/CLI em `libs/elysian-brain`, com playbook e evidencias no Vault.
+
+## Escopo
+Inclui:
+- Forense no repo `C:\\Aurora\\Elysian` (tree + inventario de pyproject/proto + referencias).
+- Registrar forense e plano de integracao no Vault Ozzmosis.
+- Criar `libs/elysian-brain` com ToolBelt STT e CLI.
+- Criar playbook e estrutura de transcripts no Vault Rodobens.
+- Registrar evidencias e executar gates.
+Nao inclui:
+- Migracao total do Brain sem decisao (opcao B).
+- Alteracoes em UIs ou produtos fora do escopo.
+
+## Riscos
+- R1: Repo Elysian nao acessivel/localizacao divergente.
+- R2: Introduzir Python sem quebrar gates Node.
+- R3: Evidencias incompletas invalidam a OS.
+
+## Passos (executar 1 por vez)
+1) WP0/WP1 Forense no Elysian (somente leitura)
+   - Comandos:
+     - `cd C:\\Aurora\\Elysian`
+     - `git remote -v`
+     - `git rev-parse HEAD`
+     - `git status -sb`
+     - `tree apps\\aurora-brain /f`
+     - `tree shared\\proto /f`
+     - `Get-ChildItem -Recurse -Filter pyproject.toml | Select-Object FullName`
+     - `Get-ChildItem -Recurse -Filter \"aurora_brain.v1.proto\" | Select-Object FullName`
+     - `rg -n \"aurora[-_ ]brain|elysian[-_ ]brain|brain|toolbelt|transcribe|whisper|ffmpeg\" .`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - Nenhum (somente leitura).
+   - Criterios de aceite:
+     - Forense concluida com paths encontrados.
+     - Gates passam.
+
+2) WP1 Entregavel: ELYBI_FORENSICS.md
+   - Comandos:
+     - `apply_patch` (criar arquivo com status factual e tabela)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ozzmosis/ELYBI_FORENSICS.md`
+   - Criterios de aceite:
+     - Arquivo criado com status, paths e tabela.
+     - Gates passam.
+
+3) WP2 Entregavel: ELYBI_INTEGRATION_PLAN.md
+   - Comandos:
+     - `apply_patch` (escolha A/B + justificativa + estrutura)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ozzmosis/ELYBI_INTEGRATION_PLAN.md`
+   - Criterios de aceite:
+     - Opcao escolhida com justificativa e estrutura final.
+     - Gates passam.
+
+4) WP3 Criar libs/elysian-brain (ToolBelt STT + CLI + smoke test)
+   - Comandos:
+     - `apply_patch` (criar estrutura, pyproject, README, toolbelt e tests)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/pyproject.toml`
+     - `libs/elysian-brain/README.md`
+     - `libs/elysian-brain/src/elysian_brain/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/batch_subtitles.py`
+     - `libs/elysian-brain/tests/test_smoke_transcribe_cli.py`
+   - Criterios de aceite:
+     - CLI `elysian-transcribe --help` executavel via poetry script.
+     - Smoke test importa o modulo sem erro.
+     - Gates passam.
+
+5) WP4 Vault Rodobens (playbook + diretório)
+   - Comandos:
+     - `apply_patch` (criar playbook + .gitkeep)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens/TRANSCRIPTION_PLAYBOOK.md`
+     - `apps/ozzmosis/data/vault/rodobens/trainings/transcripts/.gitkeep`
+   - Criterios de aceite:
+     - Arquivos criados conforme OS.
+     - Gates passam.
+
+6) WP5 Evidencias + commits
+   - Comandos:
+     - `apply_patch` (criar ELYBI_EXECUTION_EVIDENCE.md)
+     - `scripts/agents/run-gates.ps1`
+     - `git add <arquivos>`
+     - `git commit -m \"chore(vault): add elysian brain forensics + integration plan + playbook\"`
+     - `git commit -m \"chore(toolbelt): add elysian brain stt toolbelt\"`
+     - `git push`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/ozzmosis/ELYBI_EXECUTION_EVIDENCE.md`
+     - arquivos do WP1-WP4
+   - Criterios de aceite:
+     - Dois commits atomicos com mensagens especificadas.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
 # PLAN — OS-CRMCORE-IMPLEMENT-SPECS-20260101-001 (FastAPI + DB + RBAC)
 
 Objetivo: implementar `apps/crm-core` conforme `docs/specs/*.md` (commit 63d698c) com:

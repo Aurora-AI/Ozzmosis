@@ -38,6 +38,27 @@ SUPPORTED_EXTS = {
     ".ts",
 }
 
+def normalize_language(language: str) -> str | None:
+    """
+    Normalize language codes for faster-whisper.
+
+    faster-whisper accepts short ISO-style codes (e.g. 'pt', 'en'). This helper:
+    - returns None for 'auto' (enable autodetect)
+    - maps 'pt-BR'/'pt_BR'/'pt-PT' to 'pt'
+    - lowercases other values
+    """
+    value = (language or "").strip()
+    if not value:
+        return None
+
+    value = value.replace("_", "-").strip()
+    lowered = value.lower()
+    if lowered == "auto":
+        return None
+    if lowered.startswith("pt-"):
+        return "pt"
+    return lowered
+
 
 @dataclass
 class SegmentOut:
@@ -128,9 +149,10 @@ def transcribe_file(
     vad_min_silence_ms: int,
     initial_prompt: Optional[str] = None,
 ) -> List[SegmentOut]:
+    normalized_language = normalize_language(language)
     kwargs: Dict[str, Any] = {
         "audio": str(wav_path),
-        "language": language if language != "auto" else None,
+        "language": normalized_language,
         "beam_size": beam_size,
         "vad_filter": vad_filter,
     }
@@ -285,6 +307,8 @@ def transcrever_midias_em_lote(
 
     out_base = pathlib.Path(outdir).expanduser().resolve() if outdir else None
 
+    normalized_lang = normalize_language(lang) or "auto"
+
     whisper_kwargs: Dict[str, Any] = {
         "model_size_or_path": model_name,
         "device": device,
@@ -384,7 +408,7 @@ def transcrever_midias_em_lote(
                 "source_file": str(f.name),
                 "source_path": str(f),
                 "model": model_name,
-                "language": lang,
+                "language": normalized_lang,
                 "transcription_date": datetime.now().isoformat(),
                 "duration": segs[-1].end if segs else 0,
                 "segment_count": len(segs),
@@ -423,7 +447,7 @@ def transcrever_midias_em_lote(
         "skipped": skipped,
         "results": results,
         "defaults": {
-            "lang": lang,
+            "lang": normalized_lang,
             "model_name": model_name,
             "device": device,
             "compute_type": compute_type,

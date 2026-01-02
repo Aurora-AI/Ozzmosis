@@ -248,13 +248,13 @@ if (Test-Path $reportPath) {
       if ($r.PSObject.Properties.Name -contains "error") { $errorVal = $r.error }
 
       $srtName = $null
-      if ($r.srt) { $srtName = Split-Path $r.srt -Leaf }
+      if (($r.PSObject.Properties.Name -contains "srt") -and $r.srt) { $srtName = Split-Path $r.srt -Leaf }
 
       $vttName = $null
-      if ($r.vtt) { $vttName = Split-Path $r.vtt -Leaf }
+      if (($r.PSObject.Properties.Name -contains "vtt") -and $r.vtt) { $vttName = Split-Path $r.vtt -Leaf }
 
       $jsonName = $null
-      if ($r.json) { $jsonName = Split-Path $r.json -Leaf }
+      if (($r.PSObject.Properties.Name -contains "json") -and $r.json) { $jsonName = Split-Path $r.json -Leaf }
 
       $safeResults += [ordered]@{
         ok = $r.ok

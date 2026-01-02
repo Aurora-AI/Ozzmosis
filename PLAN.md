@@ -71,6 +71,64 @@ Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garan
 
 ---
 
+# PLAN — OS-OZZMOSIS-STT-HARDENING-WRAPPER-20260102-003
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Padronizar a execucao operacional do ToolBelt STT (elysian-transcribe) no Windows com:
+- wrapper PowerShell deterministico (ffmpeg + venv + CLI + logs)
+- outdir por rodada no Vault Rodobens
+- playbook atualizado com comandos recomendados
+
+## Escopo
+Inclui:
+- `scripts/elysian-transcribe.ps1` (wrapper)
+- Atualizar `apps/ozzmosis/data/vault/rodobens/TRANSCRIPTION_PLAYBOOK.md`
+- Criar pasta de execucoes no Vault de transcripts (se necessario)
+Nao inclui:
+- Integracao com Chronos para indexar transcripts automaticamente
+- Dados reais de audio no repo
+
+## Riscos
+- R1: PATH do ffmpeg varia por maquina/sessao; wrapper precisa localizar/install detectavel.
+- R2: Logs nao podem vazar conteudo sensivel; logar apenas metadados.
+- R3: Dependencias Python nao fazem parte dos gates Node; validar por smoke local e gates do repo.
+
+## Passos (executar 1 por vez)
+1) Implementar wrapper e padrao de outputs no Vault
+   - Mudancas:
+     - Adicionar `scripts/elysian-transcribe.ps1`
+     - Atualizar playbook do Vault Rodobens com comandos e recomendacoes
+     - Criar `apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/.gitkeep` (se necessario)
+     - Atualizar `.gitignore` para evitar commit acidental de outputs reais (SRT/VTT/JSON) sob `apps/ozzmosis/data/vault/rodobens/trainings/transcripts/`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - Wrapper executa `--help` e valida ffmpeg/venv
+     - `git status -sb` nao lista outputs de transcricao sob o Vault
+     - Gates passam
+
+2) Commit e push (unico) do hardening STT
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add scripts/elysian-transcribe.ps1 apps/ozzmosis/data/vault/rodobens/TRANSCRIPTION_PLAYBOOK.md apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/.gitkeep .gitignore`
+     - `git commit -m "chore(stt): add windows wrapper + vault runbook for elysian-transcribe"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Criterios de aceite:
+     - `git status -sb` limpo
+     - Gates passam
+
+## Gates
+- `scripts\agents\run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `scripts\agents\run-gates.ps1`
+
 # PLAN — WP5 RBAC Clean-Room (crm-core)
 
 Objetivo: implementar RBAC clean-room em `apps/crm-core` com motor determinístico deny-wins, auditoria mínima e pontos de integração (tests + FastAPI opcional), sem adicionar dependências novas no Node.

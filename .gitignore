@@ -20,6 +20,13 @@ out/
 last-run.json
 artifacts/
 
+# Vault (Rodobens transcripts): never commit real outputs
+apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/**
+!apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/.gitkeep
+apps/ozzmosis/data/vault/rodobens/trainings/transcripts/**/*.srt
+apps/ozzmosis/data/vault/rodobens/trainings/transcripts/**/*.vtt
+apps/ozzmosis/data/vault/rodobens/trainings/transcripts/**/*_transcript.json
+
 # Env files (never commit secrets)
 .env
 .env.local
@@ -35,6 +42,7 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+.venv/
 
 # Local type-checker configs (IDE-only)
 pyrightconfig.json

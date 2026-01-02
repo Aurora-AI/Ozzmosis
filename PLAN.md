@@ -301,6 +301,82 @@ Nao inclui:
 
 ---
 
+# PLAN — OS-DIA-03-MOCK-MRS-ADEMICON-GOLD
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Gerar o Mock Integration Environment MRS (Maturity, Rhythm, Safety) com dados sintéticos Ademicon para Chronos/Conductor/Dashboard.
+
+## Escopo
+Inclui:
+- Criar `apps/ozzmosis/data/mocks/ademicon/`.
+- Criar README e projections.json.
+- Gerar datasets `consultants_mrs.csv`, `chat_logs_srv.json`, `events_stream.json`.
+Nao inclui:
+- UI nova ou alteracoes em produtos fora Ademicon.
+- Integracoes reais ou dependencias externas.
+
+## Riscos
+- R1: Distribuicoes (55/25/20 e 80/20) fora do especificado invalidam o mock.
+- R2: Incoerencia entre scores e sinais quebra o modelo MRS.
+- R3: Gates nao executados apos cada passo violam processo do repo.
+
+## Passos (executar 1 por vez)
+1) Criar estrutura do mock, README e projections.json
+   - Comandos:
+     - `apply_patch` (README.md e projections.json)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/mocks/ademicon/README.md`
+     - `apps/ozzmosis/data/mocks/ademicon/projections.json`
+   - Criterios de aceite:
+     - Arquivos criados com conteudo conforme OS.
+     - Gates passam.
+
+2) Gerar `consultants_mrs.csv` (500 consultores, distribuicao MRS)
+   - Comandos:
+     - `python` (gerador deterministico para CSV)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/mocks/ademicon/consultants_mrs.csv`
+   - Criterios de aceite:
+     - 500 linhas de consultores + header.
+     - Distribuicoes 55/25/20 e 80/20 atendidas.
+     - Gates passam.
+
+3) Gerar `chat_logs_srv.json` e `events_stream.json`
+   - Comandos:
+     - `python` (gerador deterministico a partir do CSV)
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/mocks/ademicon/chat_logs_srv.json`
+     - `apps/ozzmosis/data/mocks/ademicon/events_stream.json`
+   - Criterios de aceite:
+     - Campos obrigatorios presentes e coerentes com MRS.
+     - Gates passam.
+
+4) Commit e push
+   - Comandos:
+     - `git add apps/ozzmosis/data/mocks/ademicon`
+     - `git status -sb`
+     - `git commit -m "chore(mocks): add Ademicon MRS mock dataset"`
+     - `git push`
+   - Arquivos:
+     - `apps/ozzmosis/data/mocks/ademicon/**`
+   - Criterios de aceite:
+     - `git status -sb` limpo apos commit.
+     - Commit criado com a mensagem especificada.
+
+## Gates
+- `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
 # PLAN — OS-CRMCORE-IMPLEMENT-SPECS-20260101-001 (FastAPI + DB + RBAC)
 
 Objetivo: implementar `apps/crm-core` conforme `docs/specs/*.md` (commit 63d698c) com:

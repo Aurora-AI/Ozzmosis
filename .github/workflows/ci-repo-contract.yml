@@ -21,6 +21,13 @@ jobs:
       - name: Repo contract check
         run: npm run repo:check
 
+      - name: Assert crm-core CI workflow exists
+        run: |
+          test -f .github/workflows/ci-crm-core.yml || {
+            echo "Missing required workflow: ci-crm-core.yml";
+            exit 1;
+          }
+
       - name: Conductor build
         run: npm run build:conductor
 

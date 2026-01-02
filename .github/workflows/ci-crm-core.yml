@@ -1,0 +1,63 @@
+name: ci-crm-core
+
+on:
+  push:
+    paths:
+      - "apps/crm-core/**"
+      - ".github/workflows/ci-crm-core.yml"
+  pull_request:
+    paths:
+      - "apps/crm-core/**"
+      - ".github/workflows/ci-crm-core.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ci-crm-core-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: crm-core / Provas A+B (runner)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # Garantia determinística de imports do padrão do repo: "from src...."
+      PYTHONPATH: ${{ github.workspace }}/apps/crm-core
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_PYTHON_VERSION_WARNING: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies (runner-only)
+        working-directory: apps/crm-core
+        run: |
+          set -euo pipefail
+          if [ -f "requirements.txt" ]; then
+            python -m pip install -r requirements.txt
+          fi
+          if [ -f "requirements-test.txt" ]; then
+            python -m pip install -r requirements-test.txt
+          else
+            echo "requirements-test.txt not found in apps/crm-core (expected)."
+            exit 2
+          fi
+
+      - name: Prova A — import check
+        run: |
+          python -c "from src.security.policy import *; from src.security.dependencies import *; print('OK')"
+
+      - name: Prova B — pytest
+        working-directory: apps/crm-core
+        run: |
+          python -m pytest -q

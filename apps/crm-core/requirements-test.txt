@@ -1,0 +1,6 @@
+# Test-only deps for crm-core (installed ONLY in CI/runner/container; never locally).
+# Keep minimal; runtime deps included only as needed to import the FastAPI app.
+
+fastapi>=0.110,<1
+httpx>=0.26,<1
+pytest>=8,<9

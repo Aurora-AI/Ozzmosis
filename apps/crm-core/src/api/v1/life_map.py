@@ -1,6 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.database import get_db
+from src.models.contact import Contact
 from src.schemas.life_map import FinancialComparison, LifeMapIn
+from src.schemas.read_models import DealOut
+from src.services.deal_service import DealService
 from src.services.math_engine import BankModelConfig, WealthMathEngine
 
 router = APIRouter(prefix="/life-map", tags=["life-map"])
@@ -22,3 +28,25 @@ async def compare(payload: LifeMapIn) -> FinancialComparison:
     cfg = BankModelConfig(bank_rate_year=0.18, months=months)
     return WealthMathEngine.compare_bank_vs_consorcio(amount=amount, config_bank=cfg)
 
+
+@router.post("", response_model=DealOut)
+async def persist_life_map(
+    payload: LifeMapIn,
+    contact_id: str,
+    db: AsyncSession = Depends(get_db),
+) -> DealOut:
+    res = await db.execute(select(Contact).where(Contact.id == contact_id).limit(1))
+    contact = res.scalar_one_or_none()
+    if not contact:
+        raise HTTPException(status_code=404, detail="contact_not_found")
+
+    svc = DealService(db)
+    deal = await svc.get_active_deal_for_contact(contact_id)
+    if not deal:
+        deal = await svc.get_or_create_active_deal(contact_id)
+
+    await svc.attach_life_map(deal, payload)
+    await db.commit()
+    await db.refresh(deal)
+
+    return DealOut.model_validate(deal)

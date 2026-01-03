@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict
-
-from src.models.deal import DealStage
+from src.models.deal import Deal, DealStage
 
 
 class PipelineGovernor:
@@ -13,7 +11,7 @@ class PipelineGovernor:
     Regras:
     - Bloqueia regressão de estágio.
     - Permite apenas transições previstas (mapa explícito).
-    - Aplica regras determinísticas baseadas em metadata.
+    - Aplica regras determinísticas baseadas no dado persistido (Deal).
     """
 
     _ORDER = [
@@ -40,7 +38,9 @@ class PipelineGovernor:
     }
 
     @staticmethod
-    def can_advance(current_stage: DealStage, next_stage: DealStage, metadata: Dict) -> bool:
+    def can_advance(deal: Deal, next_stage: DealStage) -> bool:
+        current_stage = deal.stage
+
         if next_stage == current_stage:
             return True
 
@@ -51,11 +51,10 @@ class PipelineGovernor:
         if next_stage not in PipelineGovernor._ALLOWED.get(current_stage, set()):
             return False
 
-        if next_stage == DealStage.PROPOSAL and not bool(metadata.get("has_life_map")):
+        if next_stage == DealStage.PROPOSAL and not bool(deal.life_map):
             return False
 
-        if next_stage == DealStage.CLOSED_WON and int(metadata.get("safety_score", 100)) < 50:
+        if next_stage == DealStage.CLOSED_WON and int(deal.safety_score or 100) < 50:
             return False
 
         return True
-

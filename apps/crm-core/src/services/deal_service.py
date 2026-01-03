@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.attributes import flag_modified
 
 from src.models.deal import Deal, DealStage
+from src.schemas.life_map import LifeMapIn
 from src.services.state_machine import PipelineGovernor
 
 logger = logging.getLogger(__name__)
@@ -81,7 +82,6 @@ class DealService:
         *,
         trace_id: str,
         ingest_event_id: Optional[str],
-        has_life_map: bool = False,
     ) -> None:
         """
         Aplica o output do MHC no Deal, de forma determinística e auditável.
@@ -108,14 +108,9 @@ class DealService:
         new_score = max(0, min(100, current_score + delta))
         deal.safety_score = new_score
 
-        metadata = {
-            "has_life_map": bool(has_life_map),
-            "safety_score": int(deal.safety_score or 100),
-        }
-
         if decision == "BLOCK":
             target = DealStage.CHURN_ALERT
-            if PipelineGovernor.can_advance(deal.stage, target, metadata):
+            if PipelineGovernor.can_advance(deal, target):
                 deal.stage = target
             else:
                 logger.warning(
@@ -127,7 +122,7 @@ class DealService:
         else:
             if deal.stage == DealStage.NEW:
                 target = DealStage.DISCOVERY
-                if PipelineGovernor.can_advance(deal.stage, target, metadata):
+                if PipelineGovernor.can_advance(deal, target):
                     deal.stage = target
 
         pd = dict(deal.product_data or {})
@@ -142,3 +137,13 @@ class DealService:
         }
         deal.product_data = pd
         flag_modified(deal, "product_data")
+
+    async def attach_life_map(self, deal: Deal, life_map: LifeMapIn) -> Deal:
+        current_version = int(deal.life_map_version or 0)
+
+        deal.life_map = life_map.model_dump()
+        deal.life_map_version = current_version + 1
+        deal.life_map_updated_at = datetime.now(timezone.utc)
+        flag_modified(deal, "life_map")
+
+        return deal

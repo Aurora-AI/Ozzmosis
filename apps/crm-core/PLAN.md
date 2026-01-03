@@ -37,6 +37,31 @@ Status: implemented
 - `..\\.venv\\Scripts\\python.exe -m pytest -q`
 - `scripts/agents/run-gates.ps1`
 
+# PLAN — OS-CODEX-CRM-LIFEMAP-FIRST-CLASS-TRUTH-20260103-014
+Data: 2026-01-03
+Status: implemented
+
+## Arquivos criados/alterados
+- `src/models/deal.py`
+- `src/services/state_machine.py`
+- `src/services/deal_service.py`
+- `src/workers/outbox_worker.py`
+- `src/api/v1/life_map.py`
+- `src/schemas/read_models.py`
+- `alembic/versions/20260103_0005_add_deal_life_map_first_class_fields.py`
+- Testes:
+  - `tests/test_pipeline_governor.py` (ajustado para introspecção)
+  - `tests/test_decision_application.py` (ajustado)
+  - `tests/test_life_map_governor.py`
+  - `tests/test_life_map_persistence.py`
+- Vault:
+  - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-LIFEMAP-FIRST-CLASS-TRUTH-20260103-014.md`
+
+## Gates
+- `py -3.11 -m compileall src`
+- `..\\.venv\\Scripts\\python.exe -m pytest -q`
+- `scripts/agents/run-gates.ps1`
+
 # PLAN — OS-CODEX-CRM-DECISION-APPLICATION-IMPLANT-20260103-012-FINAL
 Data: 2026-01-03
 Status: implemented

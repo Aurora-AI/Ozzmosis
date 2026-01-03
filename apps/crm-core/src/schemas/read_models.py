@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -28,6 +29,9 @@ class DealOut(BaseModel):
     srv_matrix: Dict[str, Any] = Field(default_factory=dict)
     product_data: Dict[str, Any] = Field(default_factory=dict)
     safety_score: int = 100
+    life_map: Dict[str, Any] = Field(default_factory=dict)
+    life_map_version: int = 0
+    life_map_updated_at: Optional[str] = None
 
     @field_validator("stage", mode="before")
     @classmethod
@@ -36,3 +40,16 @@ class DealOut(BaseModel):
             return value.value
         return value
 
+    @field_validator("life_map", mode="before")
+    @classmethod
+    def _life_map_default(cls, value: Any) -> Any:
+        return value or {}
+
+    @field_validator("life_map_updated_at", mode="before")
+    @classmethod
+    def _life_map_updated_at_to_str(cls, value: Any) -> Any:
+        if value is None:
+            return None
+        if isinstance(value, datetime):
+            return value.isoformat()
+        return str(value)

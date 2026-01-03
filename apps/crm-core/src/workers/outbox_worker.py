@@ -63,14 +63,11 @@ async def run_once() -> int:
                     pipeline_type=pipeline_type,
                 )
 
-                has_life_map = bool((payload.get("metadata") or {}).get("has_life_map", False))
-
                 await deal_service.apply_mhc_decision(
                     deal,
                     decision,
                     trace_id=payload.get("trace_id") or item.trace_id,
                     ingest_event_id=payload.get("ingest_event_id"),
-                    has_life_map=has_life_map,
                 )
 
                 if decision["decision"] == "BLOCK":

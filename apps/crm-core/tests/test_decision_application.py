@@ -37,7 +37,6 @@ def test_apply_mhc_decision_blocks_records_audit_and_score(tmp_path):
                     decision,
                     trace_id="evt_test_1",
                     ingest_event_id="ing_1",
-                    has_life_map=False,
                 )
                 await db.flush()
 
@@ -80,7 +79,6 @@ def test_apply_mhc_decision_proceed_advances_new_to_discovery(tmp_path):
                     decision,
                     trace_id="evt_test_2",
                     ingest_event_id="ing_2",
-                    has_life_map=False,
                 )
                 await db.flush()
 
@@ -89,4 +87,3 @@ def test_apply_mhc_decision_proceed_advances_new_to_discovery(tmp_path):
             await engine.dispose()
 
     asyncio.run(_run())
-

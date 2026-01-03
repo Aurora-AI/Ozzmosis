@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, ForeignKey, JSON, DateTime, Enum, Float, Integer
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -38,6 +39,12 @@ class Deal(Base):
     srv_matrix = Column(JSON, default=dict)
     product_data = Column(JSON, default=dict)
 
+    # --- LIFE MAP (VERDADE VERSIONADA) ---
+    # JSONB no Postgres; JSON em SQLite/runner
+    life_map = Column(JSON().with_variant(JSONB(), "postgresql"), nullable=True, default=None)
+    life_map_version = Column(Integer, nullable=False, default=0)
+    life_map_updated_at = Column(DateTime(timezone=True), nullable=True)
+
     safety_score = Column(Integer, default=100)
     compliance_flags = Column(JSON, default=list)
 
@@ -45,4 +52,3 @@ class Deal(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     contact = relationship("Contact", back_populates="deals")
-

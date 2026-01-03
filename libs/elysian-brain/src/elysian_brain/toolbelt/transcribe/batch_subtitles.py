@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import logging
 import math
@@ -156,8 +157,15 @@ def transcribe_file(
         "language": normalized_language,
         "beam_size": beam_size,
         "vad_filter": vad_filter,
-        "batch_size": batch_size,
     }
+
+    if batch_size > 0:
+        try:
+            params = inspect.signature(model.transcribe).parameters
+        except (TypeError, ValueError):
+            params = {}
+        if "batch_size" in params:
+            kwargs["batch_size"] = batch_size
 
     if vad_filter:
         kwargs["vad_parameters"] = {"min_silence_duration_ms": vad_min_silence_ms}

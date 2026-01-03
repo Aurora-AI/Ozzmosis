@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,6 +26,27 @@ class EventDispatcher:
         return entry
 
     async def drain_once(self, batch_size: int = 25) -> int:
+        items = await self.fetch_and_lock_pending(batch_size=batch_size)
+        if not items:
+            return 0
+
+        processed = 0
+        for item in items:
+            if item.status == OutboxStatus.COMPLETED:
+                continue
+            try:
+                await self.mark_success(item)
+                processed += 1
+            except Exception as e:  # pragma: no cover
+                await self.mark_failure(item, e)
+
+        return processed
+
+    async def fetch_and_lock_pending(self, batch_size: int = 25) -> List[EventOutbox]:
+        """
+        Busca e trava eventos pendentes/failed, marcando como PROCESSING
+        (pessimistic lock + SKIP LOCKED). Retorna itens para processamento.
+        """
         now = datetime.now(timezone.utc)
 
         base_stmt = (
@@ -43,25 +64,22 @@ class EventDispatcher:
             res = await self.db.execute(base_stmt)
 
         items = list(res.scalars().all())
-        if not items:
-            return 0
 
-        processed = 0
         for item in items:
+            if item.status == OutboxStatus.COMPLETED:
+                continue
+
             item.status = OutboxStatus.PROCESSING
             item.attempts = int(item.attempts or 0) + 1
             item.last_error = None
 
-            try:
-                item.status = OutboxStatus.COMPLETED
-                item.processed_at = now
-                processed += 1
+        return items
 
-            except Exception as e:  # pragma: no cover
-                item.last_error = str(e)
-                item.status = OutboxStatus.FAILED
-                item.next_retry_at = EventOutbox.compute_next_retry(item.attempts)
-                logger.exception("OUTBOX failed: id=%s trace_id=%s", item.id, item.trace_id)
+    async def mark_success(self, item: EventOutbox) -> None:
+        item.status = OutboxStatus.COMPLETED
+        item.processed_at = datetime.now(timezone.utc)
 
-        return processed
-
+    async def mark_failure(self, item: EventOutbox, err: Exception) -> None:
+        item.last_error = str(err)
+        item.status = OutboxStatus.FAILED
+        item.next_retry_at = EventOutbox.compute_next_retry(int(item.attempts or 0))

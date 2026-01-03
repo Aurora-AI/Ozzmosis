@@ -302,6 +302,55 @@ Versionar no Vault (SSOT) as duas OS canônicas:
      - `git status -sb` limpo
      - Gates PASS
 
+---
+
+# PLAN — OS-CODEX-AURORA-CRM-HYPER-ROUTER-EXEC-20260103-007-FINAL
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Implementar MHC Router + Worker blindado no CRM Headless:
+- Payload normalizado (contrato rígido)
+- Paralelismo via asyncio.gather (Safety + SRV stubs)
+- Idempotência por status + lock
+- Retry/backoff via `compute_next_retry`
+- Extensão do Dispatcher com fetch/lock + mark_success/mark_failure
+- Registrar OS 007 no Vault
+
+## Passos (executar 1 por vez)
+1) Implementar Router/Processors/Dispatcher/Worker + payload completo no ingest
+   - Mudanças:
+     - Adicionar:
+       - `apps/crm-core/src/processors/base.py`
+       - `apps/crm-core/src/processors/safety.py`
+       - `apps/crm-core/src/processors/srv.py`
+       - `apps/crm-core/src/services/router.py`
+       - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-HYPER-ROUTER-EXEC-20260103-007-FINAL.md`
+     - Atualizar:
+       - `apps/crm-core/src/services/dispatcher.py` (adicionar métodos, manter compat)
+       - `apps/crm-core/src/workers/outbox_worker.py` (sobrescrever)
+       - `apps/crm-core/src/api/v1/ingest.py` (garantir `raw_content` + `metadata` no payload)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `py -3.11 -m compileall apps\crm-core\src`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - Worker importa sem SyntaxError
+     - Payload para Router sempre contém `trace_id`, `contact_id`, `raw_content`, `metadata`
+     - Gates PASS
+
+2) Commit e push (único)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/crm-core/src/processors/base.py apps/crm-core/src/processors/safety.py apps/crm-core/src/processors/srv.py apps/crm-core/src/services/router.py apps/crm-core/src/services/dispatcher.py apps/crm-core/src/workers/outbox_worker.py apps/crm-core/src/api/v1/ingest.py apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-HYPER-ROUTER-EXEC-20260103-007-FINAL.md PLAN.md`
+     - `git commit -m "feat(crm-core): MHC router + idempotent outbox worker (OS 007)"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 2) Criar migração Alembic (contacts + deals)
    - Mudanças:
      - Adicionar nova migration em `apps/crm-core/alembic/versions/` criando:

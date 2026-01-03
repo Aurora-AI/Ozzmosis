@@ -76,6 +76,7 @@ async def ingest_message(
     outbox_payload = {
         "ingest_event_id": event.id,
         "contact_id": contact.id,
+        "raw_content": payload.content,
         "source": payload.source,
         "sender_id": payload.sender_id,
         "content_len": len(payload.content),

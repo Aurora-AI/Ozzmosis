@@ -351,6 +351,38 @@ Implementar MHC Router + Worker blindado no CRM Headless:
      - `git status -sb` limpo
      - Gates PASS
 
+---
+
+# PLAN — OS-CODEX-AURORA-CRM-TEST-DEPS-SQLALCHEMY-20260103-007B
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Desbloquear `ci-crm-core` (PR #19) corrigindo `ModuleNotFoundError: sqlalchemy` durante collection do pytest, adicionando SQLAlchemy (asyncio) às deps de teste do `crm-core`.
+
+## Passos (executar 1 por vez)
+1) Atualizar deps de teste do crm-core
+   - Mudanças:
+     - Atualizar `apps/crm-core/requirements-test.txt` adicionando `sqlalchemy[asyncio]`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `apps/crm-core/requirements-test.txt` inclui `sqlalchemy[asyncio]>=2.0,<3`
+     - Gates PASS
+
+2) Commit e push (único)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/crm-core/requirements-test.txt PLAN.md`
+     - `git commit -m "chore(crm-core): add sqlalchemy asyncio to test deps to fix CI import collection"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 2) Criar migração Alembic (contacts + deals)
    - Mudanças:
      - Adicionar nova migration em `apps/crm-core/alembic/versions/` criando:

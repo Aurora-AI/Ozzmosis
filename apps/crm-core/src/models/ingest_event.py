@@ -24,10 +24,9 @@ class IngestEvent(Base):
     source = Column(String, default="whatsapp", index=True)
     sender_id = Column(String, index=True, nullable=False)
     content = Column(String, nullable=False)
-    metadata = Column(JSON, default=dict)
+    metadata_ = Column("metadata", JSON, default=dict)
 
     contact_id = Column(String, ForeignKey("crm_contacts.id"), nullable=True, index=True)
     status = Column(Enum(IngestStatus), default=IngestStatus.RECEIVED, index=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-

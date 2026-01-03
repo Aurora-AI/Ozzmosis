@@ -383,6 +383,88 @@ Desbloquear `ci-crm-core` (PR #19) corrigindo `ModuleNotFoundError: sqlalchemy` 
      - `git status -sb` limpo
      - Gates PASS
 
+---
+
+# PLAN — OS-CODEX-AURORA-CRM-TEST-DEPS-SQLALCHEMY-20260103-007B (VAULT CLOSE)
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Registrar no Vault (SSOT) o fechamento canônico da OS 007B (hotfix CI do crm-core).
+
+## Passos (executar 1 por vez)
+1) Criar registro no Vault
+   - Mudanças:
+     - Adicionar `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-TEST-DEPS-SQLALCHEMY-20260103-007B.md`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - Arquivo existe com evidências (branch/commit/gates)
+     - Gates PASS
+
+2) Commit e push (único)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-TEST-DEPS-SQLALCHEMY-20260103-007B.md PLAN.md`
+     - `git commit -m "chore(vault): close CRM OS 007B (sqlalchemy test deps)"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
+---
+
+# PLAN — OS-CODEX-CRM-BIOLOGICAL-STABILIZATION-IMPLANT-20260103-011-FINAL
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Implantar contratos, matemática determinística e governança de estados no `crm-core`:
+- Schemas Pydantic (Constituição)
+- Engine determinístico (Respiração)
+- Máquina de estados (Coração)
+- Testes mínimos para impedir regressão
+- Registro no Vault (SSOT)
+
+## Passos (executar 1 por vez)
+1) Criar módulos e testes do CRM
+   - Mudanças:
+     - Adicionar:
+       - `apps/crm-core/src/schemas/__init__.py`
+       - `apps/crm-core/src/services/__init__.py`
+       - `apps/crm-core/src/schemas/life_map.py`
+       - `apps/crm-core/src/services/math_engine.py`
+       - `apps/crm-core/src/services/state_machine.py`
+       - `apps/crm-core/tests/test_math_engine.py`
+       - `apps/crm-core/tests/test_pipeline_governor.py`
+       - `apps/crm-core/PLAN.md`
+       - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-BIOLOGICAL-STABILIZATION-IMPLANT-20260103-011-FINAL.md`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis\apps\crm-core`
+     - `py -3.11 -m compileall src`
+     - `py -3.11 -m pytest -q`
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - Imports estáveis (`src.schemas.life_map`, `src.services.math_engine`, `src.services.state_machine`)
+     - Testes PASS
+     - Gates PASS
+
+2) Commit e push (único)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/crm-core/src/schemas/__init__.py apps/crm-core/src/services/__init__.py apps/crm-core/src/schemas/life_map.py apps/crm-core/src/services/math_engine.py apps/crm-core/src/services/state_machine.py apps/crm-core/tests/test_math_engine.py apps/crm-core/tests/test_pipeline_governor.py apps/crm-core/PLAN.md apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-BIOLOGICAL-STABILIZATION-IMPLANT-20260103-011-FINAL.md PLAN.md`
+     - `git commit -m "chore(crm-core): add life map schemas, deterministic math engine, and pipeline governor"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 2) Criar migração Alembic (contacts + deals)
    - Mudanças:
      - Adicionar nova migration em `apps/crm-core/alembic/versions/` criando:

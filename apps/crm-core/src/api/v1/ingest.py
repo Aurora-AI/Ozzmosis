@@ -63,7 +63,7 @@ async def ingest_message(
         source=payload.source,
         sender_id=payload.sender_id,
         content=payload.content,
-        metadata=payload.metadata or {},
+        metadata_=payload.metadata or {},
         status=IngestStatus.RECEIVED,
     )
     db.add(event)

@@ -37,6 +37,30 @@ Status: implemented
 - `..\\.venv\\Scripts\\python.exe -m pytest -q`
 - `scripts/agents/run-gates.ps1`
 
+# PLAN — OS-CODEX-WEALTH-PROPOSAL-ENGINE-20260103-015
+Data: 2026-01-03
+Status: implemented
+
+## Arquivos criados/alterados
+- `src/models/deal.py` (proposals fields)
+- `alembic/versions/20260103_0006_add_deal_proposals_engine_fields.py`
+- `src/schemas/proposal.py`
+- `src/services/proposal_policy.py`
+- `src/services/proposal_service.py`
+- `src/api/v1/proposals.py`
+- `src/main.py`
+- `src/schemas/read_models.py` (exposição proposals no DealOut)
+- Testes:
+  - `tests/test_proposal_engine_generation.py`
+  - `tests/test_proposal_api.py`
+- Vault:
+  - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-WEALTH-PROPOSAL-ENGINE-20260103-015.md`
+
+## Gates
+- `py -3.11 -m compileall src`
+- `..\\.venv\\Scripts\\python.exe -m pytest -q`
+- `scripts/agents/run-gates.ps1`
+
 # PLAN — OS-CODEX-CRM-LIFEMAP-FIRST-CLASS-TRUTH-20260103-014
 Data: 2026-01-03
 Status: implemented

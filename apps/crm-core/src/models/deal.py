@@ -45,6 +45,12 @@ class Deal(Base):
     life_map_version = Column(Integer, nullable=False, default=0)
     life_map_updated_at = Column(DateTime(timezone=True), nullable=True)
 
+    # --- PROPOSALS (VERDADE VERSIONADA) ---
+    # JSONB no Postgres; JSON em SQLite/runner
+    proposals = Column(JSON().with_variant(JSONB(), "postgresql"), nullable=True, default=None)
+    proposals_version = Column(Integer, nullable=False, default=0)
+    proposals_updated_at = Column(DateTime(timezone=True), nullable=True)
+
     safety_score = Column(Integer, default=100)
     compliance_flags = Column(JSON, default=list)
 

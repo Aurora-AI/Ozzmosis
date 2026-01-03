@@ -32,6 +32,9 @@ class DealOut(BaseModel):
     life_map: Dict[str, Any] = Field(default_factory=dict)
     life_map_version: int = 0
     life_map_updated_at: Optional[str] = None
+    proposals: Dict[str, Any] = Field(default_factory=dict)
+    proposals_version: int = 0
+    proposals_updated_at: Optional[str] = None
 
     @field_validator("stage", mode="before")
     @classmethod
@@ -48,6 +51,20 @@ class DealOut(BaseModel):
     @field_validator("life_map_updated_at", mode="before")
     @classmethod
     def _life_map_updated_at_to_str(cls, value: Any) -> Any:
+        if value is None:
+            return None
+        if isinstance(value, datetime):
+            return value.isoformat()
+        return str(value)
+
+    @field_validator("proposals", mode="before")
+    @classmethod
+    def _proposals_default(cls, value: Any) -> Any:
+        return value or {}
+
+    @field_validator("proposals_updated_at", mode="before")
+    @classmethod
+    def _proposals_updated_at_to_str(cls, value: Any) -> Any:
         if value is None:
             return None
         if isinstance(value, datetime):

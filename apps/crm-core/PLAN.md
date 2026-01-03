@@ -16,6 +16,27 @@ Status: implemented
 - `py -3.11 -m pytest -q`
 - `scripts/agents/run-gates.ps1`
 
+# PLAN — OS-CODEX-CRM-READ-API-OPTIC-NERVE-20260103-013
+Data: 2026-01-03
+Status: implemented
+
+## Arquivos criados/alterados
+- `src/services/contact_service.py`
+- `src/services/deal_service.py`
+- `src/schemas/read_models.py`
+- `src/api/v1/contacts.py`
+- `src/api/v1/deals.py`
+- `src/api/v1/life_map.py`
+- `src/main.py`
+- `tests/test_read_api.py`
+- Vault:
+  - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-READ-API-OPTIC-NERVE-20260103-013.md`
+
+## Gates
+- `py -3.11 -m compileall src`
+- `..\\.venv\\Scripts\\python.exe -m pytest -q`
+- `scripts/agents/run-gates.ps1`
+
 # PLAN — OS-CODEX-CRM-DECISION-APPLICATION-IMPLANT-20260103-012-FINAL
 Data: 2026-01-03
 Status: implemented

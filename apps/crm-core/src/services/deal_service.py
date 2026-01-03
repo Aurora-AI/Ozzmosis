@@ -59,6 +59,21 @@ class DealService:
         logger.info("Deal created: deal_id=%s contact_id=%s", deal.id, contact_id)
         return deal
 
+    async def get_deal(self, deal_id: str) -> Deal | None:
+        stmt = select(Deal).where(Deal.id == deal_id)
+        res = await self.db.execute(stmt)
+        return res.scalars().first()
+
+    async def get_active_deal_for_contact(self, contact_id: str) -> Deal | None:
+        stmt = (
+            select(Deal)
+            .where(Deal.contact_id == contact_id)
+            .where(Deal.stage.notin_([DealStage.CLOSED_WON, DealStage.CLOSED_LOST]))
+            .order_by(Deal.created_at.desc())
+        )
+        res = await self.db.execute(stmt)
+        return res.scalars().first()
+
     async def apply_mhc_decision(
         self,
         deal: Deal,
@@ -127,4 +142,3 @@ class DealService:
         }
         deal.product_data = pd
         flag_modified(deal, "product_data")
-

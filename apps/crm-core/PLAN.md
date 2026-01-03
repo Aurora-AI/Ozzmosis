@@ -24,6 +24,8 @@ Status: implemented
 - `src/services/deal_service.py`
 - `src/workers/outbox_worker.py`
 - `tests/test_decision_application.py`
+ - Vault:
+   - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-DECISION-APPLICATION-IMPLANT-20260103-012.md`
 
 ## Gates
 - `py -3.11 -m compileall src`

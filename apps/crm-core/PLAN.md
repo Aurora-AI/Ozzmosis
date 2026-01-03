@@ -16,3 +16,16 @@ Status: implemented
 - `py -3.11 -m pytest -q`
 - `scripts/agents/run-gates.ps1`
 
+# PLAN — OS-CODEX-CRM-DECISION-APPLICATION-IMPLANT-20260103-012-FINAL
+Data: 2026-01-03
+Status: implemented
+
+## Arquivos criados/alterados
+- `src/services/deal_service.py`
+- `src/workers/outbox_worker.py`
+- `tests/test_decision_application.py`
+
+## Gates
+- `py -3.11 -m compileall src`
+- `py -3.11 -m pytest -q`
+- `scripts/agents/run-gates.ps1`

@@ -233,6 +233,64 @@ Nao inclui:
      - `git status -sb` limpo
      - Gates PASS
 
+---
+
+# PLAN — OS-CODEX-AURORA-CRM-HEADLESS-GENESIS-20260103-004
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Materializar o CRM Headless Genesis (mínimo) com:
+- Models `Contact` e `Deal`
+- Endpoint de ingestão `/ingest/message` (sem LLM)
+- Migração Alembic criando `crm_contacts` e `crm_deals` (JSONB no Postgres)
+
+## Escopo
+Inclui somente as tarefas 1..5 da OS (arquivos listados abaixo).
+Não inclui UI, automação LLM, nem entidades extras.
+
+## Passos (executar 1 por vez)
+1) Criar/atualizar models e API de ingestão
+   - Mudanças:
+     - Criar/sobrescrever:
+       - `apps/crm-core/src/models/contact.py`
+       - `apps/crm-core/src/models/deal.py`
+       - `apps/crm-core/src/api/v1/ingest.py`
+     - Atualizar:
+       - `apps/crm-core/src/main.py` (registrar `ingest_router` sem prefix extra)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - App importa sem erro
+     - `POST /ingest/message` existe (rota registrada)
+     - Gates PASS
+
+2) Criar migração Alembic (contacts + deals)
+   - Mudanças:
+     - Adicionar nova migration em `apps/crm-core/alembic/versions/` criando:
+       - `crm_contacts`
+       - `crm_deals` + FK `contact_id -> crm_contacts.id`
+       - colunas JSON com JSONB no Postgres (via `with_variant`)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - Migration versionada no repo
+     - Gates PASS
+
+3) Commit e push (unico) da OS CRM Headless Genesis
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/crm-core/src/models/contact.py apps/crm-core/src/models/deal.py apps/crm-core/src/api/v1/ingest.py apps/crm-core/src/main.py apps/crm-core/alembic/versions/* .gitignore PLAN.md`
+     - `git commit -m "feat(crm-core): headless genesis (contacts, deals, ingest, migration)"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 # PLAN — WP5 RBAC Clean-Room (crm-core)
 
 Objetivo: implementar RBAC clean-room em `apps/crm-core` com motor determinístico deny-wins, auditoria mínima e pontos de integração (tests + FastAPI opcional), sem adicionar dependências novas no Node.

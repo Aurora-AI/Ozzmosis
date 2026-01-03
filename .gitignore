@@ -48,6 +48,9 @@ __pycache__/
 pyrightconfig.json
 apps/crm-core/pyrightconfig.json
 
+# Local audits (not SSOT unless explicitly committed)
+docs/AUDITS/
+
 # OS/editor
 .DS_Store
 Thumbs.db

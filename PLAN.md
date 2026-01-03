@@ -266,6 +266,42 @@ Não inclui UI, automação LLM, nem entidades extras.
      - `POST /ingest/message` existe (rota registrada)
      - Gates PASS
 
+---
+
+# PLAN — OS-CANONICALIZE-CRM-OS-004-005-20260103-007
+Data: 2026-01-03
+Autor: agent
+
+## Objetivo
+Versionar no Vault (SSOT) as duas OS canônicas:
+1) Fechamento OS 004 (CRM Headless Genesis)
+2) OS 005 pronta para execução (Ingest Persistence + Evento Canônico)
+
+## Passos (executar 1 por vez)
+1) Criar OS no Vault
+   - Mudanças:
+     - Adicionar:
+       - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-HEADLESS-GENESIS-20260103-004.md`
+       - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-INGEST-PERSISTENCE-20260103-005.md`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - Arquivos existem com conteúdo fechado (sem lacunas)
+     - Gates PASS
+
+2) Commit e push (único)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-HEADLESS-GENESIS-20260103-004.md apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-AURORA-CRM-INGEST-PERSISTENCE-20260103-005.md PLAN.md`
+     - `git commit -m "chore(vault): canonicalize CRM OS 004 + OS 005"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Critérios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 2) Criar migração Alembic (contacts + deals)
    - Mudanças:
      - Adicionar nova migration em `apps/crm-core/alembic/versions/` criando:

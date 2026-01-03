@@ -26,7 +26,10 @@ param(
   [string]$Model = "medium",
   [ValidateSet("cpu", "cuda")][string]$Device = "cpu",
   [string]$ComputeType = "int8",
+  [int]$CpuThreads = 0,
+  [int]$Workers = 1,
   [int]$BeamSize = 5,
+  [int]$BatchSize = 8,
 
   [switch]$Vad,
   [int]$VadMinSilenceMs = 500,
@@ -151,7 +154,19 @@ function Build-Args {
     [Parameter(Mandatory = $true)][string]$OutDir
   )
 
-  $args = @("--input", $InputPath, "--outdir", $OutDir, "--lang", $Lang, "--model", $Model, "--device", $Device, "--compute-type", $ComputeType, "--beam-size", "$BeamSize", "--format", $Format)
+  $args = @(
+    "--input", $InputPath,
+    "--outdir", $OutDir,
+    "--lang", $Lang,
+    "--model", $Model,
+    "--device", $Device,
+    "--compute-type", $ComputeType,
+    "--cpu-threads", "$CpuThreads",
+    "--workers", "$Workers",
+    "--beam-size", "$BeamSize",
+    "--batch-size", "$BatchSize",
+    "--format", $Format
+  )
 
   if ($Recursive) { $args += "--recursive" }
   if ($Vad) { $args += "--vad"; $args += @("--vad-min-silence-ms", "$VadMinSilenceMs") }
@@ -172,6 +187,11 @@ Set-Location $repoRoot
 
 Ensure-FFmpeg
 $ffmpegPath = (Get-Command ffmpeg).Source
+
+if ($CpuThreads -le 0) {
+  $p = [Environment]::ProcessorCount
+  $CpuThreads = [Math]::Max(1, $p - 1)
+}
 
 if (!$OutBase.Trim()) {
   $OutBase = Join-Path $repoRoot "apps\\ozzmosis\\data\\vault\\rodobens\\trainings\\transcripts\\_runs"

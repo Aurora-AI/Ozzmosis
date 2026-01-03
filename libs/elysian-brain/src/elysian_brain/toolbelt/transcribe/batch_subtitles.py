@@ -147,6 +147,7 @@ def transcribe_file(
     beam_size: int,
     vad_filter: bool,
     vad_min_silence_ms: int,
+    batch_size: int,
     initial_prompt: Optional[str] = None,
 ) -> List[SegmentOut]:
     normalized_language = normalize_language(language)
@@ -155,6 +156,7 @@ def transcribe_file(
         "language": normalized_language,
         "beam_size": beam_size,
         "vad_filter": vad_filter,
+        "batch_size": batch_size,
     }
 
     if vad_filter:
@@ -292,7 +294,10 @@ def transcrever_midias_em_lote(
     model_name: str = "small",
     device: str = "cpu",
     compute_type: str = "int8",
+    cpu_threads: int = 0,
+    workers: int = 1,
     beam_size: int = 5,
+    batch_size: int = 8,
     vad: bool = True,
     vad_min_silence_ms: int = 500,
     overwrite: bool = False,
@@ -320,6 +325,8 @@ def transcrever_midias_em_lote(
         "model_size_or_path": model_name,
         "device": device,
         "compute_type": compute_type,
+        "cpu_threads": cpu_threads,
+        "num_workers": workers,
     }
     if cache_dir:
         whisper_kwargs["download_root"] = cache_dir
@@ -397,6 +404,7 @@ def transcrever_midias_em_lote(
                 beam_size=beam_size,
                 vad_filter=vad,
                 vad_min_silence_ms=vad_min_silence_ms,
+                batch_size=batch_size,
                 initial_prompt=initial_prompt,
             )
 
@@ -463,6 +471,9 @@ def transcrever_midias_em_lote(
             "model_name": model_name,
             "device": device,
             "compute_type": compute_type,
+            "cpu_threads": cpu_threads,
+            "workers": workers,
+            "batch_size": batch_size,
             "vad": vad,
             "output_format": output_format,
             "merge_segments": merge_segments,
@@ -480,7 +491,10 @@ def main() -> int:
     p.add_argument("--model", default="medium")
     p.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     p.add_argument("--compute-type", default="int8")
+    p.add_argument("--cpu-threads", type=int, default=0, help="Threads CPU (0=auto).")
+    p.add_argument("--workers", type=int, default=1, help="Workers de decoding/inferencia.")
     p.add_argument("--beam-size", type=int, default=5)
+    p.add_argument("--batch-size", type=int, default=8, help="Batch size do transcribe.")
     p.add_argument("--vad", action="store_true")
     p.add_argument("--vad-min-silence-ms", type=int, default=500)
     p.add_argument("--overwrite", action="store_true")
@@ -509,7 +523,10 @@ def main() -> int:
         model_name=args.model,
         device=args.device,
         compute_type=args.compute_type,
+        cpu_threads=args.cpu_threads,
+        workers=args.workers,
         beam_size=args.beam_size,
+        batch_size=args.batch_size,
         vad=args.vad,
         vad_min_silence_ms=args.vad_min_silence_ms,
         overwrite=args.overwrite,

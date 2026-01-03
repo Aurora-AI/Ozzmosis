@@ -13,8 +13,14 @@ where elysian-transcribe
 Cria um outdir por rodada em `apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/<run_tag>` e registra `run_meta.json` + `run_summary.json` (sem paths completos por default).
 
 ```
-pwsh -File .\\scripts\\elysian-transcribe.ps1 -InputPath <pasta_ou_arquivo> -Recursive -Lang pt-BR -Model medium -Device cpu -ComputeType int8 -Vad -MergeSegments -Normalize -ToolVerbose
+pwsh -File .\\scripts\\elysian-transcribe.ps1 -InputPath <pasta_ou_arquivo> -Recursive -Lang pt-BR -Model medium -Device cpu -ComputeType int8 -CpuThreads 0 -Workers 1 -BatchSize 8 -Vad -MergeSegments -Normalize -ToolVerbose
 ```
+
+## Performance (Intel Iris / sem CUDA)
+Intel Iris nao suporta `--device cuda`. Para acelerar, use tuning de CPU:
+- `-CpuThreads 0` (default do wrapper: usa `CPU-1` threads)
+- `-Workers 1` (suba para 2 se o disco aguentar)
+- `-BatchSize 8` (suba para 12/16 se tiver RAM; baixe para 4 se ficar lento/instavel)
 
 ## CLI (CPU)
 ```

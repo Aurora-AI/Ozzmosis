@@ -178,6 +178,61 @@ Nao inclui:
      - `git status -sb` limpo
      - Gates PASS
 
+---
+
+# PLAN — OS-OZZMOSIS-STT-CPU-PERF-TUNING-20260102-006
+Data: 2026-01-02
+Autor: agent
+
+## Objetivo
+Melhorar previsibilidade de performance no Windows sem CUDA (Intel Iris) ajustando:
+- `cpu_threads` (CTranslate2 / faster-whisper)
+- `num_workers`
+- `batch_size` do `transcribe`
+
+## Escopo
+Inclui:
+- Expor flags no CLI e no wrapper PowerShell
+- Atualizar playbook com recomendação para Intel Iris (CPU tuning)
+Nao inclui:
+- Suporte a aceleração Intel via OpenVINO/DirectML (WP futuro, se necessário)
+
+## Passos (executar 1 por vez)
+1) Expor tuning CPU no toolbelt/CLI
+   - Mudancas:
+     - Atualizar `libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/batch_subtitles.py`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `.\.venv\Scripts\python.exe -m pytest libs\elysian-brain\tests -q`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - `elysian-transcribe --help` lista `--cpu-threads`, `--workers`, `--batch-size`
+     - Execução CPU funciona com defaults
+     - Testes e gates PASS
+
+2) Atualizar wrapper + playbook (Windows)
+   - Mudancas:
+     - Atualizar `scripts/elysian-transcribe.ps1` para passar tuning e defaults bons
+     - Atualizar `apps/ozzmosis/data/vault/rodobens/TRANSCRIPTION_PLAYBOOK.md` com recomendações
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Criterios de aceite:
+     - Wrapper aceita `-CpuThreads`, `-Workers`, `-BatchSize` e passa para o CLI
+     - Gates PASS
+
+3) Commit e push (unico) do tuning CPU
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `git status -sb`
+     - `git add libs/elysian-brain/src/elysian_brain/toolbelt/transcribe/batch_subtitles.py scripts/elysian-transcribe.ps1 apps/ozzmosis/data/vault/rodobens/TRANSCRIPTION_PLAYBOOK.md PLAN.md`
+     - `git commit -m "chore(stt): add cpu perf tuning knobs (threads/workers/batch)"`
+     - `scripts\agents\run-gates.ps1`
+     - `git push`
+   - Criterios de aceite:
+     - `git status -sb` limpo
+     - Gates PASS
+
 # PLAN — WP5 RBAC Clean-Room (crm-core)
 
 Objetivo: implementar RBAC clean-room em `apps/crm-core` com motor determinístico deny-wins, auditoria mínima e pontos de integração (tests + FastAPI opcional), sem adicionar dependências novas no Node.

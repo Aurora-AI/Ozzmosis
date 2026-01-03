@@ -7,7 +7,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from src.models.base import Base
-from src.models import rbac, inbox, pipeline, audit  # noqa: F401
+from src.models import rbac, inbox, pipeline, audit, contact, deal, ingest_event, outbox  # noqa: F401
 
 config = context.config
 

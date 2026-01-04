@@ -37,6 +37,28 @@ Status: implemented
 - `..\\.venv\\Scripts\\python.exe -m pytest -q`
 - `scripts/agents/run-gates.ps1`
 
+# PLAN — OS-CODEX-CRM-PROPOSAL-ACCEPTANCE-20260103-016
+Data: 2026-01-03
+Status: implemented
+
+## Arquivos criados/alterados
+- `src/models/deal.py` (acceptance fields)
+- `alembic/versions/20260103_0007_add_deal_acceptance_fields.py`
+- `src/schemas/proposal_acceptance.py`
+- `src/services/deal_service.py` (`accept_proposal`)
+- `src/api/v1/proposal_acceptance.py`
+- `src/main.py` (router wiring)
+- Testes:
+  - `tests/test_proposal_acceptance_service.py`
+  - `tests/test_proposal_acceptance_api.py`
+- Vault:
+  - `apps/ozzmosis/data/vault/aurora-crm/os/OS-CODEX-CRM-PROPOSAL-ACCEPTANCE-20260103-016.md`
+
+## Gates
+- `py -3.11 -m compileall src`
+- `..\\.venv\\Scripts\\python.exe -m pytest -q`
+- `scripts/agents/run-gates.ps1`
+
 # PLAN — OS-CODEX-WEALTH-PROPOSAL-ENGINE-20260103-015
 Data: 2026-01-03
 Status: implemented

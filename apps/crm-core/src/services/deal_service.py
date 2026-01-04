@@ -10,6 +10,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from src.models.deal import Deal, DealStage
 from src.schemas.life_map import LifeMapIn
+from src.schemas.proposal import ProposalTier
 from src.services.state_machine import PipelineGovernor
 
 logger = logging.getLogger(__name__)
@@ -146,4 +147,70 @@ class DealService:
         deal.life_map_updated_at = datetime.now(timezone.utc)
         flag_modified(deal, "life_map")
 
+        return deal
+
+    async def accept_proposal(
+        self,
+        deal_id: str,
+        accepted_tier: str,
+        client_fingerprint: Optional[str],
+        decision_timestamp: Optional[datetime],
+    ) -> Deal:
+        deal = await self.get_deal(deal_id)
+        if not deal:
+            raise ValueError("deal_not_found")
+
+        if not deal.proposals:
+            raise ValueError("proposals_missing")
+
+        if deal.accepted_tier or int(deal.acceptance_version or 0) > 0:
+            raise ValueError("already_accepted")
+
+        try:
+            tier = ProposalTier(str(accepted_tier).upper())
+        except Exception as e:
+            raise ValueError("invalid_tier") from e
+
+        bundles = (deal.proposals or {}).get("bundles") or []
+        chosen = None
+        for b in bundles:
+            if str((b or {}).get("tier") or "").upper() == tier.value:
+                chosen = b
+                break
+        if not chosen:
+            raise ValueError("tier_not_found")
+
+        accepted_at = decision_timestamp or datetime.now(timezone.utc)
+
+        snapshot = {
+            "accepted_tier": tier.value,
+            "accepted_at": accepted_at.isoformat(),
+            "client_fingerprint": client_fingerprint,
+            "source": "frontend",
+            "proposal_version_at_acceptance": int(deal.proposals_version or 0),
+            "life_map_version_at_acceptance": int(deal.life_map_version or 0),
+            "bundle": chosen,
+        }
+
+        deal.accepted_tier = tier.value
+        deal.accepted_at = accepted_at
+        deal.client_fingerprint = client_fingerprint
+        deal.accepted_proposal_data = snapshot
+        deal.acceptance_version = 1
+
+        flag_modified(deal, "accepted_proposal_data")
+
+        if deal.stage != DealStage.NEGOTIATION:
+            if deal.stage != DealStage.PROPOSAL:
+                if PipelineGovernor.can_advance(deal, DealStage.PROPOSAL):
+                    deal.stage = DealStage.PROPOSAL
+                else:
+                    raise ValueError(f"stage_transition_denied:{deal.stage.value}->PROPOSAL")
+
+            if PipelineGovernor.can_advance(deal, DealStage.NEGOTIATION):
+                deal.stage = DealStage.NEGOTIATION
+            else:
+                raise ValueError(f"stage_transition_denied:{deal.stage.value}->NEGOTIATION")
+
+        await self.db.flush()
         return deal

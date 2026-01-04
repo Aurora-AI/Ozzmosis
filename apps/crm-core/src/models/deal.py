@@ -51,6 +51,13 @@ class Deal(Base):
     proposals_version = Column(Integer, nullable=False, default=0)
     proposals_updated_at = Column(DateTime(timezone=True), nullable=True)
 
+    # --- ACCEPTANCE (CARIMBO FORENSE) ---
+    accepted_tier = Column(String, nullable=True, default=None)
+    accepted_proposal_data = Column(JSON().with_variant(JSONB(), "postgresql"), nullable=True, default=None)
+    accepted_at = Column(DateTime(timezone=True), nullable=True)
+    client_fingerprint = Column(String, nullable=True, default=None)
+    acceptance_version = Column(Integer, nullable=False, default=0)
+
     safety_score = Column(Integer, default=100)
     compliance_flags = Column(JSON, default=list)
 

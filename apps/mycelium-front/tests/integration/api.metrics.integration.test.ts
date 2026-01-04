@@ -28,7 +28,7 @@ describe("integration: upload → metrics (cards-only)", () => {
     expect(uploadRes.status).toBe(200);
     expect(put).toHaveBeenCalled();
 
-    const stored = getLastPutJson(put as any);
+    const stored = getLastPutJson(put as any, "campanha-data.json");
 
     (head as any).mockResolvedValueOnce({ url: "http://localhost/blob/campanha-data.json" });
     global.fetch = vi.fn().mockResolvedValueOnce(okJson(stored));
@@ -58,7 +58,7 @@ describe("integration: upload → metrics (cards-only)", () => {
     const uploadRes = await uploadHandler(req);
     expect(uploadRes.status).toBe(200);
 
-    const stored = getLastPutJson(put as any) as any;
+    const stored = getLastPutJson(put as any, "campanha-data.json") as any;
     expect(stored?.meta?.skippedPreambleRows).toBe(4);
     expect(stored?.meta?.headers).toContain("CNPJ");
     expect(stored?.meta?.headers).toContain("Número da Proposta");

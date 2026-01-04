@@ -23,6 +23,7 @@ async function loadPublisher() {
 
 describe('Publisher Module', () => {
   const originalToken = process.env.BLOB_READ_WRITE_TOKEN;
+  const originalEnv = process.env.NODE_ENV;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -31,6 +32,7 @@ describe('Publisher Module', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     process.env.BLOB_READ_WRITE_TOKEN = originalToken;
+    process.env.NODE_ENV = originalEnv;
   });
 
   describe('publishSnapshot', () => {
@@ -62,6 +64,7 @@ describe('Publisher Module', () => {
 
     it('deve falhar quando token nao esta configurado', async () => {
       delete process.env.BLOB_READ_WRITE_TOKEN;
+      process.env.NODE_ENV = 'development';
       const { publishSnapshot } = await loadPublisher();
 
       await expect(publishSnapshot({ ok: true })).rejects.toThrow('Missing BLOB_READ_WRITE_TOKEN');

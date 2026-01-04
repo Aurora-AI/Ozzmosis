@@ -1,12 +1,20 @@
-import { put, list, head } from '@vercel/blob';
+import { blobClient } from "@/lib/blob";
 
 type AnyObj = Record<string, any>;
 
 const PREFIX = 'campanha/snapshots';
-const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 
-function assertToken() {
-  if (!BLOB_TOKEN) throw new Error('Missing BLOB_READ_WRITE_TOKEN');
+function resolveBlobToken(): string | undefined {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (token) return token;
+  if (process.env.NODE_ENV === "test") return "test-blob-token";
+  return undefined;
+}
+
+function assertToken(): string {
+  const token = resolveBlobToken();
+  if (!token) throw new Error("Missing BLOB_READ_WRITE_TOKEN");
+  return token;
 }
 
 /**
@@ -14,15 +22,15 @@ function assertToken() {
  * Nao cria "latest.json" previsivel. O "latest" e calculado via list() no server.
  */
 export async function publishSnapshot(snapshot: AnyObj): Promise<void> {
-  assertToken();
+  const token = assertToken();
 
   const now = new Date();
   const stamp = now.toISOString().replace(/[:.]/g, '-');
   const pathname = `${PREFIX}/snapshot-${stamp}.json`;
 
-  await put(pathname, JSON.stringify(snapshot, null, 2), {
+  await blobClient.put(pathname, JSON.stringify(snapshot, null, 2), {
     access: 'public',
-    token: BLOB_TOKEN,
+    token,
     contentType: 'application/json',
     addRandomSuffix: true,
   });
@@ -33,10 +41,10 @@ export async function publishSnapshot(snapshot: AnyObj): Promise<void> {
  * Retorna null se nao houver nenhum publicado.
  */
 export async function getLatestSnapshot(): Promise<AnyObj | null> {
-  assertToken();
+  const token = assertToken();
 
-  const page = await list({
-    token: BLOB_TOKEN,
+  const page = await blobClient.list({
+    token,
     prefix: `${PREFIX}/`,
     limit: 100,
   });
@@ -50,7 +58,7 @@ export async function getLatestSnapshot(): Promise<AnyObj | null> {
     return tb - ta;
   })[0];
 
-  const meta = await head(latest.pathname, { token: BLOB_TOKEN });
+  const meta = await blobClient.head(latest.pathname, { token });
   if (!meta?.url) return null;
 
   const res = await fetch(meta.url, { cache: 'no-store' });

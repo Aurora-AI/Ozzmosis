@@ -1,4 +1,4 @@
-import { head } from "@vercel/blob";
+import { blobClient } from "@/lib/blob";
 
 type AnyRecord = Record<string, unknown>;
 
@@ -19,7 +19,7 @@ function sanitizePayload(input: unknown): unknown {
 }
 
 export async function fetchCampaignData(): Promise<unknown | null> {
-  const blobInfo = await head("campanha-data.json");
+  const blobInfo = await blobClient.head("campanha-data.json");
   if (!blobInfo?.url) return null;
 
   const url = new URL(blobInfo.url);

@@ -15,12 +15,18 @@ export const notFoundJson = (value: unknown): FetchLikeResponse => ({
   json: async () => value,
 });
 
-export function getLastPutJson(putMock: { mock: { calls: unknown[][] } }): unknown {
+export function getLastPutJson(
+  putMock: { mock: { calls: unknown[][] } },
+  pathnameIncludes: string | null = null
+): unknown {
   const calls = putMock?.mock?.calls ?? [];
   if (calls.length === 0) throw new Error("Expected put() to be called.");
-  const last = calls[calls.length - 1] ?? [];
-  const body = last[1];
+  const picked =
+    pathnameIncludes == null
+      ? calls[calls.length - 1]
+      : [...calls].reverse().find((c) => String(c?.[0] ?? "").includes(pathnameIncludes));
+  if (!picked) throw new Error("Expected put() to be called with matching pathname.");
+  const body = picked[1];
   if (typeof body !== "string") throw new Error("Expected put() body to be a JSON string.");
   return JSON.parse(body) as unknown;
 }
-

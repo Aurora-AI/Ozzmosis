@@ -1,5 +1,5 @@
-import { put } from "@vercel/blob";
 import Papa from "papaparse";
+import { blobClient } from "@/lib/blob";
 import { detectHeaderAndRows } from "@/lib/metrics/normalize";
 import { detectDelimiter } from "@/lib/csv";
 
@@ -38,7 +38,7 @@ export async function uploadCampaignCsv(csvText: string, sourceName: string): Pr
     data: { rows: strippedRows },
   };
 
-  const blob = await put("campanha-data.json", JSON.stringify(payload), {
+  const blob = await blobClient.put("campanha-data.json", JSON.stringify(payload), {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,

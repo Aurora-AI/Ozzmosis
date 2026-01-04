@@ -1,7 +1,7 @@
-import { head } from "@vercel/blob";
+import { blobClient } from "@/lib/blob";
 
 export async function fetchLatestSnapshot(): Promise<unknown | null> {
-  const blobInfo = await head("calceleve/latest.json");
+  const blobInfo = await blobClient.head("calceleve/latest.json");
   if (!blobInfo?.url) return null;
 
   const res = await fetch(blobInfo.url, { cache: "no-store" });

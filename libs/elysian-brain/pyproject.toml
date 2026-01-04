@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "elysian-brain"
+version = "0.1.0"
+description = "Elysian Brain Toolbelt (STT batch transcription)"
+authors = ["Aurora AI"]
+packages = [{ include = "elysian_brain", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+faster-whisper = "^1.0.3"
+ffmpeg-python = "^0.2.0"
+tqdm = "^4.66.0"
+
+[tool.poetry.scripts]
+elysian-transcribe = "elysian_brain.toolbelt.transcribe.batch_subtitles:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

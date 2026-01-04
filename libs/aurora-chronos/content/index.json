@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-01-02T14:49:28.448Z",
+  "roots": {
+    "chronosContent": "libs/aurora-chronos/content",
+    "vaultAdemicon": "apps/ozzmosis/data/vault/ademicon"
+  },
+  "chronos": [
+    {
+      "id": "DEC-20251228-001",
+      "type": "decision",
+      "title": "Chronos Guard de integridade editorial",
+      "date": "2025-12-28",
+      "status": "active",
+      "tags": [
+        "chronos",
+        "guard"
+      ],
+      "path": "library/decisions/DEC-20251228-001.md"
+    },
+    {
+      "id": "STD-20251229-002",
+      "type": "study",
+      "title": "Chronos: Onboarding Cognitivo de Agentes (Trustware)",
+      "date": "2025-12-29",
+      "status": "active",
+      "tags": [
+        "chronos",
+        "onboarding",
+        "trustware",
+        "governance"
+      ],
+      "path": "library/studies/STD-CHRONOS-AGENT-ONBOARDING.md"
+    }
+  ],
+  "vault": [
+    {
+      "id": "VAULT-ADEMICON-README",
+      "title": "Vault Ademicon (SSOT)",
+      "path": "README.md"
+    },
+    {
+      "id": "VAULT-ADEMICON-DOCTRINE",
+      "title": "Doutrina Aurora Wealth (Ademicon)",
+      "path": "00_MANIFESTO/DOCTRINE_WEALTH.md"
+    },
+    {
+      "id": "VAULT-ADEMICON-STATES",
+      "title": "SSOT — Estados (Ademicon)",
+      "path": "01_STATES/SSOT_STATES.md"
+    },
+    {
+      "id": "VAULT-ADEMICON-RISK",
+      "title": "Policy — Risco Operacional",
+      "path": "03_POLICIES/risk_policy.md"
+    },
+    {
+      "id": "VAULT-ADEMICON-DASHBOARD",
+      "title": "Dashboard — Wireframe Spec",
+      "path": "04_DASHBOARD/wireframe_spec.md"
+    }
+  ]
+}

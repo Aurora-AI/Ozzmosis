@@ -1,0 +1,5 @@
+{
+  "low_maturity": { "churn_risk": "high", "ltv_projection": 0 },
+  "balanced": { "churn_risk": "medium", "ltv_projection": 120000 },
+  "high_maturity": { "churn_risk": "low", "ltv_projection": 350000 }
+}

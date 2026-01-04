@@ -7,7 +7,6 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { NextRequest } from 'next/server';
 
 const putMock = vi.fn();
 const listMock = vi.fn();
@@ -64,16 +63,14 @@ describe('API Routes', () => {
         url: 'https://blob.vercel-storage.com/campanha/snapshots/snapshot-2025-01-01-xyz.json',
       });
 
-      const form = new FormData();
-      form.append('file', new File([buildCsv()], 'sample.csv', { type: 'text/csv' }));
+      const form = {
+        get: (key: string) => (key === 'file' ? ({ text: async () => buildCsv() } as unknown) : null),
+      } as unknown as FormData;
 
-      const request = new NextRequest('http://localhost:3000/api/publish-csv', {
-        method: 'POST',
-        headers: {
-          'x-admin-token': 'test-secret-token',
-        },
-        body: form,
-      });
+      const request = {
+        headers: new Headers({ 'x-admin-token': 'test-secret-token' }),
+        formData: async () => form,
+      } as unknown as Request;
 
       const response = await publishCsvHandler(request);
       const data = await response.json();
@@ -99,10 +96,10 @@ describe('API Routes', () => {
       const form = new FormData();
       form.append('file', new File([buildCsv()], 'sample.csv', { type: 'text/csv' }));
 
-      const request = new NextRequest('http://localhost:3000/api/publish-csv', {
-        method: 'POST',
-        body: form,
-      });
+      const request = {
+        headers: new Headers(),
+        formData: async () => form,
+      } as unknown as Request;
 
       const response = await publishCsvHandler(request);
       const data = await response.json();

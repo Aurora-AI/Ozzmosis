@@ -1,4 +1,4 @@
-import { head } from "@vercel/blob";
+import { blobClient } from "@/lib/blob";
 
 import { computeMetrics } from "@/lib/metrics/compute";
 import { buildHeroPayload } from "@/lib/hero/buildHeroPayload";
@@ -9,7 +9,7 @@ export type HeroLoadResult =
   | { status: "ok"; payload: HeroPayload };
 
 export async function loadHeroPayload(): Promise<HeroLoadResult> {
-  const meta = await head("campanha-data.json");
+  const meta = await blobClient.head("campanha-data.json");
   if (!meta?.url) return { status: "empty" };
 
   const url = new URL(meta.url);

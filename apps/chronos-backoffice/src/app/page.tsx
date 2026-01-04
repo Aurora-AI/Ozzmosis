@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useProject } from "@/hooks/useProject";
 import { GanttGrid } from "@/components/gantt/GanttGrid";
@@ -37,6 +38,29 @@ export default function Page() {
       ) : null}
 
       <div className="mt-8 grid grid-cols-1 gap-6">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="text-lg font-semibold">Ademicon (Vault)</div>
+          <div className="mt-1 text-sm opacity-70">
+            Biblioteca SSOT em disco. Clique para abrir a fonte oficial.
+          </div>
+          <div className="mt-3 grid gap-2 text-sm">
+            <Link className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 hover:bg-white/10" href="/vault/ademicon/states">
+              Estados (SSOT)
+            </Link>
+            <Link className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 hover:bg-white/10" href="/vault/ademicon/manifesto">
+              Manifesto (README)
+            </Link>
+            <Link className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 hover:bg-white/10" href="/vault/ademicon/doctrine-wealth">
+              Doutrina Wealth
+            </Link>
+            <Link className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 hover:bg-white/10" href="/vault/ademicon/risk-policy">
+              Policy de Risco
+            </Link>
+            <Link className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 hover:bg-white/10" href="/vault/ademicon/dashboard-spec">
+              Dashboard Spec
+            </Link>
+          </div>
+        </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="text-lg font-semibold">Projetos</div>
           {projectsNotice ? (

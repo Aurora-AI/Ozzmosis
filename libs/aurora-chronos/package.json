@@ -14,7 +14,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "node -e \"console.log('chronos:lint (placeholder)')\"",
     "smoke": "node ./scripts/smoke.mjs",
-    "chronos:guard": "tsx scripts/guard-integrity.ts"
+    "chronos:guard": "tsx scripts/guard-integrity.ts",
+    "chronos:index": "tsx scripts/build-index.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -26,4 +27,3 @@
     "typescript": "^5.7.2"
   }
 }
-

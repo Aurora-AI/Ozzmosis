@@ -70,6 +70,90 @@ Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garan
      - Sem erro de parsing/config para JSON/TS
 
 ---
+# PLAN — OS-ANTIGRAVITY-GENESIS-REBUILD-004
+Data: 2026-01-04
+Autor: agent
+
+## Objetivo
+Encerrar a OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 como "execucao revertida" (fonte perdida no workspace) e reconstruir `apps/genesis-front` com fonte versionada (Next App Router + Lenis + framer-motion) e handshake real de API via `NEXT_PUBLIC_API_URL`.
+
+## Escopo
+Inclui:
+- Atualizar `docs/os/OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003.md` (forense + conclusao).
+- Criar `docs/os/OS-ANTIGRAVITY-GENESIS-REBUILD-004.md` (OS nova + criterios).
+- Rebuild de `apps/genesis-front` com fonte (package.json + app/ + components/ + lib/api.ts).
+- Proxy/rewrite de DEV no Next para evitar CORS local sem mudar backend.
+Nao inclui:
+- Alteracoes no backend/API.
+
+## Riscos
+- R1: Deletar `apps/genesis-front` (artefatos) exige confirmacao humana e pode apagar `.env.local` local.
+- R2: Dependencias (next/react/lenis/framer-motion) exigem lockfile unico no root e gates verdes.
+- R3: CORS local pode bloquear handshake; proxy deve ser DEV-only e sem impacto em prod.
+
+## Passos (executar 1 por vez)
+1) Fechar OS-003 + abrir OS-004 (docs)
+   - Mudancas:
+     - Atualizar `docs/os/OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003.md`
+     - Criar `docs/os/OS-ANTIGRAVITY-GENESIS-REBUILD-004.md`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts/agents/run-gates.ps1`
+   - Criterios de aceite:
+     - OS-003 marcada como execucao revertida e inclui evidencias (timestamps + ausencia de fonte)
+     - OS-004 criada com entregaveis + como rodar
+     - Gates passam
+
+2) (Confirmacao humana obrigatoria) Higienizar `apps/genesis-front` e recriar com fonte Next (App Router)
+   - Mudancas:
+     - Remover artefatos (`.next/`, `node_modules/`, `.env.local`, `next-env.d.ts`) e garantir fonte real em disco.
+     - Criar `apps/genesis-front/package.json`, `app/**`, `components/**`, `lib/api.ts`.
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `Remove-Item -Recurse -Force apps/genesis-front` (exige confirmacao humana)
+     - `New-Item -ItemType Directory apps/genesis-front`
+     - `apply_patch` (criar arquivos base do app)
+     - `npm install --package-lock-only`
+     - `npm -w apps/genesis-front run build`
+     - `npm -w apps/genesis-front run typecheck`
+     - `scripts/agents/run-gates.ps1`
+   - Criterios de aceite:
+     - `apps/genesis-front/package.json` existe
+     - `apps/genesis-front/app` existe
+     - Build e typecheck do workspace passam
+     - Gates passam
+
+3) Implementar Impact Light + Golden Path (Hero -> Acceptance)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts/agents/run-gates.ps1`
+   - Criterios de aceite:
+     - Estados existem e estao navegaveis via scroll
+
+4) Integrar Deep Scroll (Lenis) + transicoes (framer-motion)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts/agents/run-gates.ps1`
+   - Criterios de aceite:
+     - Lenis ativo globalmente
+     - Transicoes por estado com motion (opacity/scale)
+
+5) Handshake real com API + proxy DEV (sem mexer no backend)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts/agents/run-gates.ps1`
+   - Criterios de aceite:
+     - `NEXT_PUBLIC_API_URL` usado em `lib/api.ts`
+     - Rewrites/proxy evita CORS local quando necessario
+
+## Gates
+- `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>` (por passo/commit)
+- `scripts/agents/run-gates.ps1`
+
+---
 
 # PLAN — OS-OZZMOSIS-STT-HARDENING-WRAPPER-20260102-003
 Data: 2026-01-02
@@ -234,6 +318,49 @@ Nao inclui:
      - Gates PASS
 
 ---
+
+    # PLAN — OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 (fechamento)
+    Data: 2026-01-04
+    Autor: agent
+
+    ## Objetivo
+    Materializar rastro auditavel da OS e preparar commit com trailer, sem incluir artefatos de build.
+
+    ## Escopo
+    Inclui:
+    - Criar `docs/os/OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003.md`
+    - Criar `docs/Vault/AURORA_CANONICAL_HISTORY.md`
+    - Revisar pasta `apps/genesis-front` para garantir que apenas fontes/versionaveis sejam consideradas
+    Nao inclui:
+    - Gerar ou recuperar codigo-fonte faltante do Genesis Front (depende de fonte externa)
+    - Comitar artefatos de build, node_modules ou env files
+
+    ## Passos (executar 1 por vez)
+    1) Materializar documentos de OS e historico canonic
+       - Comandos:
+         - Criar os arquivos em `docs/os/` e `docs/Vault/` com o conteudo fornecido
+         - Conferir `git status -sb`
+       - Criterios de aceite:
+         - Arquivos criados com conteudo legivel em ASCII
+         - `git status -sb` lista apenas os novos docs e a pasta existente `apps/genesis-front`
+
+    2) Preparar commit com trailer e gates (apos disponibilizacao de fontes)
+       - Comandos:
+         - Remover artefatos de build nao rastreaveis (garantir `.gitignore` cobre .next/node_modules/.env)
+         - `git add docs/os/OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003.md docs/Vault/AURORA_CANONICAL_HISTORY.md` (e fontes legitimas do Genesis Front quando disponiveis)
+         - `scripts/agents/run-gates.ps1`
+         - `git commit -m "chore(genesis-front): register atmospheric translation OS" -m "OS: OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003"`
+         - `git push`
+       - Criterios de aceite:
+         - Gates passam
+         - Working tree limpo e commit contendo trailer da OS
+
+    ## Gates
+    - scripts/agents/run-gates.ps1
+
+    ## Rollback
+    - git restore --staged <paths> && git checkout -- <paths> (antes do commit)
+    - git revert <sha> (apos o commit)
 
 # PLAN — OS-CODEX-AURORA-CRM-HEADLESS-GENESIS-20260103-004
 Data: 2026-01-03

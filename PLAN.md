@@ -1,3 +1,280 @@
+# PLAN — OS-004-ACCEPTANCE-CRITERIA
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Implementar os criterios de aceite da OS-004 na Genesis Front (sem alterar URL),
+com transicao Standard -> Legacy, densidade atmosferica e reacao a inputs por
+composicao de instrumentos (nao por valor absoluto).
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/src/app/page.tsx` com estado de modo e transicao suave.
+- Ajustar navegacao para modo Legacy (indicadores de seguranca).
+- Reagir a composicao de instrumentos (Legacy destacado ao selecionar 2+ itens complexos).
+
+Nao inclui:
+- Mudancas em backend ou rotas.
+- Novas dependencias NPM.
+- Refactors fora da pagina inicial.
+
+## Riscos
+- R1: Transicao visual pode conflitar com estilos globais. Mitigacao: aplicar classes apenas no container principal.
+- R2: Scroll smooth pode conflitar com Lenis. Mitigacao: manter comportamento simples e idempotente.
+
+## Passos (executar 1 por vez)
+1) Implementar criterios de aceite na home
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Criterios de aceite:
+     - Sem mudanca de URL ao ativar o protocolo.
+     - Scroll suave para o topo ao iniciar protocolo.
+     - Modo Legacy altera densidade de informacao e navegacao.
+     - Card Legacy destaca automaticamente quando patrimonio > R$ 10M.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
+# PLAN — ADR-UNIFIED-VIP-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Formalizar a constituicao "VIP unificado" no repositorio, em `docs/CONSTITUICAO/`.
+
+## Escopo
+Inclui:
+- Criar `docs/CONSTITUICAO/ADR-UNIFIED-VIP-001.md` com o texto canonico fornecido.
+
+Nao inclui:
+- Alteracoes em codigo de produto.
+- Ajustes em outras documentacoes.
+
+## Riscos
+- R1: Conteudo divergente do texto canonico. Mitigacao: copiar literalmente o texto aprovado.
+
+## Passos (executar 1 por vez)
+1) Registrar ADR canônico
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+   - Arquivos:
+     - `docs/CONSTITUICAO/ADR-UNIFIED-VIP-001.md`
+   - Criterios de aceite:
+     - Arquivo criado com conteudo canonico.
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-GENESIS-EMPATHY-005
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Implementar o "Whisper Engine" e o Composer de Instrumentos na home, com progressao
+visual suave e ativacao consciente do protocolo.
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/src/app/page.tsx` com estado de instrumentos,
+  feedback efemero e card Legacy com intensificacao progressiva.
+
+Nao inclui:
+- Mudancas em rotas/URLs.
+- Mudancas em backend ou contrato de dados.
+- Novas dependencias NPM.
+
+## Riscos
+- R1: Mensagem efemera persistir entre renders. Mitigacao: timeout com limpeza.
+- R2: Ativacao VIP automatica indevida. Mitigacao: manter clique explicito.
+
+## Passos (executar 1 por vez)
+1) Implementar Composer + Whisper
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Criterios de aceite:
+     - Feedback de empatia exibido e auto-limpo.
+     - Card Legacy intensifica com 2+ instrumentos.
+     - Transicao para VIP somente por clique.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-GENESIS-ALIGN-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Alinhar `apps/genesis-front` à estrutura `src/` e transplantar o motor visual White Absolute
+para a home da Aurora Genesis (atmosfera, tipografia e organismo principal), mantendo
+o motor de scroll Lenis existente (sem ReactLenis).
+
+## Escopo
+Inclui:
+- Mover `apps/genesis-front/app` para `apps/genesis-front/src/app`.
+- Mover `apps/genesis-front/components` para `apps/genesis-front/src/components`.
+- Atualizar `apps/genesis-front/tsconfig.json` para `@/*` apontar para `./src/*`.
+- Substituir `apps/genesis-front/src/app/globals.css` com grain/spotlight/reveal e tokens White Absolute.
+- Manter o componente `apps/genesis-front/src/components/SmoothScroll.tsx`.
+- Atualizar `apps/genesis-front/src/app/layout.tsx` com Playfair Display e classes globais (body/html).
+- Reescrever `apps/genesis-front/src/app/page.tsx` com estrutura Hero/Life Map/Showcase/Footer e reveal.
+
+Não inclui:
+- Mudanças em outras apps (`chronos-backoffice`, `mycelium-front`).
+- Novas dependências NPM ou ajustes em Tailwind config.
+- Alterações em workflows/Dockerfiles/configs fora do escopo.
+
+## Riscos
+- R1: Comandos de move (`Move-Item`) não estão no allowlist Trustware. Mitigação: executar somente com confirmação humana explícita.
+- R2: Troca de `@import 'tailwindcss'` por diretivas `@tailwind` pode quebrar o build (Tailwind v4). Mitigação: manter `@import 'tailwindcss'` no topo ao substituir o CSS.
+- R3: Alias `@/*` pode quebrar imports se não apontar para `./src/*`. Mitigação: ajustar `tsconfig.json`.
+- R4: Interseção/reveal pode não ativar em navegadores antigos. Mitigação: fallback aceitável (elementos permanecem visíveis se `active` for aplicado manualmente).
+ - R5: Mudança para ReactLenis conflita com React 19 (peer deps). Mitigação: manter Lenis atual.
+
+## Passos (executar 1 por vez)
+1) Alinhamento de estrutura `src/`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `New-Item -ItemType Directory -Path apps\genesis-front\src`
+     - `Move-Item -Path apps\genesis-front\app -Destination apps\genesis-front\src\app`
+     - `Move-Item -Path apps\genesis-front\components -Destination apps\genesis-front\src\components`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/*`
+     - `apps/genesis-front/src/components/*`
+     - `apps/genesis-front/tsconfig.json`
+   - Critérios de aceite:
+     - Estrutura `apps/genesis-front/src/app` e `apps/genesis-front/src/components` existente.
+     - `@/*` aponta para `./src/*` em `apps/genesis-front/tsconfig.json`.
+     - Gates passam.
+
+2) Atmosfera global (globals.css)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/globals.css`
+   - Critérios de aceite:
+     - CSS substituído com `grain`, `hero-spotlight`, `reveal`, `hover-luxury` e `@theme`.
+     - Gates passam.
+
+3) Motor de scroll Lenis (existente) + layout base
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/components/SmoothScroll.tsx`
+     - `apps/genesis-front/src/components/index.ts`
+     - `apps/genesis-front/src/components/LenisProvider.tsx`
+     - `apps/genesis-front/src/app/layout.tsx`
+   - Critérios de aceite:
+     - SmoothScroll mantém Lenis existente.
+     - Playfair Display importada e aplicada via variável CSS.
+     - `<body>` aplica classes globais do briefing.
+     - Gates passam.
+
+4) Organismo principal (page.tsx)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Critérios de aceite:
+     - Estrutura Hero/Life Map/Showcase/Footer conforme briefing.
+     - Lógica de reveal ativa sem imports mortos.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
+# PLAN — AURORA-GENESIS-SKIN-TRANSPLANT-20260105-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Aplicar a “Golden Copy” (White Absolute) no `apps/genesis-front`, transplantando Atmosfera (grain + spotlight), Física (cubic-bezier `0.16, 1, 0.3, 1`) e Tipografia híbrida (Inter + Playfair Display), e removendo qualquer vestígio de theme toggle (Aurora imutável).
+
+## Escopo
+Inclui:
+- Substituir `apps/genesis-front/app/globals.css` pela base “White Absolute” (mantendo Tailwind v4 via `@import 'tailwindcss';`).
+- Atualizar `apps/genesis-front/app/layout.tsx` para adicionar `Playfair_Display` e aplicar as classes `grain` + `font-sans`.
+- Substituir `apps/genesis-front/app/page.tsx` pelo organismo “Aurora Genesis” com `reveal` via `IntersectionObserver`.
+
+Não inclui:
+- Mudança de dependências NPM.
+- Ajustes em `components/*` (exceto o uso do `SmoothScroll` já existente).
+- Commits/push (fora do allowlist Trustware).
+
+## Riscos
+- R1: Divergência de diretivas Tailwind (v4). Mitigação: usar `@import 'tailwindcss';` no `globals.css`.
+- R2: Import path do `SmoothScroll` divergente. Mitigação: manter o import existente `@/components/SmoothScroll`.
+- R3: CSS global anterior continha utilitários (`.container`) usados por componentes antigos. Mitigação: `app/page.tsx` não usa mais esses componentes.
+- R4: `npm ci` pode falhar no Windows com `EPERM unlink` se o VS Code/Extensões estiverem com lock em `node_modules` (ex.: Tailwind oxide). Mitigação: fechar instâncias do VS Code que estejam com o repo aberto e re-rodar os gates.
+
+## Passos (executar 1 por vez)
+1) Atmosfera — substituir `apps/genesis-front/app/globals.css`
+   - Mudanças:
+     - Definir tokens (`--bg`, `--fg`, `--line`, etc.), `grain`, `hero-spotlight`, `reveal`, `hover-luxury` e `.font-serif`.
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+2) Tipografia — atualizar `apps/genesis-front/app/layout.tsx`
+   - Mudanças:
+     - Importar `Playfair_Display` via `next/font/google`.
+     - Aplicar `${inter.variable} ${playfair.variable}` e `grain` no `<body>`.
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+3) Organismo — substituir `apps/genesis-front/app/page.tsx`
+   - Mudanças:
+     - Página “Aurora Genesis” com navegação fixa, hero (spotlight + serif), life map (sliders) e showcase (cards).
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+## Gates
+- `scripts\agents\run-gates.ps1` após cada passo.
+
+## Rollback
+- Reverter os 3 arquivos alterados para o estado anterior (via git, com execução humana se necessário) e re-rodar `scripts\agents\run-gates.ps1`.
+
 # PLAN — ESLint root config + VS Code monorepo fix
 
 Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garantindo um config raiz do ESLint (Flat Config) e ajustes mínimos de monorepo no workspace.
@@ -70,6 +347,61 @@ Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garan
      - Sem erro de parsing/config para JSON/TS
 
 ---
+
+# PLAN — AURORA-GENESIS-HERO-FANTASY-005
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Refinar o Hero de `apps/genesis-front` para tipografia com “Ar e Autoridade” (peso/leading/tracking) e ajustar o smooth scroll via Lenis para fluidez cinematográfica.
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/components/Hero.tsx` para layout centrado, tracking negativo e contraste `font-extralight` vs `font-normal`.
+- Ajustar o wrapper de scroll em `apps/genesis-front/app/layout.tsx` com um componente `SmoothScroll` (Lenis) e opções equivalentes às do briefing.
+
+Não inclui:
+- Novas dependências NPM.
+- Mudanças em outras seções (Decision Space / Life Map / Proposals / Acceptance).
+- Refactors gerais de animações/estilos fora do Hero.
+
+## Riscos
+- R1: Regressão visual em breakpoints (mobile/desktop). Mitigação: manter classes Tailwind responsivas e validar rapidamente o layout manualmente.
+- R2: Lenis interferir com `scrollIntoView({ behavior: 'smooth' })`. Mitigação: manter configuração conservadora; se houver conflito, ajustar a navegação para `behavior: 'auto'` ou usar `lenis.scrollTo` em passo separado.
+
+## Passos (executar 1 por vez)
+1) Reconstruir o Hero (Fantasy.co)
+   - Comandos (gates):
+     - `cd C:\\Aurora\\Ozzmosis`
+     - `npm ci`
+     - `npm run repo:check`
+   - Arquivos:
+     - `apps/genesis-front/components/Hero.tsx`
+   - Critérios de aceite:
+     - `npm run repo:check` passa
+     - Hero compila e renderiza sem erro de runtime
+
+2) Smooth scroll (Lenis) via `SmoothScroll` no layout
+   - Comandos (gates):
+     - `cd C:\\Aurora\\Ozzmosis`
+     - `npm ci`
+     - `npm run repo:check`
+   - Arquivos:
+     - `apps/genesis-front/components/SmoothScroll.tsx` (novo)
+     - `apps/genesis-front/app/layout.tsx`
+     - `apps/genesis-front/components/index.ts`
+     - `apps/genesis-front/components/LenisProvider.tsx` (ajuste mínimo/compat)
+   - Critérios de aceite:
+     - `npm run repo:check` passa
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- Reverter via git (exige confirmação humana se fora do allowlist Trustware):
+  - `git revert <sha>`
+  - `npm ci && npm run repo:check`
 # PLAN — OS-ANTIGRAVITY-GENESIS-REBUILD-004
 Data: 2026-01-04
 Autor: agent

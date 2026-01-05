@@ -33,6 +33,7 @@ Este repositório não é um produto final.
 ## Canônicos (onde está a verdade)
 - Constituição Operacional: `docs/CONSTITUICAO/README.md`
 - Processo + Checklist: `docs/CONSTITUICAO/PROCESSO_PRODUTIVO.md` e `docs/CONSTITUICAO/CHECKLIST_FABRICA.md`
+- Constituição VIP: `docs/CONSTITUICAO/ADR-UNIFIED-VIP-001.md`
 - Manual do repo/fábrica: `docs/ozzmosis/MANUAL_PRODUTO_OZZMOSIS.md`
 - SSOT/Vault (espelhamento obrigatório): `docs/Vault_SSoT_MANIFEST.md`
 - Agent Skills (progressive disclosure): `agent-skills/README.md`

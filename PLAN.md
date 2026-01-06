@@ -115,6 +115,53 @@ Nao inclui:
 
 ---
 
+# PLAN — OS-SHIELD-GREEN-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Levar o butantan-shield a contract/survival/core 🟢 conforme auditor.
+
+## Escopo
+Inclui:
+- Contrato publico do Shield.
+- Survival test e script test:survival.
+- Workflow CI dedicado de survival.
+- Evidencias em `apps/ozzmosis/data/vault/rodobens-wealth/_runs/shield-green-001/`.
+
+Nao inclui:
+- UI ou refactors amplos.
+- Politicas avancadas alem do minimo deterministico.
+
+## Passos (executar 1 por vez)
+1) WP0: registrar OS no Vault + PLAN
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-SHIELD-GREEN-001.md`
+     - `PLAN.md`
+
+2) WP1: contrato do Shield
+   - Arquivos:
+     - `apps/butantan-shield/docs/CONTRACT.md`
+     - `docs/CONTRACT.md` (se necessario para evidencia do auditor)
+
+3) WP2: survival test + script
+   - Arquivos:
+     - `apps/butantan-shield/tests/survival/shield.survival.test.ts`
+     - `apps/butantan-shield/package.json`
+
+4) WP3: CI + evidencia Vault
+   - Arquivos:
+     - `.github/workflows/ci-survival-shield.yml`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/shield-green-001/*`
+
+## Gates
+- CI Linux (sem gates locais por EPERM)
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-2026-GENESIS-STABILITY-024
 Data: 2026-01-06
 Autor: agent

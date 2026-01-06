@@ -97,7 +97,7 @@ Nao inclui:
      - `cd C:\Aurora\Ozzmosis`
      - `scripts\agents\run-gates.ps1`
    - Arquivos:
-     - `scripts/product_maturity/survival_check.py`
+     - `scripts/audit/survival_check.py`
      - `.github/workflows/ci-survival-chronos.yml`
      - `.github/workflows/ci-survival-crm-core.yml`
      - `.github/workflows/ci-survival-alvaro-core.yml`

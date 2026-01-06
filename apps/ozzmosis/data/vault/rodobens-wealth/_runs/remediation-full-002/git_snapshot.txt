@@ -1,0 +1,83 @@
+### git status -sb
+## chore/shield-workspace-foundation...origin/chore/shield-workspace-foundation [ahead 16]
+ M .gitignore
+ M PLAN.md
+R  apps/ozzmosis/data/vault/_runs/contract-public-001/inventory.json -> apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-001/inventory.json
+D  artifacts/contract_overlay.json
+D  artifacts/entrypoints_check.json
+D  artifacts/survival_check.json
+R  scripts/product_maturity/survival_check.py -> scripts/audit/survival_check.py
+?? apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-001/contract_overlay.json
+?? apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-001/entrypoints_check.json
+?? apps/ozzmosis/data/vault/rodobens-wealth/_runs/remediation-full-002/
+
+### git diff --stat
+ .gitignore | 8 ++++++++
+ PLAN.md    | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+### git diff
+diff --git a/.gitignore b/.gitignore
+index ad7b257..ea8d4b7 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -20,6 +20,14 @@ out/
+ last-run.json
+ artifacts/
+ 
++# Default: ignore json artifacts
++*.json
++
++# SSOT exception: Vault run artifacts must be versioned
++!apps/ozzmosis/data/vault/**/_runs/**/*.json
++!apps/ozzmosis/data/vault/**/_runs/**/*.txt
++!apps/ozzmosis/data/vault/**/_runs/**/*.md
++
+ # Vault (Rodobens transcripts): never commit real outputs
+ apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/**
+ !apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/.gitkeep
+diff --git a/PLAN.md b/PLAN.md
+index 68806f9..0d1f47d 100644
+--- a/PLAN.md
++++ b/PLAN.md
+@@ -97,7 +97,7 @@ Nao inclui:
+      - `cd C:\Aurora\Ozzmosis`
+      - `scripts\agents\run-gates.ps1`
+    - Arquivos:
+-     - `scripts/product_maturity/survival_check.py`
++     - `scripts/audit/survival_check.py`
+      - `.github/workflows/ci-survival-chronos.yml`
+      - `.github/workflows/ci-survival-crm-core.yml`
+      - `.github/workflows/ci-survival-alvaro-core.yml`
+
+### git log --oneline --decorate -n 30
+aaa3c5b (HEAD -> chore/shield-workspace-foundation) chore(plan): add contract and remediation OS
+a50cf59 feat(survival): add tests and taxonomy docs
+5120049 feat(shield): add enforcement and smoke
+2046387 feat(chronos): add core and survival tests
+19890bb feat(survival): add checks and CI workflows
+c25030a feat(contract): add contract overlay and CI gate
+6fde826 feat(contract): add entrypoints check and inventory
+95b41b0 chore(plan): add rodobens wealth os 019
+41cac68 feat(rodobens): add trustware templates and states
+74b23a7 feat(pdf2md): add toolbelt and wrappers
+225a6fb feat(vault): add rodobens raw/processed layout
+3167208 feat(agents): enforce manual law context
+21f0814 feat(agents): add agent law
+03bf1bd chore(agents): import manual v5.0
+8d6b34f feat(pdf2md): add deterministic pipeline
+ba6aa95 feat(vault): add rodobens wealth SSOT
+807557b (origin/chore/shield-workspace-foundation) feat(trustware): enrich health and boot log
+9d6f64a docs: add ADR-UNIFIED-VIP-001 canonical constitution
+2def8a2 feat(genesis): complete Fantasy.co-inspired rebuild with source-of-truth
+b72862b chore(vault): register OS-003 forensics and open OS-004 rebuild plan
+ded1cf5 (worktree-2026-01-04T22-04-11, worktree-2026-01-04T22-03-09) chore(mycelium-front): harden test suite (react dedupe + blob adapter)
+59fa073 feat(crm-core): accept proposal tier with immutable snapshot and governed stage
+9e6a490 feat(crm-core): persist deterministic proposal bundles on Deal (OS 015)
+b968637 feat(crm-core): persist LifeMap as first-class versioned truth on Deal (OS 014)
+956bdb7 feat(crm-core): add read APIs for contacts, deals and life-map comparison (OS 013)
+2a428b8 chore(vault): canonicalize OS 012 record path
+ce82c00 feat(crm-core): apply MHC decisions to domain via DealService with governed stage transitions
+09be24c chore(vault): close CRM OS 007B (sqlalchemy test deps)
+5000438 chore(crm-core): add life map schemas, deterministic math engine, and pipeline governor
+9663066 chore(crm-core): add sqlalchemy asyncio to test deps to fix CI import collection

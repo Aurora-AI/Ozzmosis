@@ -20,3 +20,15 @@ WP1 Contract → WP2 Core → WP3 Survival → Evidencias
 - Contract 🟢
 - Core 🟢
 - Survival 🟢
+
+## Fechamento
+status: DONE
+merged_pr: https://github.com/Aurora-AI/Ozzmosis/pull/23
+merged_at: 2026-01-06
+evidence_run: apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/
+result:
+  contract: green
+  survival: green
+  core: green
+notes:
+  - CI Linux SSOT; gates locais omitidos (windows_gates_policy.md)

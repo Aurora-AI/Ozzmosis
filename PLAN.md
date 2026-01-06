@@ -68,6 +68,83 @@ Nao inclui:
 
 ---
 
+# PLAN — OS-2026-GENESIS-STABILITY-024
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Remover estados criticos (🔴) para contrato/survival/core minimo em
+butantan-shield, aurora-conductor-service e elysian-brain, com evidencia
+versionada no Vault.
+
+## Escopo
+Inclui:
+- Contratos (CONTRACT.md) para shield e conductor-service.
+- Entrypoint/exports reais quando aplicavel (sem inventar simbolos).
+- Survival do Shield + CI dedicado.
+- Enforcement fail-closed no alvaro-core.
+- Core minimo do elysian-brain lendo index.json do Vault + teste.
+- Evidencias em `_runs/` no Vault.
+
+Nao inclui:
+- OCR real ou expansao de features.
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Contrato gerar export inventado. Mitigacao: exportar apenas simbolos reais.
+- R2: Survival do Shield flake em CI. Mitigacao: smoke deterministico e timeout curto.
+
+## Passos (executar 1 por vez)
+1) Contratos (Shield + Conductor-Service) + entrypoints
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/docs/CONTRACT.md`
+     - `apps/aurora-conductor-service/docs/CONTRACT.md`
+     - `apps/butantan-shield/src/index.ts` (se houver exports reais)
+     - `apps/aurora-conductor-service/src/index.ts` (se houver exports reais)
+   - Criterios de aceite:
+     - Auditor detecta contrato (>= 🟡).
+     - Sem simbolos inventados.
+     - Gates passam.
+
+2) Shield survival + enforcement fail-closed
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/tests/survival/shield.survival.test.ts`
+     - `.github/workflows/ci-survival-shield.yml`
+     - `apps/alvaro-core/services/shield/enforcer.py`
+   - Criterios de aceite:
+     - Survival do Shield passa em CI.
+     - Enforcement bloqueia em falha (fail-closed).
+     - Gates passam.
+
+3) Brain core minimo + evidencias Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/**`
+     - `libs/elysian-brain/tests/**`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/remediation-shield-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/rodobens-ingest-024/*.json`
+   - Criterios de aceite:
+     - Brain le index.json e passa teste deterministico.
+     - Evidencias no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-REMEDIATION-FULL-002-CODEX
 Data: 2026-01-06
 Autor: agent

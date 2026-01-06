@@ -1,0 +1,14 @@
+version: 1
+product: consorcio_auto
+rules:
+  - id: require_identity
+    type: required_fields
+    fields: ["cpf_cnpj", "whatsapp_id"]
+  - id: anti_churn_min_safety
+    type: min_value
+    field: "safety_score"
+    min: 50
+  - id: stage_gate_proposal_requires_lifemap
+    type: requires
+    field: "life_map"
+    when_stage: "PROPOSAL"

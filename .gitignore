@@ -20,6 +20,14 @@ out/
 last-run.json
 artifacts/
 
+# Default: ignore json artifacts
+*.json
+
+# SSOT exception: Vault run artifacts must be versioned
+!apps/ozzmosis/data/vault/**/_runs/**/*.json
+!apps/ozzmosis/data/vault/**/_runs/**/*.txt
+!apps/ozzmosis/data/vault/**/_runs/**/*.md
+
 # Vault (Rodobens transcripts): never commit real outputs
 apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/**
 !apps/ozzmosis/data/vault/rodobens/trainings/transcripts/_runs/.gitkeep

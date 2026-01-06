@@ -1,8 +1,454 @@
+# PLAN — OS-CONTRACT-PUBLIC-001-CODEX
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Adicionar gate deterministico de contratos (entrypoints) e artefatos de auditoria
+para libs TS/Python, sem inventar exports.
+
+## Escopo
+Inclui:
+- Inventario de libs em `apps/ozzmosis/data/vault/_runs/contract-public-001/inventory.json`.
+- Script `scripts/audit/entrypoints_check.py`.
+- Overlay `scripts/product_maturity/contract_overlay.py`.
+- Workflow CI `ci-entrypoints-contract.yml`.
+- Artefatos `artifacts/entrypoints_check.json` e `artifacts/contract_overlay.json`.
+
+Nao inclui:
+- Refactors amplos em libs.
+- Alteracoes em libs fora de entrypoints (se necessario).
+
+## Riscos
+- R1: Export inventado. Mitigacao: reexportar apenas o que existe.
+- R2: Script nao roda em CI. Mitigacao: usar Python 3.11 padrao.
+
+## Passos (executar 1 por vez)
+1) Inventario + script de entrypoints
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/_runs/contract-public-001/inventory.json`
+     - `scripts/audit/entrypoints_check.py`
+   - Criterios de aceite:
+     - Inventario inclui todas as libs em `libs/`.
+     - Script gera reason-codes deterministicos.
+     - Gates passam.
+
+2) Overlay + workflow + artefatos de auditoria
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/product_maturity/contract_overlay.py`
+     - `.github/workflows/ci-entrypoints-contract.yml`
+     - `artifacts/entrypoints_check.json`
+     - `artifacts/contract_overlay.json`
+   - Criterios de aceite:
+     - CI executa entrypoints_check.
+     - Overlay gera updates deterministas.
+     - Artefatos presentes.
+     - Gates passam.
+
+3) Ajustar entrypoints se houver falhas
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/**/src/index.ts` ou `libs/**/src/<pkg>/__init__.py`
+   - Criterios de aceite:
+     - Nenhuma lib com falha de entrypoint.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-2026-GENESIS-STABILITY-024
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Remover estados criticos (🔴) para contrato/survival/core minimo em
+butantan-shield, aurora-conductor-service e elysian-brain, com evidencia
+versionada no Vault.
+
+## Escopo
+Inclui:
+- Contratos (CONTRACT.md) para shield e conductor-service.
+- Entrypoint/exports reais quando aplicavel (sem inventar simbolos).
+- Survival do Shield + CI dedicado.
+- Enforcement fail-closed no alvaro-core.
+- Core minimo do elysian-brain lendo index.json do Vault + teste.
+- Evidencias em `_runs/` no Vault.
+
+Nao inclui:
+- OCR real ou expansao de features.
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Contrato gerar export inventado. Mitigacao: exportar apenas simbolos reais.
+- R2: Survival do Shield flake em CI. Mitigacao: smoke deterministico e timeout curto.
+
+## Passos (executar 1 por vez)
+1) Contratos (Shield + Conductor-Service) + entrypoints
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/docs/CONTRACT.md`
+     - `apps/aurora-conductor-service/docs/CONTRACT.md`
+     - `apps/butantan-shield/src/index.ts` (se houver exports reais)
+     - `apps/aurora-conductor-service/src/index.ts` (se houver exports reais)
+   - Criterios de aceite:
+     - Auditor detecta contrato (>= 🟡).
+     - Sem simbolos inventados.
+     - Gates passam.
+
+2) Shield survival + enforcement fail-closed
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/tests/survival/shield.survival.test.ts`
+     - `.github/workflows/ci-survival-shield.yml`
+     - `apps/alvaro-core/services/shield/enforcer.py`
+   - Criterios de aceite:
+     - Survival do Shield passa em CI.
+     - Enforcement bloqueia em falha (fail-closed).
+     - Gates passam.
+
+3) Brain core minimo + evidencias Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/**`
+     - `libs/elysian-brain/tests/**`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/remediation-shield-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/rodobens-ingest-024/*.json`
+   - Criterios de aceite:
+     - Brain le index.json e passa teste deterministico.
+     - Evidencias no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-REMEDIATION-FULL-002-CODEX
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Atender os pontos de auditoria (survival, chronos core, shield consumidor,
+taxonomia e evidencias de deploy) com evidencias objetivas.
+
+## Escopo
+Inclui:
+- Survival tests e workflows para chronos, crm-core, alvaro-core e shield.
+- Core minimo Chronos com testes.
+- Consumo real do Shield em um fluxo.
+- Script de auditoria survival com reason-codes.
+- Docs minimos de taxonomia e evidencia de operacao.
+
+Nao inclui:
+- OCR real ou expansao de features nao pedidas.
+
+## Riscos
+- R1: Dependencias novas para testes. Mitigacao: usar stack existente.
+- R2: Falhas de CI por workflow. Mitigacao: CI isolado por job.
+
+## Passos (executar 1 por vez)
+1) Survival detection + workflows base
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/audit/survival_check.py`
+     - `.github/workflows/ci-survival-chronos.yml`
+     - `.github/workflows/ci-survival-crm-core.yml`
+     - `.github/workflows/ci-survival-alvaro-core.yml`
+     - `.github/workflows/ci-smoke-shield.yml`
+     - `artifacts/survival_check.json`
+   - Criterios de aceite:
+     - Script gera `survival_check.json` com reason-codes.
+     - Workflows executam survival/smoke.
+     - Gates passam.
+
+2) Chronos core minimo + testes survival
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/aurora-chronos/src/**`
+     - `libs/aurora-chronos/tests/**`
+     - `libs/aurora-chronos/package.json`
+   - Criterios de aceite:
+     - Append, range e index deterministico implementados.
+     - Testes unitarios e survival passam.
+     - Gates passam.
+
+3) Shield consumidor real + smoke
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/**` ou `apps/alvaro-core/**` ou `apps/crm-core/**`
+   - Criterios de aceite:
+     - Integracao real do shield com teste/smoke.
+     - Gates passam.
+
+4) Taxonomia e evidencias de deploy
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/**`
+     - `artifacts/**`
+   - Criterios de aceite:
+     - Docs de taxonomia e evidencia presentes.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Implantar Vault Rodobens Wealth com ingest PDF->MD deterministica, selecao
+de backend em runtime (sem CUDA-only), templates Trustware e estados Cinematic.
+
+## Escopo
+Inclui:
+- Vault SSOT em `apps/ozzmosis/data/vault/rodobens-wealth` com raw/processed/index/_runs.
+- Toolbelt PDF->MD em `libs/elysian-brain` e wrappers em `scripts/rodobens`.
+- Templates Trustware em `apps/ozzmosis/policies/trustware/rodobens-wealth`.
+- Documentos Cinematic Commerce e playbook.
+- Fechamento no Vault e `apps/ozzmosis/PLAN.md`.
+
+Nao inclui:
+- OCR real (fica para OS 019A).
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Dependencia nova para `pdfplumber` sem install. Mitigacao: documentar e isolar no toolbelt.
+- R2: Estrutura nova do vault divergir da anterior. Mitigacao: adicionar sem remover conteudo existente.
+
+## Passos (executar 1 por vez)
+1) Estrutura Vault (raw/processed/index/_runs)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/raw/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/processed/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura criada sem remover conteudo existente.
+     - Gates passam.
+
+2) Toolbelt PDF->MD + wrappers + playbook
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/backend.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/convert.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/indexer.py`
+     - `libs/elysian-brain/pyproject.toml`
+     - `scripts/rodobens/pdf2md.ps1`
+     - `scripts/rodobens/pdf2md.sh`
+     - `docs/rodobens/RODOBENS_VAULT_INGEST_PLAYBOOK.md`
+   - Criterios de aceite:
+     - Conversao deterministica com front-matter e hashes.
+     - Selecao runtime registrada (engine/providers).
+     - Gates passam.
+
+3) Trustware templates + estados + fechamento
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/README.md`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_auto.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_imovel.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/seguro_vida_resgatavel.yaml`
+     - `docs/rodobens/CINEMATIC_COMMERCE_STATES.md`
+     - `apps/ozzmosis/PLAN.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019.md`
+   - Criterios de aceite:
+     - Templates Trustware existentes.
+     - Documento de estados com diagrama Mermaid.
+     - Fechamento no Vault e PLAN local.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-CODEX-AGENTS-MANUAL-LAW-20260106-020
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Importar o Manual de Construcao Aurora v5.0, declarar lei para agentes e
+garantir wiring de contexto obrigatorio.
+
+## Escopo
+Inclui:
+- Manual v5.0 em `docs/manual/`.
+- Lei dos agentes em `docs/AGENTS/LAW.md`.
+- Manifest de contexto e script de verificacao.
+- Integracao do gate no `scripts/agents/run-gates.ps1`.
+- Fechamento no Vault.
+
+Nao inclui:
+- Mudancas no conteudo do manual.
+- Execucao de OCR ou pipelines externos.
+
+## Riscos
+- R1: Conteudo do manual divergente do arquivo fonte. Mitigacao: copiar integral.
+- R2: Gate adicional quebrar fluxo. Mitigacao: verificar paths antes do npm ci.
+
+## Passos (executar 1 por vez)
+1) Importar manual e alias canonico
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
+     - `docs/manual/Manual_de_Construcao_Aurora.md`
+   - Criterios de aceite:
+     - Manual v5.0 importado sem alteracoes.
+     - Alias canonico aponta para o v5.0.
+     - Gates passam.
+
+2) Declarar lei dos agentes e atualizar AGENTS.md
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/AGENTS/LAW.md`
+     - `AGENTS.md`
+   - Criterios de aceite:
+     - Lei dos agentes criada.
+     - AGENTS.md aponta para a lei e manual canonico.
+     - Gates passam.
+
+3) Wiring de contexto + gate + fechamento no Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/agents/context/agent_context_manifest.yaml`
+     - `scripts/agents/verify-agent-law.ps1`
+     - `scripts/agents/run-gates.ps1`
+     - `apps/ozzmosis/data/vault/aurora-agents/os/OS-CODEX-AGENTS-MANUAL-LAW-20260106-020.md`
+   - Criterios de aceite:
+     - Manifest e script de verificacao presentes.
+     - run-gates executa verificacao antes do npm ci.
+     - Fechamento da OS no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-004-ACCEPTANCE-CRITERIA
 Data: 2026-01-05
 Autor: agent
 
 ---
+
+# PLAN — OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Materializar o DMI Rodobens Wealth com SSOT no Vault, pipeline PDF->Markdown
+deterministico e contratos documentais (policies + estados).
+
+## Escopo
+Inclui:
+- Estrutura SSOT em `apps/ozzmosis/data/vault/rodobens-wealth`.
+- Docs canonicos (README, policies, diagramas, OS).
+- CLI deterministica `scripts/rodobens/pdf2md`.
+
+Nao inclui:
+- OCR real (fica como stub governado).
+- Dependencias novas fora do requirements local.
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Diretorios vazios nao entram no git. Mitigacao: `.gitkeep`.
+- R2: Texto com acentuacao fora do padrao. Mitigacao: manter ASCII.
+
+## Passos (executar 1 por vez)
+1) Criar Vault Rodobens Wealth + docs canonicos
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/README.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/policies/trustware_rules.yaml`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/diagrams/cinematic_states.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/sources/_inbox/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_generated/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/evidence/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura do Vault criada com SSOT e docs canonicos.
+     - Politicas Trustware iniciais em YAML.
+     - Gates passam.
+
+2) Criar CLI pdf2md (deterministica e idempotente)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/rodobens/pdf2md/requirements.txt`
+     - `scripts/rodobens/pdf2md/README.md`
+     - `scripts/rodobens/pdf2md/pdf2md.py`
+   - Criterios de aceite:
+     - Script gera MD com front-matter e hashes.
+     - Nenhum acoplamento exclusivo a CUDA.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
 
 # PLAN — TRUSTWARE-HEALTH-BOOT-LOGS
 Data: 2026-01-05

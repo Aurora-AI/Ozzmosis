@@ -1,0 +1,12 @@
+version: 1
+name: aurora-agent-context
+law:
+  - path: docs/manual/Manual_de_Construcao_Aurora.md
+  - path: docs/AGENTS/LAW.md
+
+recommended:
+  - path: AGENTS.md
+  - path: PLAN.md
+
+notes:
+  - "Os itens em `law` sao obrigatorios para qualquer execucao de agente."

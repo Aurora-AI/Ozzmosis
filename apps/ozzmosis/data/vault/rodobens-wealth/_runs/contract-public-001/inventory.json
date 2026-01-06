@@ -1,0 +1,61 @@
+{
+  "generated_at_utc": "2026-01-06T00:00:00Z",
+  "repo_root": "C:/Aurora/Ozzmosis",
+  "libs_dir": "libs",
+  "libs": [
+    {
+      "lib_path": "libs/aurora-chronos",
+      "kind": "ts",
+      "lib_name": "@aurora/chronos",
+      "entrypoint": {
+        "src_index_ts": true,
+        "root_index_ts": false,
+        "package_exports_present": false,
+        "package_main": "dist/index.js",
+        "package_types": "dist/index.d.ts"
+      },
+      "status": "ok",
+      "reason_codes": []
+    },
+    {
+      "lib_path": "libs/aurora-conductor",
+      "kind": "ts",
+      "lib_name": "@aurora/aurora-conductor",
+      "entrypoint": {
+        "src_index_ts": true,
+        "root_index_ts": false,
+        "package_exports_present": false,
+        "package_main": "dist/index.js",
+        "package_types": "dist/index.d.ts"
+      },
+      "status": "ok",
+      "reason_codes": []
+    },
+    {
+      "lib_path": "libs/elysian-brain",
+      "kind": "py",
+      "lib_name": "elysian-brain",
+      "entrypoint": {
+        "package_dir": "libs/elysian-brain/src/elysian_brain",
+        "init_py": "libs/elysian-brain/src/elysian_brain/__init__.py",
+        "has___all__": true
+      },
+      "status": "ok",
+      "reason_codes": []
+    },
+    {
+      "lib_path": "libs/trustware",
+      "kind": "ts",
+      "lib_name": "@aurora/trustware",
+      "entrypoint": {
+        "src_index_ts": true,
+        "root_index_ts": false,
+        "package_exports_present": false,
+        "package_main": "src/index.ts",
+        "package_types": null
+      },
+      "status": "ok",
+      "reason_codes": []
+    }
+  ]
+}

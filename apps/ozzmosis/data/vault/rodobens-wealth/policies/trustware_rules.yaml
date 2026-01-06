@@ -1,0 +1,28 @@
+version: 1
+domain: rodobens_wealth
+
+rules:
+  - id: IW_REQUIRED
+    title: "Interveniente Quitante obrigatorio quando aplicavel"
+    severity: high
+    when:
+      product: consortium_property
+    require:
+      - interveniente_quitante: true
+
+  - id: FGTS_POLICY
+    title: "Uso de FGTS sujeito a elegibilidade"
+    severity: medium
+    when:
+      product: consortium_property
+    require:
+      - fgts_eligibility_checked: true
+
+  - id: DATE_GUARANTEE_PROHIBITED
+    title: "Proibido prometer data de contemplacao"
+    severity: high
+    when:
+      any: true
+    forbid_claims:
+      - "garantia de contemplacao"
+      - "contemplado em X dias"

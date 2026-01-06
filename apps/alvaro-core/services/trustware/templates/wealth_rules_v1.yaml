@@ -1,0 +1,14 @@
+version: "1.0"
+id: "wealth_rules_v1"
+mode: "fail_closed"
+
+# Este arquivo existe para garantir que o TrustwareEngine tenha um baseline determinístico.
+# Regras específicas (Rodobens Wealth) devem ser adicionadas por OS própria, com evidência no Vault.
+
+products: {}
+
+rules: []
+
+defaults:
+  decision: "deny"
+  reason_code: "TRUSTWARE_NO_RULES_MATCH"

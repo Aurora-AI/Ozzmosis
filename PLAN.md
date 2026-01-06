@@ -1,3 +1,75 @@
+# PLAN — OS-CODEX-AGENTS-MANUAL-LAW-20260106-020
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Importar o Manual de Construcao Aurora v5.0, declarar lei para agentes e
+garantir wiring de contexto obrigatorio.
+
+## Escopo
+Inclui:
+- Manual v5.0 em `docs/manual/`.
+- Lei dos agentes em `docs/AGENTS/LAW.md`.
+- Manifest de contexto e script de verificacao.
+- Integracao do gate no `scripts/agents/run-gates.ps1`.
+- Fechamento no Vault.
+
+Nao inclui:
+- Mudancas no conteudo do manual.
+- Execucao de OCR ou pipelines externos.
+
+## Riscos
+- R1: Conteudo do manual divergente do arquivo fonte. Mitigacao: copiar integral.
+- R2: Gate adicional quebrar fluxo. Mitigacao: verificar paths antes do npm ci.
+
+## Passos (executar 1 por vez)
+1) Importar manual e alias canonico
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
+     - `docs/manual/Manual_de_Construcao_Aurora.md`
+   - Criterios de aceite:
+     - Manual v5.0 importado sem alteracoes.
+     - Alias canonico aponta para o v5.0.
+     - Gates passam.
+
+2) Declarar lei dos agentes e atualizar AGENTS.md
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/AGENTS/LAW.md`
+     - `AGENTS.md`
+   - Criterios de aceite:
+     - Lei dos agentes criada.
+     - AGENTS.md aponta para a lei e manual canonico.
+     - Gates passam.
+
+3) Wiring de contexto + gate + fechamento no Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/agents/context/agent_context_manifest.yaml`
+     - `scripts/agents/verify-agent-law.ps1`
+     - `scripts/agents/run-gates.ps1`
+     - `apps/ozzmosis/data/vault/aurora-agents/os/OS-CODEX-AGENTS-MANUAL-LAW-20260106-020.md`
+   - Criterios de aceite:
+     - Manifest e script de verificacao presentes.
+     - run-gates executa verificacao antes do npm ci.
+     - Fechamento da OS no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-004-ACCEPTANCE-CRITERIA
 Data: 2026-01-05
 Autor: agent

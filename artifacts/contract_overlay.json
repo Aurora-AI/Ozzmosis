@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "rules": [
+    "TS lib: stable_contract cannot be green/yellow without src/index.ts OR package.json exports.",
+    "PY lib: stable_contract cannot be green/yellow without __init__.py and __all__.",
+    "Doc: stable_contract cannot be green if README Public API is missing (rule not enforced here)."
+  ],
+  "updates": []
+}

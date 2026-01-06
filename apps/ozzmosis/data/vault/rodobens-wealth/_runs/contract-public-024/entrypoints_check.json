@@ -1,0 +1,65 @@
+{
+  "ok": true,
+  "failed_count": 0,
+  "results": [
+    {
+      "lib_path": "libs\\aurora-chronos",
+      "lib_name": "@aurora/chronos",
+      "kind": "ts",
+      "status": "ok",
+      "reason_codes": [],
+      "details": {
+        "src_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\aurora-chronos\\src\\index.ts",
+        "src_index_exists": true,
+        "root_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\aurora-chronos\\index.ts",
+        "root_index_exists": false,
+        "package_exports_present": false,
+        "package_main": "dist/index.js",
+        "package_types": "dist/index.d.ts"
+      }
+    },
+    {
+      "lib_path": "libs\\aurora-conductor",
+      "lib_name": "@aurora/aurora-conductor",
+      "kind": "ts",
+      "status": "ok",
+      "reason_codes": [],
+      "details": {
+        "src_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\aurora-conductor\\src\\index.ts",
+        "src_index_exists": true,
+        "root_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\aurora-conductor\\index.ts",
+        "root_index_exists": false,
+        "package_exports_present": false,
+        "package_main": "dist/index.js",
+        "package_types": "dist/index.d.ts"
+      }
+    },
+    {
+      "lib_path": "libs\\elysian-brain",
+      "lib_name": "elysian-brain",
+      "kind": "py",
+      "status": "ok",
+      "reason_codes": [],
+      "details": {
+        "package_dir": "C:\\Aurora\\Ozzmosis\\libs\\elysian-brain\\src\\elysian_brain",
+        "init_py": "C:\\Aurora\\Ozzmosis\\libs\\elysian-brain\\src\\elysian_brain\\__init__.py"
+      }
+    },
+    {
+      "lib_path": "libs\\trustware",
+      "lib_name": "@aurora/trustware",
+      "kind": "ts",
+      "status": "ok",
+      "reason_codes": [],
+      "details": {
+        "src_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\trustware\\src\\index.ts",
+        "src_index_exists": true,
+        "root_index_ts": "C:\\Aurora\\Ozzmosis\\libs\\trustware\\index.ts",
+        "root_index_exists": false,
+        "package_exports_present": false,
+        "package_main": "src/index.ts",
+        "package_types": null
+      }
+    }
+  ]
+}

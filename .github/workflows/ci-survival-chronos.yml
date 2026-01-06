@@ -1,0 +1,36 @@
+name: ci-survival-chronos
+
+on:
+  pull_request:
+    paths:
+      - "libs/aurora-chronos/**"
+      - ".github/workflows/ci-survival-chronos.yml"
+  push:
+    branches: [ main ]
+    paths:
+      - "libs/aurora-chronos/**"
+      - ".github/workflows/ci-survival-chronos.yml"
+
+concurrency:
+  group: ci-survival-chronos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  survival:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Chronos survival
+        run: npm -w libs/aurora-chronos run test:survival

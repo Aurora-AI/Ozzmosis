@@ -1,0 +1,73 @@
+{
+  "ok": false,
+  "failed_count": 4,
+  "results": [
+    {
+      "key": "aurora-chronos",
+      "path": "libs/aurora-chronos",
+      "kind": "node",
+      "status": "fail",
+      "reason_codes": [
+        "MISSING_TEST_SURVIVAL_SCRIPT",
+        "MISSING_SURVIVAL_FILES"
+      ],
+      "evidence": [
+        {
+          "kind": "workflow",
+          "path": ".github/workflows/ci-survival-chronos.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "crm-core",
+      "path": "apps/crm-core",
+      "kind": "python",
+      "status": "fail",
+      "reason_codes": [
+        "MISSING_SURVIVAL_FILES"
+      ],
+      "evidence": [
+        {
+          "kind": "workflow",
+          "path": ".github/workflows/ci-survival-crm-core.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "alvaro-core",
+      "path": "apps/alvaro-core",
+      "kind": "python",
+      "status": "fail",
+      "reason_codes": [
+        "MISSING_TESTS_DIR",
+        "MISSING_SURVIVAL_FILES"
+      ],
+      "evidence": [
+        {
+          "kind": "workflow",
+          "path": ".github/workflows/ci-survival-alvaro-core.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "butantan-shield",
+      "path": "apps/butantan-shield",
+      "kind": "node",
+      "status": "fail",
+      "reason_codes": [
+        "MISSING_TEST_SURVIVAL_SCRIPT",
+        "MISSING_SURVIVAL_FILES"
+      ],
+      "evidence": [
+        {
+          "kind": "workflow",
+          "path": ".github/workflows/ci-smoke-shield.yml",
+          "note": "workflow_contains_smoke"
+        }
+      ]
+    }
+  ]
+}

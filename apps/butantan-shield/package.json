@@ -10,6 +10,7 @@
     "start": "node dist/server.js",
     "lint": "echo \"lint:todo\"",
     "test": "echo \"test:todo\"",
+    "test:survival": "vitest run tests/survival --passWithNoTests=false",
     "smoke": "npm run build && node ./scripts/smoke.mjs"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^22.19.3",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.16"
   }
 }

@@ -68,6 +68,53 @@ Nao inclui:
 
 ---
 
+# PLAN — OS-CONDUCTOR-GREEN-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Elevar o Aurora Conductor a contract/core/survival 🟢 com orquestracao deterministica.
+
+## Escopo
+Inclui:
+- Contrato publico (types + Conductor) e docs de contrato.
+- Stubs deterministicos (Shield/Chronos/Brain).
+- Survival test end-to-end.
+- Evidencias em `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/`.
+
+Nao inclui:
+- Integracoes reais com Shield/Chronos/Brain.
+- Refactors fora dos arquivos listados.
+
+## Passos (executar 1 por vez)
+1) WP0: registrar OS no Vault
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CONDUCTOR-GREEN-001.md`
+
+2) WP1/WP2: contrato e core com stubs
+   - Arquivos:
+     - `libs/aurora-conductor/src/index.ts`
+     - `libs/aurora-conductor/src/stubs/*.ts`
+     - `libs/aurora-conductor/docs/CONTRACT.md`
+
+3) WP3: survival test
+   - Arquivos:
+     - `libs/aurora-conductor/tests/survival/conductor.survival.test.ts`
+
+4) Evidencias
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/git_snapshot.txt`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/windows_gates_policy.md`
+
+## Gates
+- CI Linux (sem gates locais por EPERM)
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-2026-GENESIS-STABILITY-024
 Data: 2026-01-06
 Autor: agent

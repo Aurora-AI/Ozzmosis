@@ -4,6 +4,67 @@ Autor: agent
 
 ---
 
+# PLAN — OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Materializar o DMI Rodobens Wealth com SSOT no Vault, pipeline PDF->Markdown
+deterministico e contratos documentais (policies + estados).
+
+## Escopo
+Inclui:
+- Estrutura SSOT em `apps/ozzmosis/data/vault/rodobens-wealth`.
+- Docs canonicos (README, policies, diagramas, OS).
+- CLI deterministica `scripts/rodobens/pdf2md`.
+
+Nao inclui:
+- OCR real (fica como stub governado).
+- Dependencias novas fora do requirements local.
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Diretorios vazios nao entram no git. Mitigacao: `.gitkeep`.
+- R2: Texto com acentuacao fora do padrao. Mitigacao: manter ASCII.
+
+## Passos (executar 1 por vez)
+1) Criar Vault Rodobens Wealth + docs canonicos
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/README.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/policies/trustware_rules.yaml`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/diagrams/cinematic_states.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/sources/_inbox/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_generated/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/evidence/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura do Vault criada com SSOT e docs canonicos.
+     - Politicas Trustware iniciais em YAML.
+     - Gates passam.
+
+2) Criar CLI pdf2md (deterministica e idempotente)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/rodobens/pdf2md/requirements.txt`
+     - `scripts/rodobens/pdf2md/README.md`
+     - `scripts/rodobens/pdf2md/pdf2md.py`
+   - Criterios de aceite:
+     - Script gera MD com front-matter e hashes.
+     - Nenhum acoplamento exclusivo a CUDA.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
 # PLAN — TRUSTWARE-HEALTH-BOOT-LOGS
 Data: 2026-01-05
 Autor: agent

@@ -2,6 +2,50 @@
 Data: 2026-01-05
 Autor: agent
 
+---
+
+# PLAN — TRUSTWARE-HEALTH-BOOT-LOGS
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Enriquecer o payload de `/health` e adicionar log de boot do Trustware com
+metadados minimos para operacao e forensics.
+
+## Escopo
+Inclui:
+- Adicionar `health_snapshot()` no engine Trustware.
+- Atualizar `/health` com payload canonico.
+- Logar uma linha no boot com path/version/produtos.
+
+Nao inclui:
+- Mudancas em regras YAML.
+- Novas dependencias.
+- Ajustes em outras rotas.
+
+## Riscos
+- R1: Falha ao ler mtime pode quebrar health. Mitigacao: captura de excecao e retorno `None`.
+- R2: Log duplicado em reloads. Mitigacao: manter log apenas no boot.
+
+## Passos (executar 1 por vez)
+1) Implementar snapshot e health/log de boot
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/services/trustware/engine.py`
+     - `apps/alvaro-core/main.py`
+   - Criterios de aceite:
+     - `/health` retorna `trustware.template_version` e `trustware.rules_path`.
+     - Boot loga `trustware_boot:` com version/produtos/path.
+     - Falha em YAML nao sobe e loga `trustware_boot_failed`.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
 ## Objetivo
 Implementar os criterios de aceite da OS-004 na Genesis Front (sem alterar URL),
 com transicao Standard -> Legacy, densidade atmosferica e reacao a inputs por
@@ -407,7 +451,7 @@ Data: 2026-01-04
 Autor: agent
 
 ## Objetivo
-Encerrar a OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 como "execucao revertida" (fonte perdida no workspace) e reconstruir `apps/genesis-front` com fonte versionada (Next App Router + Lenis + framer-motion) e handshake real de API via `NEXT_PUBLIC_API_URL`.
+Encerrar a OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 como "execucao revertida" (fonte perdida no workspace) e reconstruir `apps/genesis-front` com fonte versionada (Next App Router + Lenis + framer-motion) e handshake real de API via `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
 
 ## Escopo
 Inclui:
@@ -475,7 +519,7 @@ Nao inclui:
      - `cd C:\Aurora\Ozzmosis`
      - `scripts/agents/run-gates.ps1`
    - Criterios de aceite:
-     - `NEXT_PUBLIC_API_URL` usado em `lib/api.ts`
+     - `NEXT_PUBLIC_ALVARO_API_BASE_URL` usado em `lib/api.ts`
      - Rewrites/proxy evita CORS local quando necessario
 
 ## Gates
@@ -1651,6 +1695,91 @@ Nao inclui:
 
 ## Gates
 - `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+# PLAN — OS-002-RODOBENS-SYNAPSE
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Conectar `apps/mycelium-front` ao `apps/alvaro-core` via REST (FastAPI) para validar
+intencao do usuario com Trustware e renderizar warnings/acks no front.
+
+## Escopo
+Inclui:
+- Implementar Trustware engine e regras YAML em `apps/alvaro-core/services/trustware`.
+- Expor endpoint FastAPI `POST /api/v1/trustware/validate`.
+- Adicionar client front + componente DecisionGuardian + exemplo no portal Casa.
+- Adicionar `.env.example` com `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
+
+Nao inclui:
+- Mudancas em auth, banco de dados, ou outras APIs.
+- Novas dependencias fora do que ja existe no repo (usar libs ja presentes).
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Import path de pacote do backend pode divergir (`apps.alvaro_core`). Mitigacao: ajustar apenas o import mantendo o contrato.
+- R2: CORS local pode bloquear o front. Mitigacao: CORS explicito em `apps/alvaro-core/main.py`.
+- R3: Fallback do front pode mascarar erro de API. Mitigacao: `is_safe=false` e `note=api_unreachable`.
+
+## Configuracao de ambiente (Front)
+
+### mycelium-front
+
+Variaveis publicas (Next.js):
+
+- `NEXT_PUBLIC_ALVARO_API_BASE_URL` (obrigatoria)
+  Base URL do backend `alvaro-core` (sem barra no final).
+  Ex: `http://localhost:8000`
+
+- `NEXT_PUBLIC_TRUSTWARE_STRICT` (opcional, default: `true`)
+  Politica de falha do Trustware no Front:
+  - `true` => fail-closed: API indisponivel bloqueia "continuar"
+  - `false` => continua nao pode retornar "seguro"; UI marca degradado e mantem bloqueio por padrao
+
+Trustware Front Policy (canonical):
+- O front nunca deve assumir "seguro" por ausencia de resposta.
+- Em indisponibilidade do backend: estado degradado explicito (`api_unreachable`) e bloqueio em modo strict (fail-closed).
+
+## Passos (executar 1 por vez)
+1) Backend Trustware (engine + rules + rota + CORS)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/services/trustware/engine.py`
+     - `apps/alvaro-core/services/trustware/templates/rodobens_rules.yaml`
+     - `apps/alvaro-core/api/routes/trustware.py`
+     - `apps/alvaro-core/main.py`
+   - Criterios de aceite:
+     - `POST /api/v1/trustware/validate` responde JSON com `is_safe`, `warnings`, `required_acks`.
+     - CORS permite `http://localhost:3000`.
+     - Gates passam.
+
+2) Front Trustware (client + DecisionGuardian + portal Casa)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/mycelium-front/lib/trustware/client.ts`
+     - `apps/mycelium-front/src/components/trustware/DecisionGuardian.tsx`
+     - `apps/mycelium-front/src/app/(portals)/casa/page.tsx`
+     - `apps/mycelium-front/.env.example`
+   - Criterios de aceite:
+     - Front chama o backend e renderiza warnings/acks.
+     - Fallback retorna `note=api_unreachable` e `is_safe=false`.
+     - Gates passam.
+
+## Status
+- [x] OS-002 / Step 2 — Front Trustware: client tipado (fail-closed) + DecisionGuardian (acks + mensagens strict/soft) + Portal Casa integrado ao contrato do backend (product_key + user_intent) + `.env.example` com `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
 
 ## Rollback
 - `git revert <sha>`

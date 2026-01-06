@@ -1,3 +1,87 @@
+# PLAN — OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Implantar Vault Rodobens Wealth com ingest PDF->MD deterministica, selecao
+de backend em runtime (sem CUDA-only), templates Trustware e estados Cinematic.
+
+## Escopo
+Inclui:
+- Vault SSOT em `apps/ozzmosis/data/vault/rodobens-wealth` com raw/processed/index/_runs.
+- Toolbelt PDF->MD em `libs/elysian-brain` e wrappers em `scripts/rodobens`.
+- Templates Trustware em `apps/ozzmosis/policies/trustware/rodobens-wealth`.
+- Documentos Cinematic Commerce e playbook.
+- Fechamento no Vault e `apps/ozzmosis/PLAN.md`.
+
+Nao inclui:
+- OCR real (fica para OS 019A).
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Dependencia nova para `pdfplumber` sem install. Mitigacao: documentar e isolar no toolbelt.
+- R2: Estrutura nova do vault divergir da anterior. Mitigacao: adicionar sem remover conteudo existente.
+
+## Passos (executar 1 por vez)
+1) Estrutura Vault (raw/processed/index/_runs)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/raw/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/processed/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura criada sem remover conteudo existente.
+     - Gates passam.
+
+2) Toolbelt PDF->MD + wrappers + playbook
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/backend.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/convert.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/indexer.py`
+     - `libs/elysian-brain/pyproject.toml`
+     - `scripts/rodobens/pdf2md.ps1`
+     - `scripts/rodobens/pdf2md.sh`
+     - `docs/rodobens/RODOBENS_VAULT_INGEST_PLAYBOOK.md`
+   - Criterios de aceite:
+     - Conversao deterministica com front-matter e hashes.
+     - Selecao runtime registrada (engine/providers).
+     - Gates passam.
+
+3) Trustware templates + estados + fechamento
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/README.md`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_auto.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_imovel.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/seguro_vida_resgatavel.yaml`
+     - `docs/rodobens/CINEMATIC_COMMERCE_STATES.md`
+     - `apps/ozzmosis/PLAN.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019.md`
+   - Criterios de aceite:
+     - Templates Trustware existentes.
+     - Documento de estados com diagrama Mermaid.
+     - Fechamento no Vault e PLAN local.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
 # PLAN — OS-CODEX-AGENTS-MANUAL-LAW-20260106-020
 Data: 2026-01-06
 Autor: agent

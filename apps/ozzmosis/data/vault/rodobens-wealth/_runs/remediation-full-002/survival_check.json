@@ -11,17 +11,17 @@
       "evidence": [
         {
           "kind": "script",
-          "path": "libs/aurora-chronos/package.json",
+          "path": "libs\\aurora-chronos\\package.json",
           "note": "test:survival"
         },
         {
           "kind": "file",
-          "path": "tests/survival/chronos.survival.test.ts",
+          "path": "tests\\survival\\chronos.survival.test.ts",
           "note": "survival_file"
         },
         {
           "kind": "workflow",
-          "path": ".github/workflows/ci-survival-chronos.yml",
+          "path": ".github\\workflows\\ci-survival-chronos.yml",
           "note": "workflow_contains_survival"
         }
       ]
@@ -35,12 +35,17 @@
       "evidence": [
         {
           "kind": "file",
-          "path": "tests/survival/test_survival_policy.py",
+          "path": "tests\\survival\\test_survival_policy.py",
           "note": "survival_file"
         },
         {
           "kind": "workflow",
-          "path": ".github/workflows/ci-survival-crm-core.yml",
+          "path": ".github\\workflows\\ci-repo-contract.yml",
+          "note": "workflow_contains_survival"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-survival-crm-core.yml",
           "note": "workflow_contains_survival"
         }
       ]
@@ -54,12 +59,12 @@
       "evidence": [
         {
           "kind": "file",
-          "path": "tests/survival/test_survival_trustware.py",
+          "path": "tests\\survival\\test_survival_trustware.py",
           "note": "survival_file"
         },
         {
           "kind": "workflow",
-          "path": ".github/workflows/ci-survival-alvaro-core.yml",
+          "path": ".github\\workflows\\ci-survival-alvaro-core.yml",
           "note": "workflow_contains_survival"
         }
       ]
@@ -73,12 +78,17 @@
       "evidence": [
         {
           "kind": "script",
-          "path": "apps/butantan-shield/package.json",
+          "path": "apps\\butantan-shield\\package.json",
           "note": "smoke"
         },
         {
           "kind": "workflow",
-          "path": ".github/workflows/ci-smoke-shield.yml",
+          "path": ".github\\workflows\\ci-smoke-shield.yml",
+          "note": "workflow_contains_smoke"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-triad-smoke.yml",
           "note": "workflow_contains_smoke"
         }
       ]

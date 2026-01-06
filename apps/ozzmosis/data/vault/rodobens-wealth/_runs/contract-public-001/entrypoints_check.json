@@ -3,7 +3,7 @@
   "failed_count": 0,
   "results": [
     {
-      "lib_path": "libs/aurora-chronos",
+      "lib_path": "libs\\aurora-chronos",
       "lib_name": "@aurora/chronos",
       "kind": "ts",
       "status": "ok",
@@ -19,7 +19,7 @@
       }
     },
     {
-      "lib_path": "libs/aurora-conductor",
+      "lib_path": "libs\\aurora-conductor",
       "lib_name": "@aurora/aurora-conductor",
       "kind": "ts",
       "status": "ok",
@@ -35,7 +35,7 @@
       }
     },
     {
-      "lib_path": "libs/elysian-brain",
+      "lib_path": "libs\\elysian-brain",
       "lib_name": "elysian-brain",
       "kind": "py",
       "status": "ok",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "lib_path": "libs/trustware",
+      "lib_path": "libs\\trustware",
       "lib_name": "@aurora/trustware",
       "kind": "ts",
       "status": "ok",

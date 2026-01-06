@@ -1,40 +1,76 @@
-# Contract — Butantan Shield
+# Butantan Shield — Public Contract
 
 ## Purpose
-Butantan Shield provides a minimal HTTP gateway for protected proxy data used by internal tools. It enforces bearer authentication when configured.
+Butantan Shield is the **fail-closed security boundary** for the Ozzmosis ecosystem. It validates requests/tokens and returns deterministic allow/deny decisions with reason-codes.
 
 ## Public Interface
-Base URL: `http://<host>:<port>`
 
-### Health
-- `GET /health`
-  - Auth: none
-  - Response: `{ "ok": true }`
+### Mode A — HTTP (service)
+If running as a service, Shield MUST expose:
 
-### Proxy Tasks
-- `GET /proxy/tasks`
-  - Auth: Bearer token (required when `SHIELD_TOKEN` is set)
-  - Response: JSON array of task records
-  - Errors:
-    - `403` with `{ "ok": false, "code": "auth_invalid", "message": "Invalid or missing bearer token" }`
+#### `GET /health`
+- **200** when process is alive.
+- No auth required.
 
-### Proxy Projects
-- `GET /proxy/projects`
-  - Auth: Bearer token (required when `SHIELD_TOKEN` is set)
-  - Response: JSON array of project records
-  - Errors:
-    - `403` with `{ "ok": false, "code": "auth_invalid", "message": "Invalid or missing bearer token" }`
+#### `POST /v1/verify`
+Validates a token/assertion and returns an authorization decision.
 
-## Configuration
-- `SHIELD_PORT` (default: `4001`): HTTP port to bind.
-- `SHIELD_TOKEN` (optional): if set, bearer auth is enforced on `/proxy/*`.
+**Request**
+```json
+{
+  "token": "string",
+  "context": {
+    "client_id": "string",
+    "action": "string",
+    "resource": "string"
+  }
+}
+```
+
+**Response (allow)**
+
+```json
+{
+  "allowed": true,
+  "reason_code": "ALLOW_OK",
+  "policy_version": "v1"
+}
+```
+
+**Response (deny)**
+
+```json
+{
+  "allowed": false,
+  "reason_code": "DENY_INVALID_TOKEN",
+  "policy_version": "v1"
+}
+```
+
+### Mode B — Local (internal)
+
+If consumed locally, Shield MUST expose a deterministic `verify()` function with the same semantic result:
+
+* `allowed: boolean`
+* `reason_code: string`
+* `policy_version: string`
+
+## Configuration (env)
+
+* `SHIELD_MODE`: `http|local` (default: `local`)
+* `SHIELD_POLICY_PATH`: path to policy/rules file (optional; default: internal safe baseline)
+* `SHIELD_TOKEN_SECRET`: secret used to validate tokens (required for real validation; tests may use a deterministic mock)
+* `SHIELD_PORT`: HTTP port (default: `7070`)
 
 ## Failure Modes (Fail-Closed)
-- When `SHIELD_TOKEN` is configured and the request is missing/invalid:
-  - Return `403` with `code: auth_invalid`.
-- When `SHIELD_TOKEN` is not configured:
-  - Requests are allowed (dev/local mode).
+
+* If Shield cannot load policy/rules → **DENY_POLICY_LOAD_FAILED**
+* If token missing/empty → **DENY_MISSING_TOKEN**
+* If token invalid → **DENY_INVALID_TOKEN**
+* If Shield runtime error/exception → **DENY_RUNTIME_ERROR**
+* If HTTP mode and upstream caller cannot reach Shield → caller MUST treat as **DENY_SHIELD_UNAVAILABLE**
 
 ## Versioning
-- Version source: `apps/butantan-shield/package.json`.
-- Backward compatibility: additive changes to response fields only.
+
+* Service version: `apps/butantan-shield/package.json`
+* Policy version: `policy_version` field returned by verify.

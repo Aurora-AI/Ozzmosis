@@ -1,5 +1,11 @@
 # AGENTS — Contrato Operacional do Repositório (Ozzmosis)
 
+## Lei (Obrigatorio)
+- **Manual de Construcao Aurora (canonico):** `docs/manual/Manual_de_Construcao_Aurora.md`
+- **Lei dos Agentes:** `docs/AGENTS/LAW.md`
+
+Em caso de conflito, prevalece o Manual.
+
 Este arquivo define como qualquer agente (Codex 5.2 / Roo Code / Copilot) deve operar neste repositório.
 Ele tem precedência sobre “boas práticas genéricas” do agente.
 
@@ -85,4 +91,3 @@ Ação:
 - abrir docs/AGENTS/README.md
 - ler a seção relevante
 - se ainda faltar, pedir o artefato faltante (transcrição/OS/canônico)
-

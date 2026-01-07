@@ -12,6 +12,10 @@ O Projeto Aurora/Ozzmosis não é tratado como software estático, mas como um o
 * **Não corrigimos "bugs", curamos "doenças" (Homeostase).**
 * **Não aceitamos código temporário; aplicamos a política "Production First".**
 
+## 1.5. Princípios Fundamentais
+#### 1.5. Memória Muscular Operacional
+Operadores são membros executores, não cérebros. Eles devem otimizar a latência e throughput (memória muscular), mas nunca a estratégia (cognição). Referência: `docs/Vault/CONSTITUICAO/PRINCIPIO_MEMORIA_MUSCULAR_OPERACIONAL.md`.
+
 ## 2. Identidade e Cadeia de Comando
 A construção é orquestrada por três entidades distintas:
 

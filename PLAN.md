@@ -706,13 +706,19 @@ Nao inclui:
      - Conteudo derivado integralmente da Constituicao Fase Zero.
      - Explica observador, operadores como musculos, biologia como especificacao.
 
-5) Manual de Construcao (principio de memoria muscular)
+5) Governanca ativa (principio + guidelines + docs/PLAN)
    - Comandos:
      - N/A (edicao direta de arquivos)
    - Arquivos:
+     - `docs/Vault/CONSTITUICAO/PRINCIPIO_MEMORIA_MUSCULAR_OPERACIONAL.md`
+     - `docs/guidelines.md`
+     - `docs/PLAN.md`
      - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
    - Criterios de aceite:
-     - Principio adicionado com referencia ao documento canonico no Vault.
+     - Principio canonico criado conforme payload.
+     - Guidelines atualizadas com referencia ao principio.
+     - `docs/PLAN.md` com bloco de governanca ativo.
+     - Principio adicionado no Manual com referencia ao documento canonico no Vault.
 
 ## Gates
 - `scripts/agents/run-gates.ps1` (requer execucao manual conforme Trustware)

@@ -720,6 +720,18 @@ Nao inclui:
      - `docs/PLAN.md` com bloco de governanca ativo.
      - Principio adicionado no Manual com referencia ao documento canonico no Vault.
 
+6) Fechamento OS + Capitulo 01 + descricao de PR
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/OS/2026/OS-005-GENESIS-REBIRTH.md`
+     - `docs/Vault/LIVRO/2026/01-a-constituicao/CAPITULO.md`
+     - `PR_DESCRIPTION_OS-005.md`
+   - Criterios de aceite:
+     - OS retroativa criada com bloco de fechamento.
+     - Capitulo 01 criado com conteudo canonico.
+     - Descricao consolidada de PR registrada com o titulo aprovado.
+
 ## Gates
 - `scripts/agents/run-gates.ps1` (requer execucao manual conforme Trustware)
 

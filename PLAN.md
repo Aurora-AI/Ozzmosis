@@ -629,6 +629,99 @@ Nao inclui:
 - `npm ci && npm run repo:check`
 
 ---
+# PLAN — OS-VAULT-AUTOMATION-ALVARO-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Implantar a fundacao do Vault (SSOT vivo), templates de OS/Livro, constituicoes
+do Projeto Alvaro, Capitulo Zero e o principio de memoria muscular no Manual.
+
+## Escopo
+Inclui:
+- Criar a estrutura canonica em `docs/Vault`.
+- Criar os arquivos de constituicao, templates de OS/Livro e Capitulo Zero.
+- Atualizar o Manual com o principio de memoria muscular operacional.
+- Registrar governanca de memoria no PLAN.
+
+Nao inclui:
+- Mudancas fora de `docs/` e desta OS.
+- Automacoes adicionais ou alteracoes em pipelines.
+
+## Governanca de Memoria (Ativa)
+- Toda OS aberta segue template do Vault
+- Toda OS fechada gera Capitulo do Livro
+- Decisao sem Vault e invalida
+- Livro e diario de bordo e ativo estrategico
+
+## Riscos
+- R1: Fontes canonicas ausentes (Dossie Fase Zero, Estudo Profundo do Cerebro,
+  template Capitulo 0-10). Mitigacao: solicitar os artefatos antes dos passos
+  dependentes.
+- R2: Gates bloqueados pela politica Trustware. Mitigacao: solicitar execucao
+  manual do usuario quando necessario.
+
+## Passos (executar 1 por vez)
+1) Estrutura do Vault + INDEX + templates de OS
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/INDEX.md`
+     - `docs/Vault/AUDITS/2026-01-initial-maturity-report.md`
+     - `docs/Vault/CONSTITUICAO/`
+     - `docs/Vault/OS/_templates/OS_OPEN_TEMPLATE.md`
+     - `docs/Vault/OS/_templates/OS_CLOSE_TEMPLATE.md`
+     - `docs/Vault/LIVRO/_templates/`
+     - `docs/Vault/LIVRO/2026/`
+     - `docs/Vault/OS/2026/`
+   - Criterios de aceite:
+     - Estrutura criada exatamente como definida na OS.
+     - Templates de OS batem o texto canonico da OS.
+     - Relatorio de maturidade movido para `docs/Vault/AUDITS/2026-01-initial-maturity-report.md`.
+
+2) Constituicao Alvaro (Fase Zero + Biologica)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/CONSTITUICAO/ALVARO_GENESIS_PHASE_ZERO.md`
+     - `docs/Vault/CONSTITUICAO/ALVARO_GENESIS_BIOLOGICA.md`
+   - Criterios de aceite:
+     - Fase Zero e literal do dossie canonico fornecido.
+     - Biologica sintetiza o estudo fornecido com os focos exigidos.
+
+3) Template do Livro (Capitulo 0-10)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/LIVRO/_templates/CAPITULO_TEMPLATE.md`
+   - Criterios de aceite:
+     - Template corresponde exatamente ao texto canonico fornecido.
+
+4) Capitulo Zero (inauguracao)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/LIVRO/2026/00-origem-alvaro/CAPITULO.md`
+   - Criterios de aceite:
+     - Conteudo derivado integralmente da Constituicao Fase Zero.
+     - Explica observador, operadores como musculos, biologia como especificacao.
+
+5) Manual de Construcao (principio de memoria muscular)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
+   - Criterios de aceite:
+     - Principio adicionado com referencia ao documento canonico no Vault.
+
+## Gates
+- `scripts/agents/run-gates.ps1` (requer execucao manual conforme Trustware)
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
 
 # PLAN — ADR-UNIFIED-VIP-001
 Data: 2026-01-05

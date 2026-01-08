@@ -1,0 +1,10 @@
+version: 1
+product: seguro_vida_resgatavel
+rules:
+  - id: require_identity
+    type: required_fields
+    fields: ["cpf_cnpj", "email"]
+  - id: anti_churn_min_safety
+    type: min_value
+    field: "safety_score"
+    min: 50

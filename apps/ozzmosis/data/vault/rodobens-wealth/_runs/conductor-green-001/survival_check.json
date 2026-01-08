@@ -1,0 +1,97 @@
+{
+  "ok": true,
+  "failed_count": 0,
+  "results": [
+    {
+      "key": "aurora-chronos",
+      "path": "libs/aurora-chronos",
+      "kind": "node",
+      "status": "ok",
+      "reason_codes": [],
+      "evidence": [
+        {
+          "kind": "script",
+          "path": "libs\\aurora-chronos\\package.json",
+          "note": "test:survival"
+        },
+        {
+          "kind": "file",
+          "path": "tests\\survival\\chronos.survival.test.ts",
+          "note": "survival_file"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-survival-chronos.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "crm-core",
+      "path": "apps/crm-core",
+      "kind": "python",
+      "status": "ok",
+      "reason_codes": [],
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "tests\\survival\\test_survival_policy.py",
+          "note": "survival_file"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-repo-contract.yml",
+          "note": "workflow_contains_survival"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-survival-crm-core.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "alvaro-core",
+      "path": "apps/alvaro-core",
+      "kind": "python",
+      "status": "ok",
+      "reason_codes": [],
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "tests\\survival\\test_survival_trustware.py",
+          "note": "survival_file"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-survival-alvaro-core.yml",
+          "note": "workflow_contains_survival"
+        }
+      ]
+    },
+    {
+      "key": "butantan-shield",
+      "path": "apps/butantan-shield",
+      "kind": "node",
+      "status": "ok",
+      "reason_codes": [],
+      "evidence": [
+        {
+          "kind": "script",
+          "path": "apps\\butantan-shield\\package.json",
+          "note": "smoke"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-smoke-shield.yml",
+          "note": "workflow_contains_smoke"
+        },
+        {
+          "kind": "workflow",
+          "path": ".github\\workflows\\ci-triad-smoke.yml",
+          "note": "workflow_contains_smoke"
+        }
+      ]
+    }
+  ]
+}

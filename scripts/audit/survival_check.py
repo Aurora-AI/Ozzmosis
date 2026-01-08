@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
+import subprocess
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -37,6 +39,7 @@ class ComponentResult:
     status: str  # "ok" | "fail"
     reason_codes: List[str]
     evidence: List[Evidence]
+    run: Optional[Dict[str, Any]] = None
 
 
 def _read_json(path: Path) -> Optional[Dict[str, Any]]:
@@ -79,12 +82,38 @@ def _component_kind(base: Path) -> str:
         return "node"
     return "python"
 
+def _run_survival_script(repo_root: Path, workspace: str) -> Dict[str, Any]:
+    npm_cmd = shutil.which("npm.cmd") or shutil.which("npm")
+    if not npm_cmd:
+        return {
+            "command": "npm run -w {workspace} test:survival".format(workspace=workspace),
+            "exit_code": 127,
+            "stdout": "",
+            "stderr": "npm_not_found_in_path",
+        }
+
+    cmd = [npm_cmd, "run", "-w", workspace, "test:survival"]
+    result = subprocess.run(
+        cmd,
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return {
+        "command": " ".join(cmd),
+        "exit_code": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+    }
+
 
 def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResult:
     base = repo_root / rel_path
     kind = _component_kind(base)
     evidence: List[Evidence] = []
     reasons: List[str] = []
+    run: Optional[Dict[str, Any]] = None
 
     has_script = False
     if kind == "node":
@@ -96,6 +125,15 @@ def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResul
             evidence.append(
                 Evidence(kind="script", path=str(pkg.relative_to(repo_root)), note="test:survival")
             )
+            if key == "aurora-conductor-service":
+                run = _run_survival_script(repo_root, "@aurora/aurora-conductor-service")
+                evidence.append(
+                    Evidence(
+                        kind="run",
+                        path=str(pkg.relative_to(repo_root)),
+                        note=f"test:survival_exit_code={run['exit_code']}",
+                    )
+                )
         elif key == "butantan-shield" and scripts.get("smoke"):
             has_script = True
             evidence.append(
@@ -126,9 +164,12 @@ def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResul
         else:
             reasons.append("MISSING_SURVIVAL_WORKFLOW")
 
+    if run and run.get("exit_code") != 0:
+        reasons.append("SURVIVAL_SCRIPT_FAILED")
+
     has_core_evidence = has_script or bool(survival_files)
     status = "ok" if has_core_evidence else "fail"
-    if status == "ok":
+    if status == "ok" and not reasons:
         reasons = []
 
     return ComponentResult(
@@ -138,6 +179,7 @@ def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResul
         status=status,
         reason_codes=reasons,
         evidence=evidence,
+        run=run,
     )
 
 
@@ -156,6 +198,7 @@ def main() -> int:
         ("crm-core", "apps/crm-core"),
         ("alvaro-core", "apps/alvaro-core"),
         ("butantan-shield", "apps/butantan-shield"),
+        ("aurora-conductor-service", "apps/aurora-conductor-service"),
     ]
 
     results: List[ComponentResult] = []

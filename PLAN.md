@@ -629,6 +629,78 @@ Nao inclui:
 - `npm ci && npm run repo:check`
 
 ---
+# PLAN — OS-AUDIT-MATURITY-RUNNER-001
+Data: 2026-01-08
+Autor: agent
+
+## Objetivo
+Expandir os auditores para cobrir `apps/*`, incluir `aurora-conductor-service`
+em survival, e criar runner canonico `audit:maturity` no root.
+
+## Escopo
+Inclui:
+- Atualizar `scripts/audit/entrypoints_check.py` para varrer `libs/*` e `apps/*`.
+- Atualizar `scripts/audit/survival_check.py` para incluir `aurora-conductor-service`
+  e validar execucao do `test:survival` via workspace.
+- Adicionar script `audit:maturity` no `package.json` raiz usando `py`.
+
+Nao inclui:
+- Mudancas em criterios de auditoria (apenas cobertura).
+- Alteracoes em apps ou testes alem do auditor.
+
+## Riscos
+- R1: Runner falhar fora do Windows. Mitigacao: uso de `py` como runner
+  explicito no ambiente atual; cross-platform fica para OS futura.
+- R2: Execucao de tests survival falhar por dependencia. Mitigacao: manter
+  comando restrito ao workspace `@aurora/aurora-conductor-service`.
+
+## Passos (executar 1 por vez)
+1) Entrypoints check cobre apps
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `scripts/audit/entrypoints_check.py`
+   - Criterios de aceite:
+     - JSON inclui `apps/butantan-shield` e `apps/aurora-conductor-service`.
+     - Lista de targets auditados inclui `libs` e `apps`.
+
+2) Survival check inclui conductor-service e valida `test:survival`
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `scripts/audit/survival_check.py`
+   - Criterios de aceite:
+     - JSON inclui `aurora-conductor-service` com status `ok`.
+     - Evidence inclui script `test:survival` e arquivo survival.
+
+3) Runner canonico `audit:maturity`
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `package.json`
+   - Criterios de aceite:
+     - `npm run audit:maturity` executa os dois auditores via `py`.
+
+4) Executar auditor + gates
+   - Comandos:
+     - `npm run audit:maturity`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_AUDIT_OUTPUT.txt`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_entrypoints_check.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_survival_check.json`
+   - Criterios de aceite:
+     - Auditor PASS com shield + conductor-service.
+     - Gates PASS.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
 # PLAN — OS-VAULT-AUTOMATION-ALVARO-001
 Data: 2026-01-06
 Autor: agent

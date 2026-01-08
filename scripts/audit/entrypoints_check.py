@@ -162,67 +162,78 @@ def main() -> int:
         help="Output json file",
     )
     ap.add_argument("--libs-dir", default="libs", help="Libs dir relative to repo root")
+    ap.add_argument("--apps-dir", default="apps", help="Apps dir relative to repo root")
     args = ap.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
     libs_dir = (repo_root / args.libs_dir).resolve()
+    apps_dir = (repo_root / args.apps_dir).resolve()
     out_path = (repo_root / args.out).resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     results: List[Finding] = []
 
     if not libs_dir.exists():
-        payload = {"ok": False, "error": f"libs_dir_not_found: {str(libs_dir)}", "results": []}
+        payload = {
+            "ok": False,
+            "error": f"libs_dir_not_found: {str(libs_dir)}",
+            "results": [],
+            "scanned_roots": ["libs", "apps"],
+        }
         out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
         return 2
 
-    for lib in sorted([p for p in libs_dir.iterdir() if p.is_dir()]):
-        lib_name = lib.name
-
-        ts = _detect_ts_lib(lib)
-        py = _detect_py_lib(lib)
-
-        if ts and "data" in ts:
-            pkg_data = ts["data"]
-            ok, reasons, details = _ts_has_entrypoint(lib, pkg_data)
-            status = "ok" if ok else "fail"
-            results.append(
-                Finding(
-                    lib_path=str(lib.relative_to(repo_root)),
-                    lib_name=str(pkg_data.get("name", lib_name)),
-                    kind="ts",
-                    status=status,
-                    reason_codes=reasons,
-                    details=details,
-                )
-            )
+    scan_roots = [("libs", libs_dir), ("apps", apps_dir)]
+    for _, root in scan_roots:
+        if not root.exists():
             continue
+        for lib in sorted([p for p in root.iterdir() if p.is_dir()]):
+            lib_name = lib.name
 
-        if py:
-            ok, reasons, details = _py_has_entrypoint(lib)
-            status = "ok" if ok else "fail"
+            ts = _detect_ts_lib(lib)
+            py = _detect_py_lib(lib)
+
+            if ts and "data" in ts:
+                pkg_data = ts["data"]
+                ok, reasons, details = _ts_has_entrypoint(lib, pkg_data)
+                status = "ok" if ok else "fail"
+                results.append(
+                    Finding(
+                        lib_path=str(lib.relative_to(repo_root)),
+                        lib_name=str(pkg_data.get("name", lib_name)),
+                        kind="ts",
+                        status=status,
+                        reason_codes=reasons,
+                        details=details,
+                    )
+                )
+                continue
+
+            if py:
+                ok, reasons, details = _py_has_entrypoint(lib)
+                status = "ok" if ok else "fail"
+                results.append(
+                    Finding(
+                        lib_path=str(lib.relative_to(repo_root)),
+                        lib_name=lib_name,
+                        kind="py",
+                        status=status,
+                        reason_codes=reasons,
+                        details=details,
+                    )
+                )
+                continue
+
             results.append(
                 Finding(
                     lib_path=str(lib.relative_to(repo_root)),
                     lib_name=lib_name,
-                    kind="py",
-                    status=status,
-                    reason_codes=reasons,
-                    details=details,
+                    kind="unknown",
+                    status="skip",
+                    reason_codes=["NOT_TS_OR_PY_LIB"],
+                    details={},
                 )
             )
-            continue
-
-        results.append(
-            Finding(
-                lib_path=str(lib.relative_to(repo_root)),
-                lib_name=lib_name,
-                kind="unknown",
-                status="skip",
-                reason_codes=["NOT_TS_OR_PY_LIB"],
-                details={},
-            )
-        )
 
     failed = [r for r in results if r.status == "fail"]
 
@@ -230,6 +241,7 @@ def main() -> int:
         "ok": len(failed) == 0,
         "failed_count": len(failed),
         "results": [asdict(r) for r in results],
+        "scanned_roots": ["libs", "apps"],
     }
     out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 

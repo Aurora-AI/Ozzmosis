@@ -17,7 +17,7 @@
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
-    "test:survival": "vitest run tests/survival"
+    "test:survival": "npx vitest run tests/survival"
   },
   "dependencies": {
     "@aurora/aurora-conductor": "*",
@@ -29,6 +29,7 @@
     "@types/node": "^20.11.0",
     "eslint": "^9.0.0",
     "tsx": "^4.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.16"
   }
 }

@@ -1,0 +1,35 @@
+name: CI - Survival (Aurora Conductor Service)
+
+on:
+  pull_request:
+    paths:
+      - "apps/aurora-conductor-service/**"
+      - "libs/aurora-conductor/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-survival-aurora-conductor-service.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/aurora-conductor-service/**"
+      - "libs/aurora-conductor/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ci-survival-aurora-conductor-service.yml"
+
+jobs:
+  survival:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Survival
+        run: npm run -w @aurora/aurora-conductor-service test:survival

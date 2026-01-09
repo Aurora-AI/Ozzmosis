@@ -1,0 +1,30 @@
+name: ci-survival-trustware
+
+on:
+  push:
+    paths:
+      - "libs/trustware/**"
+      - ".github/workflows/ci-survival-trustware.yml"
+  pull_request:
+    paths:
+      - "libs/trustware/**"
+      - ".github/workflows/ci-survival-trustware.yml"
+
+jobs:
+  survival:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Trustware survival
+        run: npm run -w @aurora/trustware test:survival

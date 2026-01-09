@@ -32,7 +32,7 @@
     "chronos:guard": "npm -w libs/aurora-chronos run chronos:guard",
     "install:clean": "node ./scripts/npm/clean-install.mjs"
     ,
-    "audit:maturity": "py scripts/audit/entrypoints_check.py && py scripts/audit/survival_check.py"
+    "audit:maturity": "py scripts/audit/entrypoints_check.py --repo-root . --out artifacts/entrypoints_check.json && py scripts/audit/survival_check.py --repo-root . --out artifacts/survival_check.json"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

@@ -1,0 +1,29 @@
+name: entrypoints-contract-gate
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  entrypoints_contract_gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run entrypoints check
+        run: |
+          python scripts/audit/entrypoints_check.py --repo-root . --out artifacts/entrypoints_check.json
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: entrypoints_check
+          path: artifacts/entrypoints_check.json

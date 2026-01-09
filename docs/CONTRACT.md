@@ -45,6 +45,9 @@ packages/
   tsconfig/            # Base TS compartilhada
 ```
 
+Contratos (refs):
+- Butantan Shield: apps/butantan-shield/docs/CONTRACT.md
+
 ### 3) Scripts canônicos
 
 Scripts oficiais devem existir na raiz:

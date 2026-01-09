@@ -1,3 +1,1047 @@
+# PLAN — OS-CONTRACT-PUBLIC-001-CODEX
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Adicionar gate deterministico de contratos (entrypoints) e artefatos de auditoria
+para libs TS/Python, sem inventar exports.
+
+## Escopo
+Inclui:
+- Inventario de libs em `apps/ozzmosis/data/vault/_runs/contract-public-001/inventory.json`.
+- Script `scripts/audit/entrypoints_check.py`.
+- Overlay `scripts/product_maturity/contract_overlay.py`.
+- Workflow CI `ci-entrypoints-contract.yml`.
+- Artefatos `artifacts/entrypoints_check.json` e `artifacts/contract_overlay.json`.
+
+Nao inclui:
+- Refactors amplos em libs.
+- Alteracoes em libs fora de entrypoints (se necessario).
+
+## Riscos
+- R1: Export inventado. Mitigacao: reexportar apenas o que existe.
+- R2: Script nao roda em CI. Mitigacao: usar Python 3.11 padrao.
+
+## Passos (executar 1 por vez)
+1) Inventario + script de entrypoints
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/_runs/contract-public-001/inventory.json`
+     - `scripts/audit/entrypoints_check.py`
+   - Criterios de aceite:
+     - Inventario inclui todas as libs em `libs/`.
+     - Script gera reason-codes deterministicos.
+     - Gates passam.
+
+2) Overlay + workflow + artefatos de auditoria
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/product_maturity/contract_overlay.py`
+     - `.github/workflows/ci-entrypoints-contract.yml`
+     - `artifacts/entrypoints_check.json`
+     - `artifacts/contract_overlay.json`
+   - Criterios de aceite:
+     - CI executa entrypoints_check.
+     - Overlay gera updates deterministas.
+     - Artefatos presentes.
+     - Gates passam.
+
+3) Ajustar entrypoints se houver falhas
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/**/src/index.ts` ou `libs/**/src/<pkg>/__init__.py`
+   - Criterios de aceite:
+     - Nenhuma lib com falha de entrypoint.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-CONDUCTOR-GREEN-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Elevar o Aurora Conductor a contract/core/survival 🟢 com orquestracao deterministica.
+
+## Escopo
+Inclui:
+- Contrato publico (types + Conductor) e docs de contrato.
+- Stubs deterministicos (Shield/Chronos/Brain).
+- Survival test end-to-end.
+- Evidencias em `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/`.
+
+Nao inclui:
+- Integracoes reais com Shield/Chronos/Brain.
+- Refactors fora dos arquivos listados.
+
+## Passos (executar 1 por vez)
+1) WP0: registrar OS no Vault
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CONDUCTOR-GREEN-001.md`
+
+2) WP1/WP2: contrato e core com stubs
+   - Arquivos:
+     - `libs/aurora-conductor/src/index.ts`
+     - `libs/aurora-conductor/src/stubs/*.ts`
+     - `libs/aurora-conductor/docs/CONTRACT.md`
+
+3) WP3: survival test
+   - Arquivos:
+     - `libs/aurora-conductor/tests/survival/conductor.survival.test.ts`
+
+4) Evidencias
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/git_snapshot.txt`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/windows_gates_policy.md`
+
+## Gates
+- CI Linux (sem gates locais por EPERM)
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-SHIELD-GREEN-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Levar o butantan-shield a contract/survival/core 🟢 conforme auditor.
+
+## Escopo
+Inclui:
+- Contrato publico do Shield.
+- Survival test e script test:survival.
+- Workflow CI dedicado de survival.
+- Evidencias em `apps/ozzmosis/data/vault/rodobens-wealth/_runs/shield-green-001/`.
+
+Nao inclui:
+- UI ou refactors amplos.
+- Politicas avancadas alem do minimo deterministico.
+
+## Passos (executar 1 por vez)
+1) WP0: registrar OS no Vault + PLAN
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-SHIELD-GREEN-001.md`
+     - `PLAN.md`
+
+2) WP1: contrato do Shield
+   - Arquivos:
+     - `apps/butantan-shield/docs/CONTRACT.md`
+     - `docs/CONTRACT.md` (se necessario para evidencia do auditor)
+
+3) WP2: survival test + script
+   - Arquivos:
+     - `apps/butantan-shield/tests/survival/shield.survival.test.ts`
+     - `apps/butantan-shield/package.json`
+
+4) WP3: CI + evidencia Vault
+   - Arquivos:
+     - `.github/workflows/ci-survival-shield.yml`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/shield-green-001/*`
+
+## Gates
+- CI Linux (sem gates locais por EPERM)
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-2026-GENESIS-STABILITY-024
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Remover estados criticos (🔴) para contrato/survival/core minimo em
+butantan-shield, aurora-conductor-service e elysian-brain, com evidencia
+versionada no Vault.
+
+## Escopo
+Inclui:
+- Contratos (CONTRACT.md) para shield e conductor-service.
+- Entrypoint/exports reais quando aplicavel (sem inventar simbolos).
+- Survival do Shield + CI dedicado.
+- Enforcement fail-closed no alvaro-core.
+- Core minimo do elysian-brain lendo index.json do Vault + teste.
+- Evidencias em `_runs/` no Vault.
+
+Nao inclui:
+- OCR real ou expansao de features.
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Contrato gerar export inventado. Mitigacao: exportar apenas simbolos reais.
+- R2: Survival do Shield flake em CI. Mitigacao: smoke deterministico e timeout curto.
+
+## Passos (executar 1 por vez)
+1) Contratos (Shield + Conductor-Service) + entrypoints
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/docs/CONTRACT.md`
+     - `apps/aurora-conductor-service/docs/CONTRACT.md`
+     - `apps/butantan-shield/src/index.ts` (se houver exports reais)
+     - `apps/aurora-conductor-service/src/index.ts` (se houver exports reais)
+   - Criterios de aceite:
+     - Auditor detecta contrato (>= 🟡).
+     - Sem simbolos inventados.
+     - Gates passam.
+
+2) Shield survival + enforcement fail-closed
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/tests/survival/shield.survival.test.ts`
+     - `.github/workflows/ci-survival-shield.yml`
+     - `apps/alvaro-core/services/shield/enforcer.py`
+   - Criterios de aceite:
+     - Survival do Shield passa em CI.
+     - Enforcement bloqueia em falha (fail-closed).
+     - Gates passam.
+
+3) Brain core minimo + evidencias Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/**`
+     - `libs/elysian-brain/tests/**`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/contract-public-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/remediation-shield-024/*.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/rodobens-ingest-024/*.json`
+   - Criterios de aceite:
+     - Brain le index.json e passa teste deterministico.
+     - Evidencias no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-REMEDIATION-FULL-002-CODEX
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Atender os pontos de auditoria (survival, chronos core, shield consumidor,
+taxonomia e evidencias de deploy) com evidencias objetivas.
+
+## Escopo
+Inclui:
+- Survival tests e workflows para chronos, crm-core, alvaro-core e shield.
+- Core minimo Chronos com testes.
+- Consumo real do Shield em um fluxo.
+- Script de auditoria survival com reason-codes.
+- Docs minimos de taxonomia e evidencia de operacao.
+
+Nao inclui:
+- OCR real ou expansao de features nao pedidas.
+
+## Riscos
+- R1: Dependencias novas para testes. Mitigacao: usar stack existente.
+- R2: Falhas de CI por workflow. Mitigacao: CI isolado por job.
+
+## Passos (executar 1 por vez)
+1) Survival detection + workflows base
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/audit/survival_check.py`
+     - `.github/workflows/ci-survival-chronos.yml`
+     - `.github/workflows/ci-survival-crm-core.yml`
+     - `.github/workflows/ci-survival-alvaro-core.yml`
+     - `.github/workflows/ci-smoke-shield.yml`
+     - `artifacts/survival_check.json`
+   - Criterios de aceite:
+     - Script gera `survival_check.json` com reason-codes.
+     - Workflows executam survival/smoke.
+     - Gates passam.
+
+2) Chronos core minimo + testes survival
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/aurora-chronos/src/**`
+     - `libs/aurora-chronos/tests/**`
+     - `libs/aurora-chronos/package.json`
+   - Criterios de aceite:
+     - Append, range e index deterministico implementados.
+     - Testes unitarios e survival passam.
+     - Gates passam.
+
+3) Shield consumidor real + smoke
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/butantan-shield/**` ou `apps/alvaro-core/**` ou `apps/crm-core/**`
+   - Criterios de aceite:
+     - Integracao real do shield com teste/smoke.
+     - Gates passam.
+
+4) Taxonomia e evidencias de deploy
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/**`
+     - `artifacts/**`
+   - Criterios de aceite:
+     - Docs de taxonomia e evidencia presentes.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Implantar Vault Rodobens Wealth com ingest PDF->MD deterministica, selecao
+de backend em runtime (sem CUDA-only), templates Trustware e estados Cinematic.
+
+## Escopo
+Inclui:
+- Vault SSOT em `apps/ozzmosis/data/vault/rodobens-wealth` com raw/processed/index/_runs.
+- Toolbelt PDF->MD em `libs/elysian-brain` e wrappers em `scripts/rodobens`.
+- Templates Trustware em `apps/ozzmosis/policies/trustware/rodobens-wealth`.
+- Documentos Cinematic Commerce e playbook.
+- Fechamento no Vault e `apps/ozzmosis/PLAN.md`.
+
+Nao inclui:
+- OCR real (fica para OS 019A).
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Dependencia nova para `pdfplumber` sem install. Mitigacao: documentar e isolar no toolbelt.
+- R2: Estrutura nova do vault divergir da anterior. Mitigacao: adicionar sem remover conteudo existente.
+
+## Passos (executar 1 por vez)
+1) Estrutura Vault (raw/processed/index/_runs)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/raw/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/processed/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/_runs/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura criada sem remover conteudo existente.
+     - Gates passam.
+
+2) Toolbelt PDF->MD + wrappers + playbook
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/__init__.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/backend.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/convert.py`
+     - `libs/elysian-brain/src/elysian_brain/toolbelt/pdf2md/indexer.py`
+     - `libs/elysian-brain/pyproject.toml`
+     - `scripts/rodobens/pdf2md.ps1`
+     - `scripts/rodobens/pdf2md.sh`
+     - `docs/rodobens/RODOBENS_VAULT_INGEST_PLAYBOOK.md`
+   - Criterios de aceite:
+     - Conversao deterministica com front-matter e hashes.
+     - Selecao runtime registrada (engine/providers).
+     - Gates passam.
+
+3) Trustware templates + estados + fechamento
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/README.md`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_auto.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/consorcio_imovel.yaml`
+     - `apps/ozzmosis/policies/trustware/rodobens-wealth/templates/seguro_vida_resgatavel.yaml`
+     - `docs/rodobens/CINEMATIC_COMMERCE_STATES.md`
+     - `apps/ozzmosis/PLAN.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-WEALTH-Vault-Ingest-PDF2MD-Trustware-States-20260106-019.md`
+   - Criterios de aceite:
+     - Templates Trustware existentes.
+     - Documento de estados com diagrama Mermaid.
+     - Fechamento no Vault e PLAN local.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-CODEX-AGENTS-MANUAL-LAW-20260106-020
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Importar o Manual de Construcao Aurora v5.0, declarar lei para agentes e
+garantir wiring de contexto obrigatorio.
+
+## Escopo
+Inclui:
+- Manual v5.0 em `docs/manual/`.
+- Lei dos agentes em `docs/AGENTS/LAW.md`.
+- Manifest de contexto e script de verificacao.
+- Integracao do gate no `scripts/agents/run-gates.ps1`.
+- Fechamento no Vault.
+
+Nao inclui:
+- Mudancas no conteudo do manual.
+- Execucao de OCR ou pipelines externos.
+
+## Riscos
+- R1: Conteudo do manual divergente do arquivo fonte. Mitigacao: copiar integral.
+- R2: Gate adicional quebrar fluxo. Mitigacao: verificar paths antes do npm ci.
+
+## Passos (executar 1 por vez)
+1) Importar manual e alias canonico
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
+     - `docs/manual/Manual_de_Construcao_Aurora.md`
+   - Criterios de aceite:
+     - Manual v5.0 importado sem alteracoes.
+     - Alias canonico aponta para o v5.0.
+     - Gates passam.
+
+2) Declarar lei dos agentes e atualizar AGENTS.md
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `docs/AGENTS/LAW.md`
+     - `AGENTS.md`
+   - Criterios de aceite:
+     - Lei dos agentes criada.
+     - AGENTS.md aponta para a lei e manual canonico.
+     - Gates passam.
+
+3) Wiring de contexto + gate + fechamento no Vault
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/agents/context/agent_context_manifest.yaml`
+     - `scripts/agents/verify-agent-law.ps1`
+     - `scripts/agents/run-gates.ps1`
+     - `apps/ozzmosis/data/vault/aurora-agents/os/OS-CODEX-AGENTS-MANUAL-LAW-20260106-020.md`
+   - Criterios de aceite:
+     - Manifest e script de verificacao presentes.
+     - run-gates executa verificacao antes do npm ci.
+     - Fechamento da OS no Vault.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-004-ACCEPTANCE-CRITERIA
+Data: 2026-01-05
+Autor: agent
+
+---
+
+# PLAN — OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Materializar o DMI Rodobens Wealth com SSOT no Vault, pipeline PDF->Markdown
+deterministico e contratos documentais (policies + estados).
+
+## Escopo
+Inclui:
+- Estrutura SSOT em `apps/ozzmosis/data/vault/rodobens-wealth`.
+- Docs canonicos (README, policies, diagramas, OS).
+- CLI deterministica `scripts/rodobens/pdf2md`.
+
+Nao inclui:
+- OCR real (fica como stub governado).
+- Dependencias novas fora do requirements local.
+- Execucao do pipeline em fontes reais.
+
+## Riscos
+- R1: Diretorios vazios nao entram no git. Mitigacao: `.gitkeep`.
+- R2: Texto com acentuacao fora do padrao. Mitigacao: manter ASCII.
+
+## Passos (executar 1 por vez)
+1) Criar Vault Rodobens Wealth + docs canonicos
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/README.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/policies/trustware_rules.yaml`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/diagrams/cinematic_states.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os/OS-CODEX-RODOBENS-ULTIMATE-EXECUTION-20260106-019.md`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/sources/_inbox/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_generated/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/knowledge/_index/.gitkeep`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/evidence/.gitkeep`
+   - Criterios de aceite:
+     - Estrutura do Vault criada com SSOT e docs canonicos.
+     - Politicas Trustware iniciais em YAML.
+     - Gates passam.
+
+2) Criar CLI pdf2md (deterministica e idempotente)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `scripts/rodobens/pdf2md/requirements.txt`
+     - `scripts/rodobens/pdf2md/README.md`
+     - `scripts/rodobens/pdf2md/pdf2md.py`
+   - Criterios de aceite:
+     - Script gera MD com front-matter e hashes.
+     - Nenhum acoplamento exclusivo a CUDA.
+     - Gates passam.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+# PLAN — TRUSTWARE-HEALTH-BOOT-LOGS
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Enriquecer o payload de `/health` e adicionar log de boot do Trustware com
+metadados minimos para operacao e forensics.
+
+## Escopo
+Inclui:
+- Adicionar `health_snapshot()` no engine Trustware.
+- Atualizar `/health` com payload canonico.
+- Logar uma linha no boot com path/version/produtos.
+
+Nao inclui:
+- Mudancas em regras YAML.
+- Novas dependencias.
+- Ajustes em outras rotas.
+
+## Riscos
+- R1: Falha ao ler mtime pode quebrar health. Mitigacao: captura de excecao e retorno `None`.
+- R2: Log duplicado em reloads. Mitigacao: manter log apenas no boot.
+
+## Passos (executar 1 por vez)
+1) Implementar snapshot e health/log de boot
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/services/trustware/engine.py`
+     - `apps/alvaro-core/main.py`
+   - Criterios de aceite:
+     - `/health` retorna `trustware.template_version` e `trustware.rules_path`.
+     - Boot loga `trustware_boot:` com version/produtos/path.
+     - Falha em YAML nao sobe e loga `trustware_boot_failed`.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+
+## Objetivo
+Implementar os criterios de aceite da OS-004 na Genesis Front (sem alterar URL),
+com transicao Standard -> Legacy, densidade atmosferica e reacao a inputs por
+composicao de instrumentos (nao por valor absoluto).
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/src/app/page.tsx` com estado de modo e transicao suave.
+- Ajustar navegacao para modo Legacy (indicadores de seguranca).
+- Reagir a composicao de instrumentos (Legacy destacado ao selecionar 2+ itens complexos).
+
+Nao inclui:
+- Mudancas em backend ou rotas.
+- Novas dependencias NPM.
+- Refactors fora da pagina inicial.
+
+## Riscos
+- R1: Transicao visual pode conflitar com estilos globais. Mitigacao: aplicar classes apenas no container principal.
+- R2: Scroll smooth pode conflitar com Lenis. Mitigacao: manter comportamento simples e idempotente.
+
+## Passos (executar 1 por vez)
+1) Implementar criterios de aceite na home
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Criterios de aceite:
+     - Sem mudanca de URL ao ativar o protocolo.
+     - Scroll suave para o topo ao iniciar protocolo.
+     - Modo Legacy altera densidade de informacao e navegacao.
+     - Card Legacy destaca automaticamente quando patrimonio > R$ 10M.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+# PLAN — OS-AUDIT-MATURITY-RUNNER-001
+Data: 2026-01-08
+Autor: agent
+
+## Objetivo
+Expandir os auditores para cobrir `apps/*`, incluir `aurora-conductor-service`
+em survival, e criar runner canonico `audit:maturity` no root.
+
+## Escopo
+Inclui:
+- Atualizar `scripts/audit/entrypoints_check.py` para varrer `libs/*` e `apps/*`.
+- Atualizar `scripts/audit/survival_check.py` para incluir `aurora-conductor-service`
+  e validar execucao do `test:survival` via workspace.
+- Adicionar script `audit:maturity` no `package.json` raiz usando `py`.
+
+Nao inclui:
+- Mudancas em criterios de auditoria (apenas cobertura).
+- Alteracoes em apps ou testes alem do auditor.
+
+## Riscos
+- R1: Runner falhar fora do Windows. Mitigacao: uso de `py` como runner
+  explicito no ambiente atual; cross-platform fica para OS futura.
+- R2: Execucao de tests survival falhar por dependencia. Mitigacao: manter
+  comando restrito ao workspace `@aurora/aurora-conductor-service`.
+
+## Passos (executar 1 por vez)
+1) Entrypoints check cobre apps
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `scripts/audit/entrypoints_check.py`
+   - Criterios de aceite:
+     - JSON inclui `apps/butantan-shield` e `apps/aurora-conductor-service`.
+     - Lista de targets auditados inclui `libs` e `apps`.
+
+2) Survival check inclui conductor-service e valida `test:survival`
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `scripts/audit/survival_check.py`
+   - Criterios de aceite:
+     - JSON inclui `aurora-conductor-service` com status `ok`.
+     - Evidence inclui script `test:survival` e arquivo survival.
+
+3) Runner canonico `audit:maturity`
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `package.json`
+   - Criterios de aceite:
+     - `npm run audit:maturity` executa os dois auditores via `py`.
+
+4) Executar auditor + gates
+   - Comandos:
+     - `npm run audit:maturity`
+     - `scripts/agents/run-gates.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_AUDIT_OUTPUT.txt`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_entrypoints_check.json`
+     - `apps/ozzmosis/data/vault/rodobens-wealth/os_history/OS-SHIELD-CONDUCTOR-GREEN-001_survival_check.json`
+   - Criterios de aceite:
+     - Auditor PASS com shield + conductor-service.
+     - Gates PASS.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+# PLAN — OS-VAULT-AUTOMATION-ALVARO-001
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Implantar a fundacao do Vault (SSOT vivo), templates de OS/Livro, constituicoes
+do Projeto Alvaro, Capitulo Zero e o principio de memoria muscular no Manual.
+
+## Escopo
+Inclui:
+- Criar a estrutura canonica em `docs/Vault`.
+- Criar os arquivos de constituicao, templates de OS/Livro e Capitulo Zero.
+- Atualizar o Manual com o principio de memoria muscular operacional.
+- Registrar governanca de memoria no PLAN.
+
+Nao inclui:
+- Mudancas fora de `docs/` e desta OS.
+- Automacoes adicionais ou alteracoes em pipelines.
+
+## Governanca de Memoria (Ativa)
+- Toda OS aberta segue template do Vault
+- Toda OS fechada gera Capitulo do Livro
+- Decisao sem Vault e invalida
+- Livro e diario de bordo e ativo estrategico
+
+## Riscos
+- R1: Fontes canonicas ausentes (Dossie Fase Zero, Estudo Profundo do Cerebro,
+  template Capitulo 0-10). Mitigacao: solicitar os artefatos antes dos passos
+  dependentes.
+- R2: Gates bloqueados pela politica Trustware. Mitigacao: solicitar execucao
+  manual do usuario quando necessario.
+
+## Passos (executar 1 por vez)
+1) Estrutura do Vault + INDEX + templates de OS
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/INDEX.md`
+     - `docs/Vault/AUDITS/2026-01-initial-maturity-report.md`
+     - `docs/Vault/CONSTITUICAO/`
+     - `docs/Vault/OS/_templates/OS_OPEN_TEMPLATE.md`
+     - `docs/Vault/OS/_templates/OS_CLOSE_TEMPLATE.md`
+     - `docs/Vault/LIVRO/_templates/`
+     - `docs/Vault/LIVRO/2026/`
+     - `docs/Vault/OS/2026/`
+   - Criterios de aceite:
+     - Estrutura criada exatamente como definida na OS.
+     - Templates de OS batem o texto canonico da OS.
+     - Relatorio de maturidade movido para `docs/Vault/AUDITS/2026-01-initial-maturity-report.md`.
+
+2) Constituicao Alvaro (Fase Zero + Biologica)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/CONSTITUICAO/ALVARO_GENESIS_PHASE_ZERO.md`
+     - `docs/Vault/CONSTITUICAO/ALVARO_GENESIS_BIOLOGICA.md`
+   - Criterios de aceite:
+     - Fase Zero e literal do dossie canonico fornecido.
+     - Biologica sintetiza o estudo fornecido com os focos exigidos.
+
+3) Template do Livro (Capitulo 0-10)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/LIVRO/_templates/CAPITULO_TEMPLATE.md`
+   - Criterios de aceite:
+     - Template corresponde exatamente ao texto canonico fornecido.
+
+4) Capitulo Zero (inauguracao)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/LIVRO/2026/00-origem-alvaro/CAPITULO.md`
+   - Criterios de aceite:
+     - Conteudo derivado integralmente da Constituicao Fase Zero.
+     - Explica observador, operadores como musculos, biologia como especificacao.
+
+5) Governanca ativa (principio + guidelines + docs/PLAN)
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/CONSTITUICAO/PRINCIPIO_MEMORIA_MUSCULAR_OPERACIONAL.md`
+     - `docs/guidelines.md`
+     - `docs/PLAN.md`
+     - `docs/manual/Manual_de_Construcao_Aurora_v5.0.md`
+   - Criterios de aceite:
+     - Principio canonico criado conforme payload.
+     - Guidelines atualizadas com referencia ao principio.
+     - `docs/PLAN.md` com bloco de governanca ativo.
+     - Principio adicionado no Manual com referencia ao documento canonico no Vault.
+
+6) Fechamento OS + Capitulo 01 + descricao de PR
+   - Comandos:
+     - N/A (edicao direta de arquivos)
+   - Arquivos:
+     - `docs/Vault/OS/2026/OS-005-GENESIS-REBIRTH.md`
+     - `docs/Vault/LIVRO/2026/01-a-constituicao/CAPITULO.md`
+     - `PR_DESCRIPTION_OS-005.md`
+   - Criterios de aceite:
+     - OS retroativa criada com bloco de fechamento.
+     - Capitulo 01 criado com conteudo canonico.
+     - Descricao consolidada de PR registrada com o titulo aprovado.
+
+## Gates
+- `scripts/agents/run-gates.ps1` (requer execucao manual conforme Trustware)
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
+# PLAN — ADR-UNIFIED-VIP-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Formalizar a constituicao "VIP unificado" no repositorio, em `docs/CONSTITUICAO/`.
+
+## Escopo
+Inclui:
+- Criar `docs/CONSTITUICAO/ADR-UNIFIED-VIP-001.md` com o texto canonico fornecido.
+
+Nao inclui:
+- Alteracoes em codigo de produto.
+- Ajustes em outras documentacoes.
+
+## Riscos
+- R1: Conteudo divergente do texto canonico. Mitigacao: copiar literalmente o texto aprovado.
+
+## Passos (executar 1 por vez)
+1) Registrar ADR canônico
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+   - Arquivos:
+     - `docs/CONSTITUICAO/ADR-UNIFIED-VIP-001.md`
+   - Criterios de aceite:
+     - Arquivo criado com conteudo canonico.
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-GENESIS-EMPATHY-005
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Implementar o "Whisper Engine" e o Composer de Instrumentos na home, com progressao
+visual suave e ativacao consciente do protocolo.
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/src/app/page.tsx` com estado de instrumentos,
+  feedback efemero e card Legacy com intensificacao progressiva.
+
+Nao inclui:
+- Mudancas em rotas/URLs.
+- Mudancas em backend ou contrato de dados.
+- Novas dependencias NPM.
+
+## Riscos
+- R1: Mensagem efemera persistir entre renders. Mitigacao: timeout com limpeza.
+- R2: Ativacao VIP automatica indevida. Mitigacao: manter clique explicito.
+
+## Passos (executar 1 por vez)
+1) Implementar Composer + Whisper
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Criterios de aceite:
+     - Feedback de empatia exibido e auto-limpo.
+     - Card Legacy intensifica com 2+ instrumentos.
+     - Transicao para VIP somente por clique.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+
+---
+
+# PLAN — OS-GENESIS-ALIGN-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Alinhar `apps/genesis-front` à estrutura `src/` e transplantar o motor visual White Absolute
+para a home da Aurora Genesis (atmosfera, tipografia e organismo principal), mantendo
+o motor de scroll Lenis existente (sem ReactLenis).
+
+## Escopo
+Inclui:
+- Mover `apps/genesis-front/app` para `apps/genesis-front/src/app`.
+- Mover `apps/genesis-front/components` para `apps/genesis-front/src/components`.
+- Atualizar `apps/genesis-front/tsconfig.json` para `@/*` apontar para `./src/*`.
+- Substituir `apps/genesis-front/src/app/globals.css` com grain/spotlight/reveal e tokens White Absolute.
+- Manter o componente `apps/genesis-front/src/components/SmoothScroll.tsx`.
+- Atualizar `apps/genesis-front/src/app/layout.tsx` com Playfair Display e classes globais (body/html).
+- Reescrever `apps/genesis-front/src/app/page.tsx` com estrutura Hero/Life Map/Showcase/Footer e reveal.
+
+Não inclui:
+- Mudanças em outras apps (`chronos-backoffice`, `mycelium-front`).
+- Novas dependências NPM ou ajustes em Tailwind config.
+- Alterações em workflows/Dockerfiles/configs fora do escopo.
+
+## Riscos
+- R1: Comandos de move (`Move-Item`) não estão no allowlist Trustware. Mitigação: executar somente com confirmação humana explícita.
+- R2: Troca de `@import 'tailwindcss'` por diretivas `@tailwind` pode quebrar o build (Tailwind v4). Mitigação: manter `@import 'tailwindcss'` no topo ao substituir o CSS.
+- R3: Alias `@/*` pode quebrar imports se não apontar para `./src/*`. Mitigação: ajustar `tsconfig.json`.
+- R4: Interseção/reveal pode não ativar em navegadores antigos. Mitigação: fallback aceitável (elementos permanecem visíveis se `active` for aplicado manualmente).
+ - R5: Mudança para ReactLenis conflita com React 19 (peer deps). Mitigação: manter Lenis atual.
+
+## Passos (executar 1 por vez)
+1) Alinhamento de estrutura `src/`
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `New-Item -ItemType Directory -Path apps\genesis-front\src`
+     - `Move-Item -Path apps\genesis-front\app -Destination apps\genesis-front\src\app`
+     - `Move-Item -Path apps\genesis-front\components -Destination apps\genesis-front\src\components`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/*`
+     - `apps/genesis-front/src/components/*`
+     - `apps/genesis-front/tsconfig.json`
+   - Critérios de aceite:
+     - Estrutura `apps/genesis-front/src/app` e `apps/genesis-front/src/components` existente.
+     - `@/*` aponta para `./src/*` em `apps/genesis-front/tsconfig.json`.
+     - Gates passam.
+
+2) Atmosfera global (globals.css)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/globals.css`
+   - Critérios de aceite:
+     - CSS substituído com `grain`, `hero-spotlight`, `reveal`, `hover-luxury` e `@theme`.
+     - Gates passam.
+
+3) Motor de scroll Lenis (existente) + layout base
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/components/SmoothScroll.tsx`
+     - `apps/genesis-front/src/components/index.ts`
+     - `apps/genesis-front/src/components/LenisProvider.tsx`
+     - `apps/genesis-front/src/app/layout.tsx`
+   - Critérios de aceite:
+     - SmoothScroll mantém Lenis existente.
+     - Playfair Display importada e aplicada via variável CSS.
+     - `<body>` aplica classes globais do briefing.
+     - Gates passam.
+
+4) Organismo principal (page.tsx)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/genesis-front/src/app/page.tsx`
+   - Critérios de aceite:
+     - Estrutura Hero/Life Map/Showcase/Footer conforme briefing.
+     - Lógica de reveal ativa sem imports mortos.
+     - Gates passam.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+
+# PLAN — AURORA-GENESIS-SKIN-TRANSPLANT-20260105-001
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Aplicar a “Golden Copy” (White Absolute) no `apps/genesis-front`, transplantando Atmosfera (grain + spotlight), Física (cubic-bezier `0.16, 1, 0.3, 1`) e Tipografia híbrida (Inter + Playfair Display), e removendo qualquer vestígio de theme toggle (Aurora imutável).
+
+## Escopo
+Inclui:
+- Substituir `apps/genesis-front/app/globals.css` pela base “White Absolute” (mantendo Tailwind v4 via `@import 'tailwindcss';`).
+- Atualizar `apps/genesis-front/app/layout.tsx` para adicionar `Playfair_Display` e aplicar as classes `grain` + `font-sans`.
+- Substituir `apps/genesis-front/app/page.tsx` pelo organismo “Aurora Genesis” com `reveal` via `IntersectionObserver`.
+
+Não inclui:
+- Mudança de dependências NPM.
+- Ajustes em `components/*` (exceto o uso do `SmoothScroll` já existente).
+- Commits/push (fora do allowlist Trustware).
+
+## Riscos
+- R1: Divergência de diretivas Tailwind (v4). Mitigação: usar `@import 'tailwindcss';` no `globals.css`.
+- R2: Import path do `SmoothScroll` divergente. Mitigação: manter o import existente `@/components/SmoothScroll`.
+- R3: CSS global anterior continha utilitários (`.container`) usados por componentes antigos. Mitigação: `app/page.tsx` não usa mais esses componentes.
+- R4: `npm ci` pode falhar no Windows com `EPERM unlink` se o VS Code/Extensões estiverem com lock em `node_modules` (ex.: Tailwind oxide). Mitigação: fechar instâncias do VS Code que estejam com o repo aberto e re-rodar os gates.
+
+## Passos (executar 1 por vez)
+1) Atmosfera — substituir `apps/genesis-front/app/globals.css`
+   - Mudanças:
+     - Definir tokens (`--bg`, `--fg`, `--line`, etc.), `grain`, `hero-spotlight`, `reveal`, `hover-luxury` e `.font-serif`.
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+2) Tipografia — atualizar `apps/genesis-front/app/layout.tsx`
+   - Mudanças:
+     - Importar `Playfair_Display` via `next/font/google`.
+     - Aplicar `${inter.variable} ${playfair.variable}` e `grain` no `<body>`.
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+3) Organismo — substituir `apps/genesis-front/app/page.tsx`
+   - Mudanças:
+     - Página “Aurora Genesis” com navegação fixa, hero (spotlight + serif), life map (sliders) e showcase (cards).
+   - Comandos (gates):
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Critérios de aceite:
+     - `scripts\agents\run-gates.ps1` retorna `Gates PASS`
+
+## Gates
+- `scripts\agents\run-gates.ps1` após cada passo.
+
+## Rollback
+- Reverter os 3 arquivos alterados para o estado anterior (via git, com execução humana se necessário) e re-rodar `scripts\agents\run-gates.ps1`.
+
 # PLAN — ESLint root config + VS Code monorepo fix
 
 Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garantindo um config raiz do ESLint (Flat Config) e ajustes mínimos de monorepo no workspace.
@@ -70,12 +1114,67 @@ Objetivo: eliminar o erro do VS Code ESLint (`Could not find config file`) garan
      - Sem erro de parsing/config para JSON/TS
 
 ---
+
+# PLAN — AURORA-GENESIS-HERO-FANTASY-005
+Data: 2026-01-05
+Autor: agent
+
+## Objetivo
+Refinar o Hero de `apps/genesis-front` para tipografia com “Ar e Autoridade” (peso/leading/tracking) e ajustar o smooth scroll via Lenis para fluidez cinematográfica.
+
+## Escopo
+Inclui:
+- Atualizar `apps/genesis-front/components/Hero.tsx` para layout centrado, tracking negativo e contraste `font-extralight` vs `font-normal`.
+- Ajustar o wrapper de scroll em `apps/genesis-front/app/layout.tsx` com um componente `SmoothScroll` (Lenis) e opções equivalentes às do briefing.
+
+Não inclui:
+- Novas dependências NPM.
+- Mudanças em outras seções (Decision Space / Life Map / Proposals / Acceptance).
+- Refactors gerais de animações/estilos fora do Hero.
+
+## Riscos
+- R1: Regressão visual em breakpoints (mobile/desktop). Mitigação: manter classes Tailwind responsivas e validar rapidamente o layout manualmente.
+- R2: Lenis interferir com `scrollIntoView({ behavior: 'smooth' })`. Mitigação: manter configuração conservadora; se houver conflito, ajustar a navegação para `behavior: 'auto'` ou usar `lenis.scrollTo` em passo separado.
+
+## Passos (executar 1 por vez)
+1) Reconstruir o Hero (Fantasy.co)
+   - Comandos (gates):
+     - `cd C:\\Aurora\\Ozzmosis`
+     - `npm ci`
+     - `npm run repo:check`
+   - Arquivos:
+     - `apps/genesis-front/components/Hero.tsx`
+   - Critérios de aceite:
+     - `npm run repo:check` passa
+     - Hero compila e renderiza sem erro de runtime
+
+2) Smooth scroll (Lenis) via `SmoothScroll` no layout
+   - Comandos (gates):
+     - `cd C:\\Aurora\\Ozzmosis`
+     - `npm ci`
+     - `npm run repo:check`
+   - Arquivos:
+     - `apps/genesis-front/components/SmoothScroll.tsx` (novo)
+     - `apps/genesis-front/app/layout.tsx`
+     - `apps/genesis-front/components/index.ts`
+     - `apps/genesis-front/components/LenisProvider.tsx` (ajuste mínimo/compat)
+   - Critérios de aceite:
+     - `npm run repo:check` passa
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
+
+## Rollback
+- Reverter via git (exige confirmação humana se fora do allowlist Trustware):
+  - `git revert <sha>`
+  - `npm ci && npm run repo:check`
 # PLAN — OS-ANTIGRAVITY-GENESIS-REBUILD-004
 Data: 2026-01-04
 Autor: agent
 
 ## Objetivo
-Encerrar a OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 como "execucao revertida" (fonte perdida no workspace) e reconstruir `apps/genesis-front` com fonte versionada (Next App Router + Lenis + framer-motion) e handshake real de API via `NEXT_PUBLIC_API_URL`.
+Encerrar a OS-ANTIGRAVITY-GENESIS-FANTASY-TRANSLATION-003 como "execucao revertida" (fonte perdida no workspace) e reconstruir `apps/genesis-front` com fonte versionada (Next App Router + Lenis + framer-motion) e handshake real de API via `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
 
 ## Escopo
 Inclui:
@@ -143,7 +1242,7 @@ Nao inclui:
      - `cd C:\Aurora\Ozzmosis`
      - `scripts/agents/run-gates.ps1`
    - Criterios de aceite:
-     - `NEXT_PUBLIC_API_URL` usado em `lib/api.ts`
+     - `NEXT_PUBLIC_ALVARO_API_BASE_URL` usado em `lib/api.ts`
      - Rewrites/proxy evita CORS local quando necessario
 
 ## Gates
@@ -1319,6 +2418,91 @@ Nao inclui:
 
 ## Gates
 - `scripts/agents/run-gates.ps1` apos cada passo.
+
+## Rollback
+- `git revert <sha>`
+- `npm ci && npm run repo:check`
+
+---
+# PLAN — OS-002-RODOBENS-SYNAPSE
+Data: 2026-01-06
+Autor: agent
+
+## Objetivo
+Conectar `apps/mycelium-front` ao `apps/alvaro-core` via REST (FastAPI) para validar
+intencao do usuario com Trustware e renderizar warnings/acks no front.
+
+## Escopo
+Inclui:
+- Implementar Trustware engine e regras YAML em `apps/alvaro-core/services/trustware`.
+- Expor endpoint FastAPI `POST /api/v1/trustware/validate`.
+- Adicionar client front + componente DecisionGuardian + exemplo no portal Casa.
+- Adicionar `.env.example` com `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
+
+Nao inclui:
+- Mudancas em auth, banco de dados, ou outras APIs.
+- Novas dependencias fora do que ja existe no repo (usar libs ja presentes).
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Import path de pacote do backend pode divergir (`apps.alvaro_core`). Mitigacao: ajustar apenas o import mantendo o contrato.
+- R2: CORS local pode bloquear o front. Mitigacao: CORS explicito em `apps/alvaro-core/main.py`.
+- R3: Fallback do front pode mascarar erro de API. Mitigacao: `is_safe=false` e `note=api_unreachable`.
+
+## Configuracao de ambiente (Front)
+
+### mycelium-front
+
+Variaveis publicas (Next.js):
+
+- `NEXT_PUBLIC_ALVARO_API_BASE_URL` (obrigatoria)
+  Base URL do backend `alvaro-core` (sem barra no final).
+  Ex: `http://localhost:8000`
+
+- `NEXT_PUBLIC_TRUSTWARE_STRICT` (opcional, default: `true`)
+  Politica de falha do Trustware no Front:
+  - `true` => fail-closed: API indisponivel bloqueia "continuar"
+  - `false` => continua nao pode retornar "seguro"; UI marca degradado e mantem bloqueio por padrao
+
+Trustware Front Policy (canonical):
+- O front nunca deve assumir "seguro" por ausencia de resposta.
+- Em indisponibilidade do backend: estado degradado explicito (`api_unreachable`) e bloqueio em modo strict (fail-closed).
+
+## Passos (executar 1 por vez)
+1) Backend Trustware (engine + rules + rota + CORS)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/services/trustware/engine.py`
+     - `apps/alvaro-core/services/trustware/templates/rodobens_rules.yaml`
+     - `apps/alvaro-core/api/routes/trustware.py`
+     - `apps/alvaro-core/main.py`
+   - Criterios de aceite:
+     - `POST /api/v1/trustware/validate` responde JSON com `is_safe`, `warnings`, `required_acks`.
+     - CORS permite `http://localhost:3000`.
+     - Gates passam.
+
+2) Front Trustware (client + DecisionGuardian + portal Casa)
+   - Comandos:
+     - `cd C:\Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+   - Arquivos:
+     - `apps/mycelium-front/lib/trustware/client.ts`
+     - `apps/mycelium-front/src/components/trustware/DecisionGuardian.tsx`
+     - `apps/mycelium-front/src/app/(portals)/casa/page.tsx`
+     - `apps/mycelium-front/.env.example`
+   - Criterios de aceite:
+     - Front chama o backend e renderiza warnings/acks.
+     - Fallback retorna `note=api_unreachable` e `is_safe=false`.
+     - Gates passam.
+
+## Status
+- [x] OS-002 / Step 2 — Front Trustware: client tipado (fail-closed) + DecisionGuardian (acks + mensagens strict/soft) + Portal Casa integrado ao contrato do backend (product_key + user_intent) + `.env.example` com `NEXT_PUBLIC_ALVARO_API_BASE_URL`.
+
+## Gates
+- `npm ci`
+- `npm run repo:check`
 
 ## Rollback
 - `git revert <sha>`

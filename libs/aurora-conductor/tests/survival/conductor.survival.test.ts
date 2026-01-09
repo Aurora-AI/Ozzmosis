@@ -13,6 +13,10 @@ import {
   SafeFileSystem,
   RunArtifactSchema
 } from "../../dist/index.js";
+import { Conductor, type ConductorEvent } from "../../dist/index.js";
+import { ShieldStub } from "../../dist/stubs/shield.stub.js";
+import { ChronosStub } from "../../dist/stubs/chronos.stub.js";
+import { BrainStub } from "../../dist/stubs/brain.stub.js";
 
 async function withTempRepo<T>(fixtureName: string, fn: (repoRoot: string) => Promise<T>) {
   const { repoRoot, cleanup } = await createTempRepoFromFixture(fixtureName);
@@ -162,5 +166,32 @@ describe("Aurora Conductor - survival tests (blackbox)", () => {
       const parsed = JSON.parse(raw) as unknown;
       expect(normalizeArtifactForDeterminism(parsed)).toEqual(normalizeArtifactForDeterminism(artifact));
     });
+  });
+
+  it("T8: orchestracao end-to-end (commit e reject)", async () => {
+    const conductor = new Conductor(new ShieldStub(), new ChronosStub(), new BrainStub());
+
+    const baseEvent: ConductorEvent = {
+      id: "evt-1",
+      type: "TEST",
+      payload: {},
+      occurred_at: new Date().toISOString()
+    };
+
+    const committed = await conductor.handle(baseEvent);
+    expect(committed.status).toBe("COMMITTED");
+
+    class DenyShield extends ShieldStub {
+      async validate(_: ConductorEvent) {
+        return { allowed: false, reason_code: "DENIED_BY_POLICY" };
+      }
+    }
+
+    const rejected = await new Conductor(new DenyShield(), new ChronosStub(), new BrainStub()).handle({
+      ...baseEvent,
+      id: "evt-2"
+    });
+    expect(rejected.status).toBe("REJECTED");
+    expect(rejected.reason_code).toBe("DENIED_BY_POLICY");
   });
 });

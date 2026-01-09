@@ -1,10 +1,16 @@
 export const CHRONOS_VERSION = "0.1.0";
 
 /**
- * Chronos é o pilar do “tempo operacional” em desenvolvimento.
- * Nesta fase ele existe como contrato + disciplina de build + smoke test.
+ * Chronos e o nucleo do tempo operacional.
+ * Este modulo expõe um core minimo deterministico.
  */
 export type ChronosPlaceholder = {
   version: string;
 };
 
+export {
+  ChronosCore,
+  build_chronos_index,
+  type ChronosEvent,
+  type ChronosIndex,
+} from "./core";

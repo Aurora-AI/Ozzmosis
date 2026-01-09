@@ -1,0 +1,12 @@
+== git status -sb ==
+## chore/os-conductor-green-001
+?? apps/ozzmosis/data/vault/rodobens-wealth/_runs/conductor-green-001/
+
+== git diff --stat ==
+
+== git log --oneline -5 ==
+5e7037e test(conductor): add end-to-end survival test
+8173c60 feat(conductor): publish public contract and ports
+95116ac docs(plan): register OS-CONDUCTOR-GREEN-001
+dde6588 docs(vault): register OS-CONDUCTOR-GREEN-001
+1636929 Merge pull request #22 from Aurora-AI/chore/os-024-genesis-stability

@@ -31,6 +31,8 @@
     "chronos:smoke": "npm run -w @aurora/chronos smoke",
     "chronos:guard": "npm -w libs/aurora-chronos run chronos:guard",
     "install:clean": "node ./scripts/npm/clean-install.mjs"
+    ,
+    "audit:maturity": "py scripts/audit/entrypoints_check.py && py scripts/audit/survival_check.py"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

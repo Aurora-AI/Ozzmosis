@@ -1,0 +1,377 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FANTASY.CO INSPIRED — "Floating in White" Design System
+
+   Core Principles:
+   1. Absolute White background = no visible bounds = content floats
+   2. Black Piano typography = maximum contrast = editorial impact
+   3. Extreme negative space = each section breathes
+   4. Parallax depth = elements move independently = 3D feel
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* The Canvas - Pure White, No Bounds */
+  --background: #FFFFFF;
+
+  /* Black Piano - The Only Color That Matters */
+  --foreground: #000000;
+  --black-piano: #000000;
+  --black-piano-90: rgba(0, 0, 0, 0.9);
+  --black-piano-60: rgba(0, 0, 0, 0.6);
+  --black-piano-40: rgba(0, 0, 0, 0.4);
+  --black-piano-20: rgba(0, 0, 0, 0.2);
+  --black-piano-10: rgba(0, 0, 0, 0.1);
+  --black-piano-05: rgba(0, 0, 0, 0.05);
+
+  /* Typography - Editorial Precision */
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* Spacing - Breath and Presence */
+  --space-section: clamp(120px, 20vh, 200px);
+  --space-content: clamp(60px, 10vh, 100px);
+
+  /* Motion - Smooth and Intentional */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-slow: 1.2s;
+  --duration-medium: 0.8s;
+  --duration-fast: 0.4s;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESET — Clean Slate
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.5;
+  overflow-x: hidden;
+  /* The infinite white canvas */
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY — Black Piano Editorial
+
+   Inspired by Fantasy.co:
+   - Massive headlines with tight letter-spacing
+   - Strong weight contrast
+   - Uppercase accents for hierarchy
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.03em; /* Tight, editorial feel */
+  line-height: 1.0;
+  color: var(--black-piano);
+}
+
+/* Hero-sized headlines */
+h1 {
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+/* Section headlines */
+h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+/* Subsection headlines */
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Body text - Subtle, supporting */
+p {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--black-piano-60);
+  max-width: 55ch;
+}
+
+/* Eyebrow / Label text */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--black-piano-40);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT — Extreme Negative Space
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 80px);
+}
+
+/* Full-height sections with proper breathing room */
+.section {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-section) 0;
+  position: relative;
+}
+
+/* Shorter content sections */
+.section-short {
+  min-height: auto;
+  padding: var(--space-content) 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTONS — Minimal, High Contrast
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 40px;
+  background: var(--black-piano);
+  color: var(--background);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out-expo),
+              opacity var(--duration-fast) var(--ease-out-expo);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 40px;
+  background: transparent;
+  color: var(--black-piano);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--black-piano-20);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.btn-secondary:hover {
+  background: var(--black-piano);
+  color: var(--background);
+  border-color: var(--black-piano);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARDS — Floating, No Visual Weight
+
+   Fantasy.co approach:
+   - No shadows
+   - Minimal borders (or none)
+   - Separation through space, not decoration
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.card {
+  background: var(--background);
+  border: 1px solid var(--black-piano-10);
+  padding: 40px;
+  transition: border-color var(--duration-fast) var(--ease-out-expo);
+}
+
+.card:hover {
+  border-color: var(--black-piano);
+}
+
+/* Inverted card state */
+.card-selected {
+  background: var(--black-piano);
+  border-color: var(--black-piano);
+  color: var(--background);
+}
+
+.card-selected h3,
+.card-selected p {
+  color: var(--background);
+}
+
+.card-selected p {
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM ELEMENTS — Invisible Until Interacted
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1px;
+  background: var(--black-piano-20);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--black-piano);
+  border-radius: 50%;
+  cursor: grab;
+  transition: transform var(--duration-fast) var(--ease-out-expo);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLL INDICATOR — Minimal Presence
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.scroll-indicator {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.scroll-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--black-piano-20);
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.scroll-dot:hover {
+  background: var(--black-piano-40);
+}
+
+.scroll-dot.active {
+  background: var(--black-piano);
+  transform: scale(1.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS — Smooth, Intentional Motion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Fade in from below - the signature Fantasy.co reveal */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle breathing for loading states */
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp var(--duration-slow) var(--ease-out-expo) forwards;
+}
+
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* Stagger delays for sequential reveals */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Maintain Proportion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .scroll-indicator {
+    display: none;
+  }
+
+  .section {
+    padding: 80px 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Parallax depth layers */
+.parallax-slow { --parallax-speed: 0.1; }
+.parallax-medium { --parallax-speed: 0.3; }
+.parallax-fast { --parallax-speed: 0.5; }

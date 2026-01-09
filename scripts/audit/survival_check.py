@@ -198,7 +198,6 @@ def main() -> int:
         ("crm-core", "apps/crm-core"),
         ("alvaro-core", "apps/alvaro-core"),
         ("butantan-shield", "apps/butantan-shield"),
-        ("trustware", "libs/trustware"),
         ("aurora-conductor-service", "apps/aurora-conductor-service"),
     ]
 

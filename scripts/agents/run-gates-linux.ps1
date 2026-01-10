@@ -14,7 +14,7 @@ Write-Output "[gates-linux] repoRoot: $repoRoot"
 # - Access to pull node:20-slim image
 
 docker run --rm -t `
-  -v "$repoRoot:/repo" `
+  -v "${repoRoot}:/repo" `
   -w /repo `
   node:20-slim bash -lc @"
 set -euo pipefail

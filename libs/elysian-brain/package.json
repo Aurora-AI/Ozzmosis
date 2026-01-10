@@ -1,0 +1,11 @@
+{
+  "name": "@aurora/elysian-brain",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test:survival": "npx vitest run tests/survival"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
+  }
+}

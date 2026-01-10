@@ -11,9 +11,9 @@
     "test:survival": "jest --config jest.config.cjs"
   },
   "dependencies": {
-    "@aurora/trustware": "*",
     "@ai-sdk/openai": "^3.0.1",
     "@ai-sdk/react": "^3.0.3",
+    "@aurora/trustware": "*",
     "@tanstack/react-query": "^5.0.0",
     "ai": "^6.0.3",
     "framer-motion": "^11.0.0",

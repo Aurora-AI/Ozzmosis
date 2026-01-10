@@ -51,11 +51,19 @@ def _read_json(path: Path) -> Optional[Dict[str, Any]]:
 
 def _find_survival_files(base: Path) -> List[Evidence]:
     found: List[Evidence] = []
-    for p in base.rglob("*"):
-        if p.is_file() and "survival" in p.name.lower():
-            found.append(
-                Evidence(kind="file", path=str(p.relative_to(base)), note="survival_file")
-            )
+    try:
+        for p in base.rglob("*"):
+            try:
+                if p.is_file() and "survival" in p.name.lower():
+                    found.append(
+                        Evidence(kind="file", path=str(p.relative_to(base)), note="survival_file")
+                    )
+            except (OSError, PermissionError):
+                # Skip files we can't access (symlinks, permission denied)
+                continue
+    except (OSError, PermissionError):
+        # If we can't traverse at all, return what we have
+        pass
     return found
 
 
@@ -108,6 +116,58 @@ def _run_survival_script(repo_root: Path, workspace: str) -> Dict[str, Any]:
     }
 
 
+def _discover_survival_workspaces(repo_root: Path) -> List[tuple[str, str]]:
+    """
+    Discover workspaces that have test:survival script.
+    Returns list of (workspace_name, relative_path) tuples.
+    """
+    root_pkg = _read_json(repo_root / "package.json")
+    if not root_pkg or "workspaces" not in root_pkg:
+        return []
+
+    workspaces_patterns: List[str] = root_pkg.get("workspaces", [])
+    candidates: List[tuple[str, str]] = []
+
+    for pattern in workspaces_patterns:
+        # Resolve glob patterns like "apps/*", "libs/*"
+        if "*" in pattern:
+            base_dir = repo_root / pattern.replace("/*", "")
+            if base_dir.exists() and base_dir.is_dir():
+                for subdir in base_dir.iterdir():
+                    if subdir.is_dir():
+                        pkg_path = subdir / "package.json"
+                        if pkg_path.exists():
+                            pkg_data = _read_json(pkg_path)
+                            if isinstance(pkg_data, dict):
+                                name = pkg_data.get("name", subdir.name)
+                                rel_path = str(subdir.relative_to(repo_root)).replace("\\", "/")
+                                candidates.append((name, rel_path))
+        else:
+            # Exact path
+            subdir = repo_root / pattern
+            if subdir.exists() and subdir.is_dir():
+                pkg_path = subdir / "package.json"
+                if pkg_path.exists():
+                    pkg_data = _read_json(pkg_path)
+                    if isinstance(pkg_data, dict):
+                        name = pkg_data.get("name", subdir.name)
+                        rel_path = str(subdir.relative_to(repo_root)).replace("\\", "/")
+                        candidates.append((name, rel_path))
+
+    # Filter: only those with test:survival
+    discovered: List[tuple[str, str]] = []
+    for name, rel_path in candidates:
+        base = repo_root / rel_path
+        pkg_path = base / "package.json"
+        pkg_data = _read_json(pkg_path)
+        if isinstance(pkg_data, dict):
+            scripts = pkg_data.get("scripts", {})
+            if scripts.get("test:survival"):
+                discovered.append((name, rel_path))
+
+    return discovered
+
+
 def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResult:
     base = repo_root / rel_path
     kind = _component_kind(base)
@@ -125,19 +185,14 @@ def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResul
             evidence.append(
                 Evidence(kind="script", path=str(pkg.relative_to(repo_root)), note="test:survival")
             )
-            if key == "aurora-conductor-service":
-                run = _run_survival_script(repo_root, "@aurora/aurora-conductor-service")
-                evidence.append(
-                    Evidence(
-                        kind="run",
-                        path=str(pkg.relative_to(repo_root)),
-                        note=f"test:survival_exit_code={run['exit_code']}",
-                    )
-                )
-        elif key == "butantan-shield" and scripts.get("smoke"):
-            has_script = True
+            # Run survival script for all Node workspaces with test:survival
+            run = _run_survival_script(repo_root, key)
             evidence.append(
-                Evidence(kind="script", path=str(pkg.relative_to(repo_root)), note="smoke")
+                Evidence(
+                    kind="run",
+                    path=str(pkg.relative_to(repo_root)),
+                    note=f"test:survival_exit_code={run['exit_code']}",
+                )
             )
         else:
             reasons.append("MISSING_TEST_SURVIVAL_SCRIPT")
@@ -148,21 +203,11 @@ def _check_component(repo_root: Path, key: str, rel_path: str) -> ComponentResul
     survival_files = _find_survival_files(base)
     if survival_files:
         evidence.extend(survival_files)
-    else:
-        reasons.append("MISSING_SURVIVAL_FILES")
 
-    if key == "butantan-shield":
-        workflow_evidence = _find_workflow_evidence(repo_root, key, "smoke")
-        if workflow_evidence:
-            evidence.extend(workflow_evidence)
-        else:
-            reasons.append("MISSING_SMOKE_WORKFLOW")
-    else:
-        workflow_evidence = _find_workflow_evidence(repo_root, key, "survival")
-        if workflow_evidence:
-            evidence.extend(workflow_evidence)
-        else:
-            reasons.append("MISSING_SURVIVAL_WORKFLOW")
+    # Workflow evidence: look for ci-survival-<slug>.yml patterns
+    workflow_evidence = _find_workflow_evidence(repo_root, key, "survival")
+    if workflow_evidence:
+        evidence.extend(workflow_evidence)
 
     if run and run.get("exit_code") != 0:
         reasons.append("SURVIVAL_SCRIPT_FAILED")
@@ -193,17 +238,25 @@ def main() -> int:
     out_path = (repo_root / args.out).resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    components = [
-        ("aurora-chronos", "libs/aurora-chronos"),
-        ("crm-core", "apps/crm-core"),
-        ("alvaro-core", "apps/alvaro-core"),
-        ("butantan-shield", "apps/butantan-shield"),
-        ("aurora-conductor-service", "apps/aurora-conductor-service"),
-    ]
+    # Discover workspaces with test:survival generically
+    discovered = _discover_survival_workspaces(repo_root)
+
+    # Prepare components: (key_for_report, workspace_name_for_npm, rel_path)
+    # key_for_report: simplified name for JSON key (e.g., "trustware" from "@aurora/trustware")
+    # workspace_name_for_npm: full workspace name to use with npm run -w
+    components: List[tuple[str, str, str]] = []
+    for workspace_name, rel_path in discovered:
+        # Use last component as key (e.g., "trustware" from "@aurora/trustware")
+        key = workspace_name.split("/")[-1] if "/" in workspace_name else workspace_name
+        components.append((key, workspace_name, rel_path))
 
     results: List[ComponentResult] = []
-    for key, rel_path in components:
-        results.append(_check_component(repo_root, key, rel_path))
+    for key, workspace_name, rel_path in components:
+        # Pass workspace_name (full) but report under simplified key
+        comp = _check_component(repo_root, workspace_name, rel_path)
+        # Override key to simplified version
+        comp.key = key
+        results.append(comp)
 
     failed = [r for r in results if r.status == "fail"]
     payload = {

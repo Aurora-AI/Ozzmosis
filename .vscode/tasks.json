@@ -22,6 +22,21 @@
       "args": ["compose", "-f", "docker/compose.triad.dev.yml", "config"],
       "problemMatcher": []
     }
+    ,
+    {
+      "label": "Ozzmosis: Gates (Linux Container)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\agents\\run-gates-linux.ps1"
+      ],
+      "problemMatcher": [],
+      "group": "test"
+    }
   ]
 }
 

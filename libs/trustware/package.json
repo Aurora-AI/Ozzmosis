@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",
+  "scripts": {
+    "test:survival": "npx vitest run tests/survival"
+  },
   "dependencies": {
     "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
   }
 }

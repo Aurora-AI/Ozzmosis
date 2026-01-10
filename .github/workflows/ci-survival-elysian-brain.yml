@@ -1,0 +1,31 @@
+name: ci-survival-elysian-brain
+
+on:
+  push:
+    paths:
+      - "libs/elysian-brain/**"
+      - ".github/workflows/ci-survival-elysian-brain.yml"
+  pull_request:
+    paths:
+      - "libs/elysian-brain/**"
+      - ".github/workflows/ci-survival-elysian-brain.yml"
+
+jobs:
+  survival:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies (deterministic)
+        run: npm ci
+
+      - name: Elysian Brain survival
+        run: npm run -w @aurora/elysian-brain test:survival

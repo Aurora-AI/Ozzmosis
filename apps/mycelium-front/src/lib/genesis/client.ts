@@ -1,36 +1,50 @@
-export const BASE = process.env.NEXT_PUBLIC_ALVARO_CORE_BASE_URL ?? '';
+export type GenesisDecideRequest = {
+  force_block?: boolean;
+};
 
-export async function genesisDecide(opts: { force_block?: boolean } = {}) {
-  const res = await fetch(`${BASE}/genesis/decide`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(opts),
-  });
+export type GenesisDecideResponse = {
+  contract_version: string;
+  endpoint: string;
+  request_sha256: string;
+  verdict: 'ALLOW' | 'BLOCK';
+  reasons: string[];
+  policy_version?: string;
+  policy_mode?: string;
+  policy_rule_ids_triggered?: string[];
+  artifacts?: Record<string, string>;
+};
 
-  let data: any;
-  try {
-    data = await res.json();
-  } catch (e) {
-    // non-json response
-    if (!res.ok) throw new Error('GENESIS_DECIDE_FAILED');
-    return null;
-  }
-
-  if (!res.ok) throw new Error(data?.message ?? 'GENESIS_DECIDE_FAILED');
-  return data;
+function baseUrl(): string {
+  const env = process.env.NEXT_PUBLIC_ALVARO_CORE_BASE_URL;
+  if (env && env.trim().length > 0) return env.trim();
+  // same-origin (preferred) — Next rewrites will proxy /genesis/*
+  return '';
 }
 
-export async function genesisDecidePdf(opts: { force_block?: boolean } = {}) {
-  const res = await fetch(`${BASE}/genesis/decide/pdf`, {
+export async function genesisDecide(payload: GenesisDecideRequest = {}): Promise<GenesisDecideResponse> {
+  const res = await fetch(`${baseUrl()}/genesis/decide`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(opts),
+    body: JSON.stringify(payload),
   });
+
   if (!res.ok) {
-    let txt = 'GENESIS_DECIDE_PDF_FAILED';
-    try { txt = await res.text(); } catch {}
-    throw new Error(txt);
+    const text = await res.text().catch(() => '');
+    throw new Error(`genesisDecide failed: ${res.status} ${res.statusText} ${text}`);
   }
-  const blob = await res.blob();
-  return blob;
+  return (await res.json()) as GenesisDecideResponse;
+}
+
+export async function genesisDecidePdf(payload: GenesisDecideRequest = {}): Promise<Blob> {
+  const res = await fetch(`${baseUrl()}/genesis/decide.pdf`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`genesisDecidePdf failed: ${res.status} ${res.statusText} ${text}`);
+  }
+  return await res.blob();
 }

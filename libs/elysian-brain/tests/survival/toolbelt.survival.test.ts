@@ -73,4 +73,51 @@ describe("toolbelt survival (python bridge)", () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].ref).toBe("norm:example");
   });
+
+  it("runs finance calculator for compound_interest", () => {
+    let res: ReturnType<typeof toolbeltRun>;
+    try {
+      res = toolbeltRun({
+        tool: "finance",
+        input: { op: "compound_interest", principal: 1000, rate: 0.02, nper: 12 },
+      });
+    } catch (error) {
+      if (shouldSkip(error)) return;
+      throw error;
+    }
+    expect(res.ok).toBe(true);
+    expect(res.output.op).toBe("compound_interest");
+    expect(typeof res.output.value).toBe("number");
+  });
+
+  it("runs stats mean deterministically", () => {
+    let res: ReturnType<typeof toolbeltRun>;
+    try {
+      res = toolbeltRun({
+        tool: "stats",
+        input: { op: "mean", values: [1, 2, 3, 4] },
+      });
+    } catch (error) {
+      if (shouldSkip(error)) return;
+      throw error;
+    }
+    expect(res.ok).toBe(true);
+    expect(res.output.op).toBe("mean");
+    expect(res.output.value).toBe(2.5);
+  });
+
+  it("runs calendar add_days deterministically", () => {
+    let res: ReturnType<typeof toolbeltRun>;
+    try {
+      res = toolbeltRun({
+        tool: "calendar",
+        input: { op: "add_days", iso: "2026-01-01", days: 10 },
+      });
+    } catch (error) {
+      if (shouldSkip(error)) return;
+      throw error;
+    }
+    expect(res.ok).toBe(true);
+    expect(res.output.value).toBe("2026-01-11");
+  });
 });

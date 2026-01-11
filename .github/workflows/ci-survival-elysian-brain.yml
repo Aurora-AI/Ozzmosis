@@ -23,6 +23,9 @@ jobs:
       - name: Verify Python
         run: python --version
 
+      - name: Install Python dependencies
+        run: pip install pydantic
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

@@ -1,1 +1,1 @@
-__all__ = ["calculator"]
+__all__ = ["calculator", "reference", "search_local"]

@@ -1,0 +1,12 @@
+version: "0"
+mode: "error"
+
+rules:
+  - id: "TW_FORCE_BLOCK_TRUE"
+    description: "If force_block is true, block deterministically."
+    when:
+      field: "force_block"
+      op: "equals"
+      value: true
+    verdict: "BLOCK"
+    reason_code: "TW_FORCE_BLOCK_TRUE"

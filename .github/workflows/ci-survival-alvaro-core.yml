@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PYTHONPATH: ${{ github.workspace }}/apps/alvaro-core
+      PYTHONPATH: ${{ github.workspace }}/apps/alvaro-core/src
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
       PIP_NO_PYTHON_VERSION_WARNING: "1"
     steps:

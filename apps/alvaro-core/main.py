@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import trustware
 from api.routes.trustware import router as trustware_router
+from alvaro.genesis.api import router as genesis_router
 
 logger = logging.getLogger("alvaro_core")
 
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(trustware_router, prefix="/api/v1/trustware")
+app.include_router(genesis_router)
 
 try:
     snap = trustware.engine.health_snapshot()

@@ -1,7 +1,7 @@
 # Vault Close: OS-GENESIS-HARDENING-001
 
-**Date Closed:** 2025-02-04  
-**Branch:** `chore/os-shield-green-001`  
+**Date Closed:** 2025-02-04
+**Branch:** `chore/os-shield-green-001`
 **Status:** ✅ CLOSED
 
 ---
@@ -26,6 +26,7 @@ Harden Genesis Decide Engine dev UX by eliminating CORS friction via Next.js rew
 **File Modified:** `apps/mycelium-front/next.config.js`
 
 **Changes:**
+
 - Added async `rewrites()` method to redirect `/genesis/:path*` server-side
 - Backend target: `http://127.0.0.1:8010` (hardcoded fallback)
 - Optional override: `AURORA_ALVARO_CORE_INTERNAL_URL` env var
@@ -33,6 +34,7 @@ Harden Genesis Decide Engine dev UX by eliminating CORS friction via Next.js rew
 **Commit:** `9e759a5eb9751439aa3037d44817c21423d8b5b2`
 
 **Code Reference:**
+
 ```javascript
 async rewrites() {
   const target = process.env.AURORA_ALVARO_CORE_INTERNAL_URL || "http://127.0.0.1:8010";
@@ -52,6 +54,7 @@ async rewrites() {
 **File Modified:** `apps/mycelium-front/src/lib/genesis/client.ts`
 
 **Changes:**
+
 - Added TypeScript types: `GenesisDecideRequest`, `GenesisDecideResponse`
 - Implemented `baseUrl()` function: defaults to `""` (same-origin via rewrites), respects `NEXT_PUBLIC_ALVARO_CORE_BASE_URL`
 - Refactored endpoints: `genesisDecide()` (POST /genesis/decide), `genesisDecidePdf()` (POST /genesis/decide.pdf)
@@ -60,6 +63,7 @@ async rewrites() {
 **Commit:** `8f38ec564628d11d70647669a7b88f9dec1807b3`
 
 **Code Reference:**
+
 ```typescript
 function baseUrl(): string {
   return process.env.NEXT_PUBLIC_ALVARO_CORE_BASE_URL || "";
@@ -76,7 +80,9 @@ interface GenesisDecideResponse {
   policy_evaluated_at: string;
 }
 
-async function genesisDecide(payload: GenesisDecideRequest): Promise<GenesisDecideResponse> {
+async function genesisDecide(
+  payload: GenesisDecideRequest
+): Promise<GenesisDecideResponse> {
   const res = await fetch(`${baseUrl()}/genesis/decide`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -95,6 +101,7 @@ async function genesisDecide(payload: GenesisDecideRequest): Promise<GenesisDeci
 **File Created:** `docs/GENESIS_DEV_RUNBOOK.md`
 
 **Contents:**
+
 - Canonical port reference (uvicorn 8010, next dev 3000)
 - Backend startup: `uvicorn alvaro.app:app --reload --port 8010`
 - Frontend startup: `npm install && npm run dev`
@@ -114,16 +121,19 @@ async function genesisDecide(payload: GenesisDecideRequest): Promise<GenesisDeci
 ### Integration Test Results
 
 ✅ **Backend + Frontend integration verified:**
+
 - `/genesis/decide` returns JSON (verdict, request_sha256, reasons)
 - `/genesis/decide.pdf` returns PDF with custom headers
 - Same-origin rewrites proxy confirmed working (no CORS errors)
 - TypeScript types provide IDE autocomplete for frontend developers
 
 ✅ **Smoke test scenarios:**
+
 - force_block=false → verdict=ALLOW
 - force_block=true → verdict=BLOCK, includes TW_FORCE_BLOCK_TRUE reason code
 
 ✅ **Branch + remote status:**
+
 - All commits pushed to `chore/os-shield-green-001`
 - Linear history: WP1 (9e759a5) → WP2 (8f38ec5) → WP3 (9ba7a8a)
 
@@ -140,22 +150,22 @@ async function genesisDecide(payload: GenesisDecideRequest): Promise<GenesisDeci
 
 ## Artifacts
 
-| Artifact | Location | Purpose |
-|----------|----------|---------|
-| Config rewrites | `apps/mycelium-front/next.config.js` | Server-side proxy setup |
-| Client types | `apps/mycelium-front/src/lib/genesis/client.ts` | Type-safe API calls |
-| Dev runbook | `docs/GENESIS_DEV_RUNBOOK.md` | Local setup guide |
-| Test evidence | N/A (inline smoke test) | Manual verification on localhost:3000 |
+| Artifact        | Location                                        | Purpose                               |
+| --------------- | ----------------------------------------------- | ------------------------------------- |
+| Config rewrites | `apps/mycelium-front/next.config.js`            | Server-side proxy setup               |
+| Client types    | `apps/mycelium-front/src/lib/genesis/client.ts` | Type-safe API calls                   |
+| Dev runbook     | `docs/GENESIS_DEV_RUNBOOK.md`                   | Local setup guide                     |
+| Test evidence   | N/A (inline smoke test)                         | Manual verification on localhost:3000 |
 
 ---
 
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| Backend port conflict (8010 already in use) | Dev cannot start backend | Runbook documents port override via env var |
-| Next rewrites proxy misconfigured | Rewrites don't trigger, CORS returns | Verified async syntax; documented in runbook |
-| Client base URL not inferred correctly | Frontend calls wrong backend | Type exports + runbook make defaults explicit |
+| Risk                                        | Impact                               | Mitigation                                    |
+| ------------------------------------------- | ------------------------------------ | --------------------------------------------- |
+| Backend port conflict (8010 already in use) | Dev cannot start backend             | Runbook documents port override via env var   |
+| Next rewrites proxy misconfigured           | Rewrites don't trigger, CORS returns | Verified async syntax; documented in runbook  |
+| Client base URL not inferred correctly      | Frontend calls wrong backend         | Type exports + runbook make defaults explicit |
 
 ---
 
@@ -169,11 +179,12 @@ async function genesisDecide(payload: GenesisDecideRequest): Promise<GenesisDeci
 
 ## Sign-Off
 
-**OS Status:** CLOSED  
-**Branch:** `chore/os-shield-green-001`  
+**OS Status:** CLOSED
+**Branch:** `chore/os-shield-green-001`
 **All WPs Completed:** ✅
 
 **Summary of Commits:**
+
 1. WP1: `9e759a5eb9751439aa3037d44817c21423d8b5b2` — next.config.js rewrites proxy
 2. WP2: `8f38ec564628d11d70647669a7b88f9dec1807b3` — client.ts types + same-origin default
 3. WP3: `9ba7a8a` — GENESIS_DEV_RUNBOOK.md documentation

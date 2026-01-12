@@ -1,38 +1,21 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { LenisProvider } from '@/components/LenisProvider'
+import type { ReactNode } from "react"
+import "./globals.css"
+import { getTokens, tokensToCssVars } from "../src/lib/tokens"
+import { getActiveSkin } from "../src/lib/skin"
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
-
-export const metadata: Metadata = {
-  title: 'Aurora Genesis | Private Banking Redefined',
-  description: 'O usuário não preenche formulários. Ele constrói decisões.',
-  keywords: ['private banking', 'wealth management', 'financial planning'],
-  authors: [{ name: 'Aurora AI' }],
-  openGraph: {
-    title: 'Aurora Genesis | Private Banking Redefined',
-    description: 'O usuário não preenche formulários. Ele constrói decisões.',
-    type: 'website',
-  },
+export const metadata = {
+  title: "Genesis — Rodobens Wealth",
+  description: "Genesis Frontend (Rodobens / Wealth) — tokens-first, motion governed.",
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const skin = getActiveSkin()
+  const tokens = getTokens(skin.domain)
+  const cssVars = tokensToCssVars(tokens)
+
   return (
-    <html lang="pt-BR" className={inter.variable}>
-      <body>
-        <LenisProvider>
-          {children}
-        </LenisProvider>
-      </body>
+    <html lang="pt-BR" style={cssVars}>
+      <body>{children}</body>
     </html>
   )
 }

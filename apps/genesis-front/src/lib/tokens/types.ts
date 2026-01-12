@@ -54,6 +54,12 @@ export type TokenCore = {
     20: string
     24: string
   }
+  layout: {
+    containerMax: string
+    borderWidth: {
+      1: string
+    }
+  }
 }
 
 export type TokenSemantic = {

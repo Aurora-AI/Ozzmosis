@@ -8,7 +8,7 @@ export default function FooterSection() {
             justifyContent: "space-between",
             gap: "var(--space-6)",
             alignItems: "center",
-            borderTop: "1px solid var(--color-border)",
+            borderTop: "var(--border-1) solid var(--color-border)",
             paddingTop: "var(--space-6)",
           }}
         >

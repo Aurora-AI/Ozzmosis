@@ -8,12 +8,15 @@ export default function CallToActionSection() {
         paddingTop: "var(--space-12)",
         paddingBottom: "var(--space-20)",
         background: "var(--color-surface-alt)",
-        borderTop: "1px solid var(--color-border)",
-        borderBottom: "1px solid var(--color-border)",
+        borderTop: "var(--border-1) solid var(--color-border)",
+        borderBottom: "var(--border-1) solid var(--color-border)",
       }}
     >
       <div className="g-container">
-        <div className={`${motionClass("fadeIn")} g-card`} style={{ padding: "var(--space-10)" }}>
+        <div
+          className={`${motionClass("fadeIn")} g-card`}
+          style={{ padding: "var(--space-10)" }}
+        >
           <div
             style={{
               display: "flex",

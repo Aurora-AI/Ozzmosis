@@ -23,6 +23,9 @@ artifacts/
 # Default: ignore json artifacts
 *.json
 
+# Antigravity: allow MCP example template (not real secrets)
+!.antigravity/mcp/servers.example.json
+
 # SSOT exception: Vault run artifacts must be versioned
 !apps/ozzmosis/data/vault/**/_runs/**/*.json
 !apps/ozzmosis/data/vault/**/_runs/**/*.txt

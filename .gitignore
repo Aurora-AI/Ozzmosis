@@ -18,10 +18,14 @@ out/
 # Runtime artifacts (Trustware: side-effects opt-in)
 .artifacts/
 last-run.json
-artifacts/
+artifacts/**
+!artifacts/README.md
 
 # Default: ignore json artifacts
 *.json
+
+# Antigravity: allow MCP example template (not real secrets)
+!.antigravity/mcp/servers.example.json
 
 # SSOT exception: Vault run artifacts must be versioned
 !apps/ozzmosis/data/vault/**/_runs/**/*.json
@@ -68,4 +72,7 @@ Thumbs.db
 !.vscode/settings.json
 !.vscode/tasks.json
 .idea/
+
+# Antigravity / Agents
 .agent/
+.antigravity/mcp/servers.json

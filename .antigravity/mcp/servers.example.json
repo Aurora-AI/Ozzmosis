@@ -1,0 +1,19 @@
+{
+  "servers": [
+    {
+      "name": "bigquery",
+      "transport": "mcp-store",
+      "config": {
+        "project": "YOUR_GCP_PROJECT_ID"
+      }
+    },
+    {
+      "name": "alloydb",
+      "transport": "mcp-store",
+      "config": {
+        "instance": "YOUR_INSTANCE",
+        "database": "YOUR_DATABASE"
+      }
+    }
+  ]
+}

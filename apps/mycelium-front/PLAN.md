@@ -1,12 +1,22 @@
 # PLAN — OS-CODEX-MYCELIUM-FRONT-TEST-HARDENING-20260103-017
+
+**⚠️ DEPRECATED PROJECT:** Este projeto está descontinuado. Ver [DEPRECATED_NOTICE.md](./DEPRECATED_NOTICE.md).
+
+**⚠️ DERIVAÇÃO:** Este PLAN é derivado da OS canônica em:
+📄 [`apps/ozzmosis/data/vault/mycelium-front/os/OS-CODEX-MYCELIUM-FRONT-TEST-HARDENING-20260103-017.md`](../../ozzmosis/data/vault/mycelium-front/os/OS-CODEX-MYCELIUM-FRONT-TEST-HARDENING-20260103-017.md)
+
+---
+
 Data: 2026-01-03
 Status: implemented
 
 ## Objetivo
+
 - Eliminar `Invalid hook call` nos testes (React/ReactDOM em versões mistas).
 - Remover dependência prática de `BLOB_READ_WRITE_TOKEN` nos testes (mocks + fallback determinístico).
 
 ## Mudanças
+
 - `apps/mycelium-front/package.json`
   - `react`/`react-dom` padronizados em `19.2.3`
 - `package.json` (root)
@@ -23,7 +33,7 @@ Status: implemented
   - `apps/mycelium-front/tests/integration/api.metrics.integration.test.ts` (usa filtro de pathname)
 
 ## Validação
+
 - `npm -w apps/mycelium-front ls react react-dom` → uma única versão (`19.2.3`)
 - `npm -w apps/mycelium-front test` → PASS
 - `scripts/agents/run-gates.ps1` → PASS
-

@@ -30,8 +30,7 @@
     "chronos:build": "npm run -w @aurora/chronos build",
     "chronos:smoke": "npm run -w @aurora/chronos smoke",
     "chronos:guard": "npm -w libs/aurora-chronos run chronos:guard",
-    "install:clean": "node ./scripts/npm/clean-install.mjs"
-    ,
+    "install:clean": "node ./scripts/npm/clean-install.mjs",
     "audit:maturity": "py scripts/audit/entrypoints_check.py --repo-root . --out artifacts/entrypoints_check.json && py scripts/audit/survival_check.py --repo-root . --out artifacts/survival_check.json"
   },
   "devDependencies": {
@@ -40,7 +39,8 @@
     "@typescript-eslint/parser": "^8.50.1",
     "eslint": "^9.39.2",
     "globals": "^14.0.0",
-    "jsonc-eslint-parser": "^2.4.2"
+    "jsonc-eslint-parser": "^2.4.2",
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "react": "19.2.3",
@@ -49,5 +49,8 @@
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "next": "^16.1.1"
   }
 }

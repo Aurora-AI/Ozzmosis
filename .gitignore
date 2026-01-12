@@ -18,7 +18,8 @@ out/
 # Runtime artifacts (Trustware: side-effects opt-in)
 .artifacts/
 last-run.json
-artifacts/
+artifacts/**
+!artifacts/README.md
 
 # Default: ignore json artifacts
 *.json
@@ -71,4 +72,7 @@ Thumbs.db
 !.vscode/settings.json
 !.vscode/tasks.json
 .idea/
+
+# Antigravity / Agents
 .agent/
+.antigravity/mcp/servers.json

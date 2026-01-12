@@ -30,6 +30,17 @@ export default [
       globals: {
         ...globals.node,
         ...globals.es2021,
+        ...globals.browser,
+        React: "readonly",
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        requestAnimationFrame: "readonly",
+        cancelAnimationFrame: "readonly",
+        HTMLElement: "readonly",
+        HTMLDivElement: "readonly",
+        Node: "readonly",
+        Event: "readonly",
       },
     },
     plugins: {

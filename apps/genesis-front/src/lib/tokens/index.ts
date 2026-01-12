@@ -61,6 +61,12 @@ const core: TokenCore = {
     20: "80px",
     24: "96px",
   },
+  layout: {
+    containerMax: "1120px",
+    borderWidth: {
+      1: "1px",
+    },
+  },
 }
 
 export function getTokens(domain: TokenDomain = "rodobens-wealth"): TokenSet {
@@ -132,5 +138,9 @@ export function tokensToCssVars(tokens: TokenSet): CssVarMap {
     "--space-16": tokens.core.space[16],
     "--space-20": tokens.core.space[20],
     "--space-24": tokens.core.space[24],
+
+    // Layout
+    "--container-max": tokens.core.layout.containerMax,
+    "--border-1": tokens.core.layout.borderWidth[1],
   }
 }

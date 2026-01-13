@@ -1,15 +1,6 @@
-import HeroSection from "../components/sections/HeroSection"
-import TrustSection from "../components/sections/TrustSection"
-import CallToActionSection from "../components/sections/CallToActionSection"
-import FooterSection from "../components/sections/FooterSection"
+import TemplateRenderer from "../components/templates/TemplateRenderer"
+import { genesisTemplateV0 } from "../src/lib/templates/genesis-v0"
 
 export default function Page() {
-  return (
-    <main>
-      <HeroSection />
-      <TrustSection />
-      <CallToActionSection />
-      <FooterSection />
-    </main>
-  )
+  return <TemplateRenderer template={genesisTemplateV0} />
 }

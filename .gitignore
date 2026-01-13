@@ -24,6 +24,9 @@ artifacts/**
 # Default: ignore json artifacts
 *.json
 
+# WP9 — allow deterministic contracts (schemas) to be versioned (Trustware SSOT)
+!**/*.schema.json
+
 # Antigravity: allow MCP example template (not real secrets)
 !.antigravity/mcp/servers.example.json
 

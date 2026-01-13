@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora.local/schemas/slots/tco-mirror.schema.json",
+  "title": "TCO Mirror — TrustwareSlot",
+  "description": "Contrato determinístico do slot TCO Mirror. Exposição de linhas de custo total (placeholders), sem cálculo real/toolbelt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["slot_type", "version", "disclaimer", "lines"],
+  "properties": {
+    "slot_type": {
+      "type": "string",
+      "const": "TCOMirrorSlot"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "disclaimer": {
+      "type": "string",
+      "const": "valores estimados — cálculo não conectado"
+    },
+    "headline": {
+      "type": "string",
+      "maxLength": 140,
+      "default": "Custo total de vida (TCO) — exposição"
+    },
+    "lines": {
+      "description": "Linhas obrigatórias de custo (placeholders). amount pode ser null neste WP.",
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "label", "amount"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "parcel",
+              "admin_fee",
+              "itbi",
+              "deed",
+              "registry",
+              "insurance",
+              "post_contemplation_cost"
+            ]
+          },
+          "label": { "type": "string", "minLength": 3, "maxLength": 64 },
+          "amount": {
+            "description": "Valor monetário. Null quando não conectado ao cálculo.",
+            "type": ["number", "null"],
+            "minimum": 0
+          },
+          "note": {
+            "description": "Nota auditável (ex.: fonte, condição, pendência).",
+            "type": "string",
+            "maxLength": 160
+          }
+        }
+      }
+    },
+    "bank_alternative": {
+      "description": "Placeholder da alternativa bancária. Não é simulação; é espelho comparativo com dados ausentes permitidos.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "headline": { "type": "string", "maxLength": 140 },
+        "monthly_cost": { "type": ["number", "null"], "minimum": 0 },
+        "total_cost": { "type": ["number", "null"], "minimum": 0 },
+        "note": { "type": "string", "maxLength": 200 }
+      }
+    },
+    "explain": {
+      "description": "Conteúdo educativo (não conversão).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "maxLength": 80 },
+        "body": { "type": "string", "maxLength": 900 }
+      }
+    }
+  }
+}

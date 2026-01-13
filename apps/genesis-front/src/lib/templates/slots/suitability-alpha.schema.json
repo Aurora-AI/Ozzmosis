@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora.local/schemas/slots/suitability-alpha.schema.json",
+  "title": "Suitability Alpha — TrustwareSlot",
+  "description": "Contrato determinístico do slot Suitability Alpha. Não calcula; apenas expressa estado e evidências/ausências de dados de forma auditável.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["slot_type", "version", "state", "headline"],
+  "properties": {
+    "slot_type": {
+      "type": "string",
+      "const": "SuitabilityAlphaSlot"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["blocked", "warn", "pass", "insufficient_data"]
+    },
+    "headline": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 140
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 420
+    },
+    "liquidity": {
+      "description": "Liquidez declarativa (0..1). Neste WP é opcional e pode estar ausente. Não há cálculo aqui.",
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reasons": {
+      "description": "Motivos auditáveis do estado (sem coerção).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 64
+          },
+          "message": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 240
+          },
+          "evidence": {
+            "description": "Evidência curta (ex.: 'input: X', 'documento: Y'). Sem anexos aqui.",
+            "type": "string",
+            "maxLength": 240
+          }
+        }
+      },
+      "default": []
+    },
+    "missing_fields": {
+      "description": "Campos ausentes quando state = insufficient_data (estado ético).",
+      "type": "array",
+      "items": { "type": "string", "minLength": 2, "maxLength": 64 },
+      "default": []
+    },
+    "explain": {
+      "description": "Conteúdo educativo (não conversão).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "maxLength": 80 },
+        "body": { "type": "string", "maxLength": 800 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "state": { "const": "insufficient_data" } },
+        "required": ["state"]
+      },
+      "then": {
+        "required": ["missing_fields"],
+        "properties": {
+          "missing_fields": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "state": { "enum": ["blocked", "warn", "pass"] } },
+        "required": ["state"]
+      },
+      "then": {
+        "properties": {
+          "missing_fields": { "maxItems": 0 }
+        }
+      }
+    }
+  ]
+}

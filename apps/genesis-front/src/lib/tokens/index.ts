@@ -89,6 +89,11 @@ export function tokensToCssVars(tokens: TokenSet): CssVarMap {
     "--color-success": tokens.semantic.success,
     "--color-warn": tokens.semantic.warn,
     "--color-danger": tokens.semantic.danger,
+    // Trustware (WP-AG-GRAPH-001)
+    "--trustware-pass": tokens.semantic.trustwarePass,
+    "--trustware-warn": tokens.semantic.trustwareWarn,
+    "--trustware-blocked": tokens.semantic.trustwareBlocked,
+    "--trustware-insufficient": tokens.semantic.trustwareInsufficient,
 
     // Typography
     "--font-sans": tokens.core.typography.fontSans,

@@ -4,6 +4,8 @@ import React from "react";
 import { SuitabilityAlphaSlot, type SuitabilityAlphaSlotModel } from "./SuitabilityAlphaSlot";
 import { TCOMirrorSlot, type TCOMirrorSlotModel } from "./TCOMirrorSlot";
 import { getSlotType, isTrustwareSlotType, type TrustwareSlotType } from "../../../src/lib/templates/slots/slotRegistry";
+import { TrustwareStateBadge } from "../../trustware/TrustwareStateBadge";
+import { TrustwareStateFrame } from "../../trustware/TrustwareStateFrame";
 
 type TrustwareSlotModel = SuitabilityAlphaSlotModel | TCOMirrorSlotModel;
 
@@ -14,17 +16,19 @@ export type TrustwareSlotRendererProps = {
   onExplain?: () => void; // educativo; não conversão
 };
 
-function FallbackCard(props: { title: string; message: string; detail?: string }) {
-  const { title, message, detail } = props;
+function FallbackCard(props: { title: string; message: string; detail?: string; state?: "blocked" | "insufficient_data" }) {
+  const { title, message, detail, state = "insufficient_data" } = props;
   return (
-    <section className="rounded-2xl border bg-background p-4">
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      <p className="mt-2 text-sm text-muted-foreground">{message}</p>
-      {detail ? <p className="mt-2 text-xs text-muted-foreground">{detail}</p> : null}
-      <p className="mt-4 text-xs text-muted-foreground">
-        Nenhuma inferência foi feita. Este bloco é apenas roteamento e evidência.
+    <TrustwareStateFrame state={state} title={title}>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm font-medium text-foreground">{message}</p>
+        <TrustwareStateBadge state={state} />
+      </div>
+      {detail ? <p className="mt-2 text-[10px] font-mono text-muted-foreground opacity-60 line-clamp-2">{detail}</p> : null}
+      <p className="mt-4 text-[10px] text-muted-foreground border-t pt-4">
+        Sincronizando telemetria técnica... Nenhuma inferência foi feita. Este bloco é apenas roteamento técnico.
       </p>
-    </section>
+    </TrustwareStateFrame>
   );
 }
 
@@ -40,6 +44,7 @@ function renderKnownSlot(slotType: TrustwareSlotType, payload: TrustwareSlotMode
           title="Slot desconhecido"
           message="Este slot não está registrado no catálogo canônico."
           detail={`slot_type: ${slotType}`}
+          state="blocked"
         />
       );
   }
@@ -49,15 +54,16 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
   const { payload, isLoading, error, onExplain } = props;
 
   if (isLoading) {
-    return <FallbackCard title="Carregando" message="Preparando slot (sem inferência)." />;
+    return <FallbackCard title="Carregando" message="Sincronizando telemetria técnica..." />;
   }
 
   if (error) {
     return (
       <FallbackCard
         title="Análise manual pendente"
-        message="Não foi possível renderizar este slot (erro de entrada/contrato)."
+        message="Falha na integridade do contrato."
         detail={error}
+        state="blocked"
       />
     );
   }
@@ -68,7 +74,8 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
     return (
       <FallbackCard
         title="Análise manual pendente"
-        message="Payload ausente ou sem slot_type. Não inferimos sem envelope mínimo."
+        message="Dados insuficientes para decisão."
+        detail="Payload ausente ou sem slot_type. Não inferimos sem envelope mínimo."
       />
     );
   }
@@ -77,8 +84,8 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
     return (
       <FallbackCard
         title="Análise manual pendente"
-        message="Slot não reconhecido pelo catálogo canônico."
-        detail={`slot_type: ${slotTypeRaw}`}
+        message="Dados insuficientes para decisão."
+        detail={`Slot não reconhecido pelo catálogo canônico. slot_type: ${slotTypeRaw}`}
       />
     );
   }
@@ -91,8 +98,9 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
     return (
       <FallbackCard
         title="Análise manual pendente"
-        message="Falha ao renderizar slot apesar de reconhecido. Nenhuma inferência foi feita."
+        message="Falha na integridade do contrato."
         detail={String(e)}
+        state="blocked"
       />
     );
   }

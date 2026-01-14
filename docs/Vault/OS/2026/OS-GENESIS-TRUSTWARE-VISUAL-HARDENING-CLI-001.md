@@ -1,4 +1,5 @@
 # 🧬 OS-GENESIS-TRUSTWARE-VISUAL-HARDENING-CLI-001
+
 **Tipo:** Ordem de Serviço — Execução Técnica (CLI)
 **Autor:** ChatGPT — Diretoria Técnica
 **Executor:** Agente CLI (Antigravity / CODEX / equivalente)
@@ -11,6 +12,7 @@
 ---
 
 ## 1. Objetivo (execução real)
+
 Aplicar hardening visual clínico no Trustware Audit Terminal, garantindo:
 
 - UI clinicamente neutra (sem persuasão/marketing)
@@ -24,25 +26,27 @@ Aplicar hardening visual clínico no Trustware Audit Terminal, garantindo:
 ---
 
 ## 2. Pré-condições (GATE ZERO)
+
 Antes de tocar em qualquer arquivo, confirmar existência de:
 
-1) Cânone clínico:
-```
-docs/Vault/FRONTEND/GENESIS_TRUSTWARE_VISUAL_CANON.md
-```
+1) Referência clínica (obrigatório existir pelo menos uma):
 
-2) Visual Freeze macro:
-```
-docs/Vault/FRONTEND/WP-AG-GRAPH-005.md
-```
+- `docs/Vault/FRONTEND/GENESIS_TRUSTWARE_VISUAL_CANON.md` **OU**
+- `docs/Vault/FRONTEND/TRUSTWARE_DESIGN_CONTRACT.md`
 
-Se qualquer um estiver ausente → **ABORTAR**.
+1) Visual Freeze macro:
+
+- `docs/Vault/FRONTEND/WP-AG-GRAPH-005.md`
+
+Se (1) ou (2) estiver ausente → **ABORTAR**.
+Se o Cânone Visual não existir, usar o TRUSTWARE_DESIGN_CONTRACT como base.
 
 ---
 
 ## 3. Escopo e Restrições
 
 ### ✅ Permitido
+
 - ajustes de espaçamento interno (padding/gap) e hierarquia visual (sem grid)
 - normalização visual dos estados clínicos (sem tokens novos)
 - remoção de efeitos persuasivos (glow/neon/anim decorativa)
@@ -51,6 +55,7 @@ Se qualquer um estiver ausente → **ABORTAR**.
 - `data-testid` em pontos-chave
 
 ### ❌ Proibido
+
 - alterar lógica Trustware (toolbelt/policies/thresholds/decisions)
 - criar novos slots/estados
 - alterar tokens semânticos / paleta base
@@ -62,6 +67,7 @@ Se qualquer um estiver ausente → **ABORTAR**.
 ---
 
 ## 4. Allowlist absoluta de arquivos
+
 O executor **SÓ PODE** modificar os arquivos abaixo:
 
 ```
@@ -79,14 +85,18 @@ Se outro arquivo aparecer no diff → **ABORTAR**.
 ## 5. Tarefas de Execução (passo a passo)
 
 ### 5.1 Remover anti-padrões visuais (persuasivos)
-Garantir que não existam (neste escopo):
-- glow / neon / “brilho emocional”
-- animação decorativa
-- transições longas (> 200ms) sem função cognitiva
-- feedback “celebratório” em `pass` (sem “parabéns” visual)
+
+O executor deve procurar e remover apenas onde houver efeito persuasivo/performático, com base em sinais objetivos como:
+
+- classes `animate-*` decorativas
+- transições longas definidas explicitamente (>200ms)
+- efeitos de brilho/glow deliberado (ex.: `drop-shadow`, `shadow-*` excessivo, `ring-*` chamativo)
+Sem remover feedback funcional de foco/estado.
 
 ### 5.2 Hardening de estados clínicos (semântica lógica)
-Garantir tratamento consistente:
+
+Garantir tratamento consistente dos **Estados canônicos**:
+`pass | warn | blocked | insufficient_data`
 
 - `pass`: discreto, não celebratório
 - `warn`: atenção silenciosa (não alarmista)
@@ -94,9 +104,12 @@ Garantir tratamento consistente:
 - `insufficient_data`: ausência ética explícita e neutra (não “erro de sistema”)
 
 **Regra:** cor = estado lógico, não emoção.
+**Proibido:** Renomear ou criar alias para estados.
 
 ### 5.3 Hierarquia e densidade (uso prolongado)
+
 Ajustes permitidos:
+
 - reduzir/normalizar `gap` e `padding` internos em blocos secundários
 - melhorar scan do summary/título/estado
 - reduzir competição visual entre elementos
@@ -105,7 +118,9 @@ Ajustes permitidos:
 **Proibição:** não mexer em grid/layout macro.
 
 ### 5.4 Acessibilidade mínima (A11y)
+
 Aplicar:
+
 - foco visível e discreto nos elementos interativos principais
 - navegação por teclado (Tab/Enter/Space) onde fizer sentido
 - `aria-label` em controles não textuais
@@ -114,7 +129,9 @@ Aplicar:
 **Nota:** não implementar focus-trap complexo.
 
 ### 5.5 Observabilidade mínima
+
 Adicionar `data-testid` estáveis em:
+
 - terminal root
 - side rail root + itens principais
 - slot renderer
@@ -123,6 +140,7 @@ Adicionar `data-testid` estáveis em:
 ---
 
 ## 6. Gates obrigatórios
+
 Executar todos e exigir PASS:
 
 ```bash
@@ -143,6 +161,11 @@ Antes do commit:
 git diff --cached --name-only
 ```
 
+**Critério de allowlist:**
+
+- O diff deve conter **apenas** os arquivos da allowlist da Seção 4.
+- Se qualquer arquivo fora da allowlist aparecer (especialmente tokens/globals.css) → **ABORTAR**.
+
 Depois do commit:
 
 ```bash
@@ -156,7 +179,7 @@ git show --name-only --oneline --no-patch HEAD
 Mensagem canônica:
 
 ```text
-feat(frontend): clinical visual hardening for trustware terminal (OS-GENESIS-TRUSTWARE-VISUAL-HARDENING-CLI-001)
+feat(frontend): trustware clinical visual hardening (OS-GENESIS-TRUSTWARE-VISUAL-HARDENING-CLI-001)
 ```
 
 ---
@@ -169,11 +192,12 @@ Criar:
 
 Conteúdo mínimo:
 
-* objetivo
-* arquivos alterados (confirmar allowlist)
-* gates (PASS)
-* hash do commit
-* declaração explícita: “Nenhuma lógica Trustware foi alterada.”
+- objetivo
+- arquivos alterados (confirmar allowlist)
+- gates (PASS)
+- hash do commit
+- declaração explícita: “Nenhuma lógica Trustware foi alterada.”
+- declaração explícita: “Nenhum arquivo de tokens/globals/css foi alterado.”
 
 ---
 
@@ -181,10 +205,10 @@ Conteúdo mínimo:
 
 Concluída apenas se:
 
-* UI clinicamente neutra (sem persuasão)
-* estados consistentes (pass/warn/blocked/insufficient_data)
-* foco/teclado/ARIA mínimos funcionando
-* `data-testid` presentes
-* gates PASS
-* 1 commit
-* Vault Close criado
+- UI clinicamente neutra (sem persuasão)
+- estados consistentes (pass/warn/blocked/insufficient_data)
+- foco/teclado/ARIA mínimos funcionando
+- `data-testid` presentes
+- gates PASS
+- 1 commit
+- Vault Close criado

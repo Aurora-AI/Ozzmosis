@@ -37,6 +37,9 @@ export type TCOMirrorSlotProps = {
   isLoading?: boolean;
   error?: string | null;
   onExplain?: () => void; // “Por que isso importa?” (educativo; não conversão)
+  isFocused?: boolean;
+  isDimmed?: boolean;
+  onFocus?: () => void;
 };
 
 function formatMoneyBRL(v: number | null | undefined): string {
@@ -49,11 +52,11 @@ function formatMoneyBRL(v: number | null | undefined): string {
 }
 
 export function TCOMirrorSlot(props: TCOMirrorSlotProps) {
-  const { data, isLoading, error, onExplain } = props;
+  const { data, isLoading, error, onExplain, isFocused, isDimmed, onFocus } = props;
 
   if (isLoading) {
     return (
-      <TrustwareStateFrame state="insufficient_data" title="TCO Mirror">
+      <TrustwareStateFrame state="insufficient_data" title="TCO Mirror" isDimmed={isDimmed}>
         <div className="h-5 w-48 rounded bg-muted animate-pulse" />
         <div className="mt-4 space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -66,7 +69,7 @@ export function TCOMirrorSlot(props: TCOMirrorSlotProps) {
 
   if (error) {
     return (
-      <TrustwareStateFrame state="blocked" title="TCO Mirror">
+      <TrustwareStateFrame state="blocked" title="TCO Mirror" isDimmed={isDimmed}>
         <p className="text-sm font-medium text-foreground">Falha na integridade do contrato.</p>
         <p className="mt-2 text-xs text-muted-foreground">{error}</p>
       </TrustwareStateFrame>
@@ -75,14 +78,27 @@ export function TCOMirrorSlot(props: TCOMirrorSlotProps) {
 
   if (!data) {
     return (
-      <TrustwareStateFrame state="insufficient_data" title="TCO Mirror">
+      <TrustwareStateFrame state="insufficient_data" title="TCO Mirror" isDimmed={isDimmed}>
         <p className="text-sm font-medium text-foreground">Dados insuficientes para decisão.</p>
       </TrustwareStateFrame>
     );
   }
 
+  const metadata = [
+    { label: "Slot Version", value: data.version },
+    { label: "Lines Count", value: String(data.lines.length) },
+    { label: "Bank Alternative", value: data.bank_alternative ? "Available" : "Missing" },
+  ];
+
   return (
-    <TrustwareStateFrame state="insufficient_data" title="TCO Mirror">
+    <TrustwareStateFrame
+      state="insufficient_data"
+      title="TCO Mirror"
+      isFocused={isFocused}
+      isDimmed={isDimmed}
+      onFocus={onFocus}
+      metadata={metadata}
+    >
       <header className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-foreground">{data.headline ?? "Custo total de vida (TCO) — exposição"}</p>

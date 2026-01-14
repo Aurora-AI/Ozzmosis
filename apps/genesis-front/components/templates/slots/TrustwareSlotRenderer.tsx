@@ -14,12 +14,15 @@ export type TrustwareSlotRendererProps = {
   isLoading?: boolean;
   error?: string | null;
   onExplain?: () => void; // educativo; não conversão
+  isFocused?: boolean;
+  isDimmed?: boolean;
+  onFocus?: () => void;
 };
 
-function FallbackCard(props: { title: string; message: string; detail?: string; state?: "blocked" | "insufficient_data" }) {
-  const { title, message, detail, state = "insufficient_data" } = props;
+function FallbackCard(props: { title: string; message: string; detail?: string; state?: "blocked" | "insufficient_data"; isDimmed?: boolean }) {
+  const { title, message, detail, state = "insufficient_data", isDimmed } = props;
   return (
-    <TrustwareStateFrame state={state} title={title}>
+    <TrustwareStateFrame state={state} title={title} isDimmed={isDimmed}>
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-medium text-foreground">{message}</p>
         <TrustwareStateBadge state={state} />
@@ -32,12 +35,24 @@ function FallbackCard(props: { title: string; message: string; detail?: string; 
   );
 }
 
-function renderKnownSlot(slotType: TrustwareSlotType, payload: TrustwareSlotModel, onExplain?: () => void) {
+function renderKnownSlot(
+  slotType: TrustwareSlotType,
+  payload: TrustwareSlotModel,
+  onExplain?: () => void,
+  focusProps?: { isFocused?: boolean; isDimmed?: boolean; onFocus?: () => void }
+) {
+  // Common focus props to pass down
+  const common = {
+    isFocused: focusProps?.isFocused,
+    isDimmed: focusProps?.isDimmed,
+    onFocus: focusProps?.onFocus,
+  };
+
   switch (slotType) {
     case "SuitabilityAlphaSlot":
-      return <SuitabilityAlphaSlot data={payload as SuitabilityAlphaSlotModel} onExplain={onExplain} />;
+      return <SuitabilityAlphaSlot data={payload as SuitabilityAlphaSlotModel} onExplain={onExplain} {...common} />;
     case "TCOMirrorSlot":
-      return <TCOMirrorSlot data={payload as TCOMirrorSlotModel} onExplain={onExplain} />;
+      return <TCOMirrorSlot data={payload as TCOMirrorSlotModel} onExplain={onExplain} {...common} />;
     default:
       return (
         <FallbackCard
@@ -45,16 +60,18 @@ function renderKnownSlot(slotType: TrustwareSlotType, payload: TrustwareSlotMode
           message="Este slot não está registrado no catálogo canônico."
           detail={`slot_type: ${slotType}`}
           state="blocked"
+          isDimmed={focusProps?.isDimmed}
         />
       );
   }
 }
 
 export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
-  const { payload, isLoading, error, onExplain } = props;
+  const { payload, isLoading, error, onExplain, isFocused, isDimmed, onFocus } = props;
+  const focusProps = { isFocused, isDimmed, onFocus };
 
   if (isLoading) {
-    return <FallbackCard title="Carregando" message="Sincronizando telemetria técnica..." />;
+    return <FallbackCard title="Carregando" message="Sincronizando telemetria técnica..." isDimmed={isDimmed} />;
   }
 
   if (error) {
@@ -64,6 +81,7 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
         message="Falha na integridade do contrato."
         detail={error}
         state="blocked"
+        isDimmed={isDimmed}
       />
     );
   }
@@ -93,7 +111,7 @@ export function TrustwareSlotRenderer(props: TrustwareSlotRendererProps) {
   // Aqui assumimos que payload já foi validado pelo validator do template contract,
   // ou que é um payload confiável (ex.: demos). Mesmo assim, não crashamos.
   try {
-    return renderKnownSlot(slotTypeRaw, payload as TrustwareSlotModel, onExplain);
+    return renderKnownSlot(slotTypeRaw, payload as TrustwareSlotModel, onExplain, focusProps);
   } catch (e) {
     return (
       <FallbackCard

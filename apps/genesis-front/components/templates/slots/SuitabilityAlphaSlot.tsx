@@ -21,14 +21,17 @@ export type SuitabilityAlphaSlotProps = {
   isLoading?: boolean;
   error?: string | null;
   onExplain?: () => void; // “Entenda este ponto” (educativo; não conversão)
+  isFocused?: boolean;
+  isDimmed?: boolean;
+  onFocus?: () => void;
 };
 
 export function SuitabilityAlphaSlot(props: SuitabilityAlphaSlotProps) {
-  const { data, isLoading, error, onExplain } = props;
+  const { data, isLoading, error, onExplain, isFocused, isDimmed, onFocus } = props;
 
   if (isLoading) {
     return (
-      <TrustwareStateFrame state="insufficient_data" title="Suitability Alpha">
+      <TrustwareStateFrame state="insufficient_data" title="Suitability Alpha" isDimmed={isDimmed}>
         <div className="flex items-center justify-between gap-3">
           <div className="h-5 w-40 rounded bg-muted animate-pulse" />
           <div className="h-5 w-24 rounded bg-muted animate-pulse" />
@@ -40,7 +43,7 @@ export function SuitabilityAlphaSlot(props: SuitabilityAlphaSlotProps) {
 
   if (error) {
     return (
-      <TrustwareStateFrame state="blocked" title="Suitability Alpha">
+      <TrustwareStateFrame state="blocked" title="Suitability Alpha" isDimmed={isDimmed}>
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm font-medium text-foreground">Falha na integridade do contrato.</p>
           <TrustwareStateBadge state="blocked" />
@@ -52,7 +55,7 @@ export function SuitabilityAlphaSlot(props: SuitabilityAlphaSlotProps) {
 
   if (!data) {
     return (
-      <TrustwareStateFrame state="insufficient_data" title="Suitability Alpha">
+      <TrustwareStateFrame state="insufficient_data" title="Suitability Alpha" isDimmed={isDimmed}>
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm font-medium text-foreground">Dados insuficientes para decisão.</p>
           <TrustwareStateBadge state="insufficient_data" />
@@ -64,8 +67,22 @@ export function SuitabilityAlphaSlot(props: SuitabilityAlphaSlotProps) {
   const reasons = data.reasons ?? [];
   const missing = data.missing_fields ?? [];
 
+  const metadata = [
+    { label: "Slot Version", value: data.version },
+    { label: "Liquidez (R$)", value: data.liquidity != null ? String(data.liquidity) : "—" },
+    { label: "Missing Fields", value: String(missing.length) },
+    { label: "Reasons Count", value: String(reasons.length) },
+  ];
+
   return (
-    <TrustwareStateFrame state={data.state} title="Suitability Alpha">
+    <TrustwareStateFrame
+      state={data.state}
+      title="Suitability Alpha"
+      isFocused={isFocused}
+      isDimmed={isDimmed}
+      onFocus={onFocus}
+      metadata={metadata}
+    >
       <header className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-foreground">{data.headline}</p>

@@ -41,20 +41,32 @@ function deriveTelemetryStatus(distribution: ReturnType<typeof calculateStateDis
 }
 
 export function TrustwareAuditTerminal({ slots, sessionId, productContext, timestamp }: TrustwareAuditTerminalProps) {
+  const [focusedSlotIndex, setFocusedSlotIndex] = React.useState<number | null>(null);
+
   const stateDistribution = calculateStateDistribution(slots);
   const telemetryStatus = deriveTelemetryStatus(stateDistribution);
 
+  // Clear focus when clicking comfortably outside slots
+  const handleBackgroundClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setFocusedSlotIndex(null);
+    }
+  };
+
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "var(--color-bg)" }}>
+    <div
+      style={{ minHeight: "100vh", backgroundColor: "var(--color-bg)" }}
+      onClick={() => setFocusedSlotIndex(null)} // Click anywhere on background clears focus
+    >
       <AuditHeader sessionId={sessionId} productContext={productContext} timestamp={timestamp} />
 
       <div className="g-container" style={{ paddingTop: "var(--space-8)", paddingBottom: "var(--space-16)" }}>
         <div className="grid gap-8" style={{ gridTemplateColumns: "1fr 2fr 280px" }}>
           {/* Left spacer for visual balance */}
-          <div />
+          <div onClick={handleBackgroundClick} className="cursor-default" />
 
           {/* Main Audit Stack */}
-          <main className="space-y-6">
+          <main className="space-y-6" onClick={(e) => e.stopPropagation()}>
             {slots.length === 0 ? (
               <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
                 <p style={{ fontSize: "var(--text-sm)", color: "var(--color-fg)", opacity: 0.6 }}>
@@ -62,9 +74,21 @@ export function TrustwareAuditTerminal({ slots, sessionId, productContext, times
                 </p>
               </div>
             ) : (
-              slots.map((slot, index) => (
-                <TrustwareSlotRenderer key={index} payload={slot} />
-              ))
+              slots.map((slot, index) => {
+                const isFocused = focusedSlotIndex === index;
+                // Dim if something else is focused, otherwise normal
+                const isDimmed = focusedSlotIndex !== null && !isFocused;
+
+                return (
+                  <TrustwareSlotRenderer
+                    key={index}
+                    payload={slot}
+                    isFocused={isFocused}
+                    isDimmed={isDimmed}
+                    onFocus={() => setFocusedSlotIndex(index)}
+                  />
+                );
+              })
             )}
           </main>
 

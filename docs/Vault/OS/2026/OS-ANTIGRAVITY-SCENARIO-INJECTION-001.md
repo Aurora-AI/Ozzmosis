@@ -1,27 +1,95 @@
 # 🧬 OS-ANTIGRAVITY-SCENARIO-INJECTION-001
 
-**Tipo:** Injeção de Mock / Prototipagem Rápida
-**Foco:** Popular o Terminal com o Case "Scania"
-**Executor:** Antigravity (Aurora)
+**Arquivo:** `docs/Vault/OS/2026/OS-ANTIGRAVITY-SCENARIO-INJECTION-001.md`
+**Executor:** Antigravity
+**Status:** 🚀 EM EXECUÇÃO
 
-#### 1. OBJETIVO
+#### 1. COMPONENTE DE NAVEGAÇÃO (`AuditSideRail.tsx`)
 
-Substituir o estado vazio do `TrustwareAuditTerminal` por um **Cenário de Demonstração Hardcoded** que exibe a auditoria de um consórcio de pesados.
+*Objetivo: Criar a barra lateral escura, técnica e contextual.*
 
-#### 2. PAYLOAD DE CÓDIGO (SOBRESCREVER)
+**Caminho:** `apps/genesis-front/components/terminal/AuditSideRail.tsx`
 
-**Arquivo Alvo:** `apps/genesis-front/components/terminal/TrustwareAuditTerminal.tsx`
+```tsx
+'use client';
 
-O Executor deve substituir o conteúdo atual por este código, que implementa a estrutura de "Slots" com dados reais de mock:
+import { Activity, Database, FileCode, Lock, Settings, ShieldAlert } from "lucide-react";
+
+export function AuditSideRail() {
+  const menuItems = [
+    { icon: Activity, label: "Live Telemetry", active: true },
+    { icon: Database, label: "Data Sources", active: false },
+    { icon: ShieldAlert, label: "Risk Policy", active: false },
+    { icon: FileCode, label: "Smart Contracts", active: false },
+  ];
+
+  return (
+    <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-6">
+      {/* Context Card */}
+      <div className="border border-white/10 rounded-xl p-4 bg-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+          <span className="text-[10px] font-mono text-green-500 uppercase tracking-widest">System Online</span>
+        </div>
+
+        <div className="space-y-1 mb-4">
+          <span className="text-[10px] font-mono text-gray-500 uppercase block">Alvo da Auditoria</span>
+          <div className="text-sm font-bold text-white leading-tight">Frota Scania R540</div>
+          <div className="text-xs text-gray-400 font-mono">ID: #9928-AX</div>
+        </div>
+
+        <div className="h-px w-full bg-white/10 mb-4" />
+
+        <div className="flex justify-between items-center text-[10px] font-mono text-gray-500">
+          <span>Trust Score</span>
+          <span className="text-green-400 font-bold">98/100</span>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex flex-col gap-1">
+        {menuItems.map((item) => (
+          <button
+            key={item.label}
+            className={`
+              group flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-mono uppercase tracking-wide transition-all
+              ${item.active
+                ? 'bg-white/10 text-white border border-white/10'
+                : 'text-gray-600 hover:text-gray-300 hover:bg-white/5'}
+            `}
+          >
+            <item.icon className={`w-4 h-4 ${item.active ? 'text-green-500' : 'text-gray-600 group-hover:text-gray-400'}`} />
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Footer Info */}
+      <div className="mt-auto pt-6 border-t border-white/5">
+        <div className="flex items-center gap-2 text-gray-700">
+          <Lock className="w-3 h-3" />
+          <span className="text-[10px] font-mono">E2E Encrypted</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+#### 2. O TERMINAL LÓGICO (`TrustwareAuditTerminal.tsx`)
+
+*Objetivo: Exibir a "Verdade" com animação de boot e dados financeiros reais.*
+
+**Caminho:** `apps/genesis-front/components/terminal/TrustwareAuditTerminal.tsx`
 
 ```tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, AlertCircle, CheckCircle2, XCircle, Activity, FileText, TrendingUp } from 'lucide-react';
-// import { AuditSideRail } from './AuditSideRail'; // Unused in this mock layout
+import { ShieldCheck, AlertCircle, CheckCircle2, XCircle, Activity, ChevronRight, Terminal } from 'lucide-react';
+import { AuditSideRail } from './AuditSideRail';
 
-// --- TIPOS MOCK ---
+// --- TIPOS ---
 type SlotStatus = 'pass' | 'fail' | 'warn' | 'processing';
 
 interface AuditSlotProps {
@@ -32,7 +100,7 @@ interface AuditSlotProps {
   delay?: number;
 }
 
-// --- COMPONENTE DE SLOT (Visual Trustware) ---
+// --- SLOT UNITÁRIO ---
 const AuditSlot = ({ label, value, status, detail, delay = 0 }: AuditSlotProps) => {
   const [visible, setVisible] = useState(false);
 
@@ -41,107 +109,183 @@ const AuditSlot = ({ label, value, status, detail, delay = 0 }: AuditSlotProps) 
     return () => clearTimeout(timer);
   }, [delay]);
 
-  if (!visible) return <div className="h-24 bg-white/5 rounded-lg animate-pulse" />;
+  if (!visible) return (
+    <div className="h-32 rounded-xl bg-white/5 border border-white/5 animate-pulse flex items-center justify-center">
+      <div className="w-4 h-4 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+    </div>
+  );
 
-  const statusColor = {
-    pass: 'text-green-500 border-green-500/20 bg-green-500/5',
-    fail: 'text-red-500 border-red-500/20 bg-red-500/5',
-    warn: 'text-yellow-500 border-yellow-500/20 bg-yellow-500/5',
-    processing: 'text-blue-500 border-blue-500/20 bg-blue-500/5',
+  const statusConfig = {
+    pass: { color: 'text-green-500', border: 'border-green-500/30', bg: 'bg-green-500/5', icon: CheckCircle2 },
+    fail: { color: 'text-red-500', border: 'border-red-500/30', bg: 'bg-red-500/5', icon: XCircle },
+    warn: { color: 'text-yellow-500', border: 'border-yellow-500/30', bg: 'bg-yellow-500/5', icon: AlertCircle },
+    processing: { color: 'text-blue-500', border: 'border-blue-500/30', bg: 'bg-blue-500/5', icon: Activity },
   }[status];
 
-  const Icon = {
-    pass: CheckCircle2,
-    fail: XCircle,
-    warn: AlertCircle,
-    processing: Activity,
-  }[status];
+  const Icon = statusConfig.icon;
 
   return (
-    <div className={`p-4 rounded-lg border ${statusColor} border-opacity-30 transition-all duration-500`}>
-      <div className="flex justify-between items-start mb-2">
-        <span className="text-[10px] font-mono uppercase tracking-widest opacity-70">{label}</span>
-        <Icon className={`w-4 h-4 ${status === 'processing' ? 'animate-spin' : ''}`} />
+    <div className={`
+      relative overflow-hidden p-5 rounded-xl border ${statusConfig.border} ${statusConfig.bg}
+      transition-all duration-700 ease-out hover:scale-[1.02] hover:bg-opacity-10 group
+    `}>
+      <div className="flex justify-between items-start mb-3">
+        <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{label}</span>
+        <Icon className={`w-4 h-4 ${statusConfig.color} ${status === 'processing' ? 'animate-spin' : ''}`} />
       </div>
-      <div className="font-mono text-xl font-bold tracking-tight">{value}</div>
-      {detail && <div className="mt-2 text-xs font-mono opacity-60 border-t border-white/10 pt-2">{detail}</div>}
+
+      <div className="font-mono text-2xl md:text-3xl font-bold text-white tracking-tight mb-4">
+        {value}
+      </div>
+
+      {detail && (
+        <div className="flex items-center gap-2 pt-3 border-t border-white/10">
+          <ChevronRight className="w-3 h-3 text-gray-600" />
+          <span className="text-xs font-mono text-gray-400">{detail}</span>
+        </div>
+      )}
+
+      {/* Scanline Effect */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-[200%] w-full -translate-y-full group-hover:translate-y-full transition-transform duration-1000 pointer-events-none" />
     </div>
   );
 };
 
-// --- O TERMINAL PRINCIPAL ---
+// --- TERMINAL MAIN ---
 export function TrustwareAuditTerminal() {
   const [booting, setBooting] = useState(true);
+  const [terminalLines, setTerminalLines] = useState<string[]>([]);
 
+  // Simulação de Boot do Kernel Trustware
   useEffect(() => {
-    setTimeout(() => setBooting(false), 800); // Boot sequence effect
+    const bootSequence = [
+      "Initializing Trustware Kernel v2.1...",
+      "Loading cryptographic primitives...",
+      "Connecting to Ledger Nodes [SYNC]...",
+      "Verifying Policy Ruleset: 'Rodobens_Heavy_Fleet_2026'...",
+      "ACCESS GRANTED."
+    ];
+
+    let delay = 0;
+    bootSequence.forEach((line, index) => {
+      delay += 150 + Math.random() * 200;
+      setTimeout(() => {
+        setTerminalLines(prev => [...prev, line]);
+        if (index === bootSequence.length - 1) {
+          setTimeout(() => setBooting(false), 600);
+        }
+      }, delay);
+    });
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 min-h-[600px]">
+    <div className="flex flex-col lg:flex-row gap-8 min-h-[600px] w-full">
 
-      {/* 1. SIDE RAIL (Navegação Interna) */}
-      <div className="w-full md:w-64 flex-shrink-0">
-        <div className="border border-white/10 rounded-xl p-4 bg-black/40 backdrop-blur-xl h-full">
-          <div className="mb-6 px-2">
-            <span className="text-[10px] font-mono text-gray-500 uppercase">Contexto Ativo</span>
-            <div className="text-sm font-bold text-white mt-1">Frota Scania R540</div>
-            <div className="text-xs text-green-500 font-mono mt-1">● Live Stream</div>
-          </div>
-          <nav className="space-y-1">
-            {['Visão Geral', 'Matemática Financeira', 'Conformidade Legal', 'Risco de Crédito'].map((item, i) => (
-              <button key={item} className={`w-full text-left px-3 py-2 rounded text-xs font-mono uppercase tracking-wide transition-colors ${i === 0 ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}>
-                {item}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+      {/* Left Rail */}
+      <AuditSideRail />
 
-      {/* 2. MAIN CONSOLE */}
-      <div className="flex-1 space-y-6">
+      {/* Main Display */}
+      <div className="flex-1 flex flex-col gap-6">
 
-        {/* HEADER DO CONSOLE */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/10">
           <div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">Relatório de Viabilidade</h2>
-            <p className="text-gray-500 text-sm font-mono mt-1">HASH: 8f4a...c291 • TRUSTWARE ENGINE v2.1</p>
+            <h1 className="text-3xl font-bold text-white tracking-tighter">Relatório de Viabilidade</h1>
+            <div className="flex items-center gap-3 mt-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-gray-300 border border-white/10">
+                PROPOSAL #8821-B
+              </span>
+              <span className="text-xs text-gray-500 font-mono">
+                Processado em 14 jan 2026, 16:42 UTC
+              </span>
+            </div>
           </div>
-          <div className="flex gap-3">
-             <div className="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded text-green-500 font-mono text-xs font-bold uppercase flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" /> Aprovado
-             </div>
-          </div>
+
+          {!booting && (
+            <div className="flex items-center gap-3 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg animate-in fade-in zoom-in duration-500">
+              <ShieldCheck className="w-5 h-5 text-green-500" />
+              <div className="flex flex-col">
+                <span className="text-[10px] font-mono text-green-400 uppercase leading-none mb-0.5">Veredito do Sistema</span>
+                <span className="text-sm font-bold text-white uppercase tracking-wide">Tecnicamente Aprovado</span>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* GRID DE DADOS (The Truth) */}
+        {/* Boot Screen vs Grid */}
         {booting ? (
-           <div className="h-64 flex items-center justify-center font-mono text-xs text-green-500 animate-pulse">
-             INICIALIZANDO PROTOCOLOS DE AUDITORIA...
-           </div>
+          <div className="flex-1 bg-black border border-white/10 rounded-xl p-8 font-mono text-sm text-green-500/80 shadow-inner">
+            {terminalLines.map((line, i) => (
+              <div key={i} className="mb-2 flex gap-3">
+                <span className="text-gray-700">{">"}</span>
+                <span className="typing-effect">{line}</span>
+              </div>
+            ))}
+            <div className="animate-pulse mt-2">_</div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Linha 1: Financeiro */}
-            <AuditSlot label="Crédito Alvo" value="R$ 750.000,00" status="pass" detail="Cobertura: 100% FIPE" delay={100} />
-            <AuditSlot label="Taxa Administrativa" value="14.00%" status="pass" detail="Competitividade: Alta" delay={200} />
-            <AuditSlot label="Prazo Otimizado" value="92 Meses" status="warn" detail="Sugestão: Reduzir para 85m" delay={300} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-in slide-in-from-bottom-4 duration-700 fade-in">
+            {/* Linha 1: Core Financials */}
+            <AuditSlot
+              label="Crédito Disponível"
+              value="R$ 750.000"
+              status="pass"
+              detail="Cobertura 100% Tabela FIPE"
+              delay={100}
+            />
+            <AuditSlot
+              label="Taxa Administrativa"
+              value="14.00%"
+              status="pass"
+              detail="Competitividade: Alta (Top 5%)"
+              delay={250}
+            />
+            <AuditSlot
+              label="Prazo Otimizado"
+              value="92 Meses"
+              status="warn"
+              detail="Sugerido: Reduzir para 85m"
+              delay={400}
+            />
 
-            {/* Linha 2: Performance */}
-            <AuditSlot label="Custo Efetivo (CET)" value="1.12% a.m." status="pass" detail="Benchmark: 1.45% a.m." delay={400} />
-            <AuditSlot label="Lance Embutido" value="30% (R$ 225k)" status="processing" detail="Calculando probabilidade..." delay={500} />
-            <AuditSlot label="Economia Projetada" value="R$ 142.500" status="pass" detail="vs. Financiamento Tradicional" delay={600} />
+            {/* Linha 2: Advanced Metrics */}
+            <AuditSlot
+              label="Custo Efetivo (CET)"
+              value="1.12% a.m."
+              status="pass"
+              detail="Abaixo do Benchmark (1.45%)"
+              delay={550}
+            />
+            <AuditSlot
+              label="Potencial de Lance"
+              value="30% (R$ 225k)"
+              status="processing"
+              detail="Simulando probabilidade..."
+              delay={700}
+            />
+            <AuditSlot
+              label="Economia Real"
+              value="R$ 142.500"
+              status="pass"
+              detail="vs. Financiamento CDC"
+              delay={850}
+            />
           </div>
         )}
 
-        {/* LOG DE EXECUÇÃO (Terminal Feel) */}
+        {/* Console Log Footer */}
         {!booting && (
-          <div className="mt-8 border border-white/5 rounded-lg bg-black p-4 font-mono text-[10px] text-gray-600 h-32 overflow-hidden font-light">
-            <div className="mb-1 text-gray-500">[SYSTEM] Trustware kernel loaded.</div>
-            <div className="mb-1 text-gray-500">[AUDIT] Analyzing proposal ID #99281...</div>
-            <div className="mb-1 text-green-900">[PASS] Credit score check complete.</div>
-            <div className="mb-1 text-green-900">[PASS] Compliance ruleset v4.2 verified.</div>
-            <div className="mb-1 text-yellow-900">[WARN] Duration exceeds optimal yield curve by 7 months.</div>
-            <div className="mb-1 text-blue-900 animate-pulse">[MATH] Running Monte Carlo simulation for bid strategy...</div>
+          <div className="mt-4 border-t border-white/5 pt-4">
+            <div className="flex items-center gap-2 mb-2 text-gray-500 text-xs font-mono uppercase">
+              <Terminal className="w-3 h-3" />
+              <span>System Log</span>
+            </div>
+            <div className="font-mono text-[10px] text-gray-600 space-y-1">
+              <div className="flex gap-2"><span className="text-gray-700">16:42:01</span> <span>[INFO] Credit score analysis complete. Result: AAA.</span></div>
+              <div className="flex gap-2"><span className="text-gray-700">16:42:02</span> <span>[INFO] Collateral verified against Scania_2026_Database.</span></div>
+              <div className="flex gap-2"><span className="text-gray-700">16:42:03</span> <span className="text-yellow-700/70">[WARN] Duration deviation detected (7 months). Policy allows override.</span></div>
+              <div className="flex gap-2"><span className="text-gray-700">16:42:04</span> <span className="text-blue-500 animate-pulse">[RUN] Monte Carlo simulation for bid strategy in progress...</span></div>
+            </div>
           </div>
         )}
 

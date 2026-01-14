@@ -1,148 +1,63 @@
-"use client";
+'use client';
 
-import React from "react";
-import { TrustwareStateBadge, type TrustwareState } from "../trustware/TrustwareStateBadge";
+import { Activity, Database, FileCode, Lock, Settings, ShieldAlert } from "lucide-react";
 
-export type AuditSideRailProps = {
-  telemetryStatus: TrustwareState;
-  slotCount: number;
-  stateDistribution: {
-    pass: number;
-    warn: number;
-    blocked: number;
-    insufficient_data: number;
-  };
-};
-
-export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }: AuditSideRailProps) {
-  const total = slotCount || 1;
-  const passPercent = (stateDistribution.pass / total) * 100;
-  const warnPercent = (stateDistribution.warn / total) * 100;
-  const blockedPercent = (stateDistribution.blocked / total) * 100;
-  const insufficientPercent = (stateDistribution.insufficient_data / total) * 100;
+export function AuditSideRail() {
+  const menuItems = [
+    { icon: Activity, label: "Live Telemetry", active: true },
+    { icon: Database, label: "Data Sources", active: false },
+    { icon: ShieldAlert, label: "Risk Policy", active: false },
+    { icon: FileCode, label: "Smart Contracts", active: false },
+  ];
 
   return (
-    <aside style={{ width: "280px" }}>
-      <div className="sticky" style={{ top: "var(--space-4)" }}>
-        {/* Telemetry Status */}
-        <section
-          className="rounded-xl border p-2.5"
-          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
-          data-testid="audit-status-section"
-        >
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
-            Telemetria
-          </h3>
-          <div className="mt-1.5">
-            <TrustwareStateBadge state={telemetryStatus} />
-          </div>
-        </section>
+    <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-6">
+      {/* Context Card */}
+      <div className="border border-white/10 rounded-xl p-4 bg-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+          <span className="text-[10px] font-mono text-green-500 uppercase tracking-widest">System Online</span>
+        </div>
 
-        {/* Slot Summary */}
-        <section
-          className="mt-3 rounded-xl border p-2.5"
-          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
-          data-testid="audit-summary-section"
-        >
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
-            Slots Auditados
-          </h3>
-          <p className="mt-1.5 font-mono font-bold" style={{ fontSize: "var(--text-xl)", color: "var(--color-fg)" }}>
-            {slotCount}
-          </p>
-        </section>
+        <div className="space-y-1 mb-4">
+          <span className="text-[10px] font-mono text-gray-500 uppercase block">Alvo da Auditoria</span>
+          <div className="text-sm font-bold text-white leading-tight">Frota Scania R540</div>
+          <div className="text-xs text-gray-400 font-mono">ID: #9928-AX</div>
+        </div>
 
-        {/* State Distribution */}
-        <section
-          className="mt-3 rounded-xl border p-2.5"
-          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
-          data-testid="audit-distribution-section"
-        >
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
-            Distribuição
-          </h3>
+        <div className="h-px w-full bg-white/10 mb-4" />
 
-          <div className="mt-2 space-y-2">
-            {/* Pass Bar */}
-            <div data-testid="dist-bar-pass">
-              <div className="flex items-center justify-between mb-0.5">
-                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Verificado</span>
-                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.pass}</span>
-              </div>
-              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${passPercent}%`,
-                    backgroundColor: "color-mix(in srgb, var(--trustware-pass) 60%, transparent)"
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Warn Bar */}
-            <div data-testid="dist-bar-warn">
-              <div className="flex items-center justify-between mb-0.5">
-                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Atenção</span>
-                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.warn}</span>
-              </div>
-              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${warnPercent}%`,
-                    backgroundColor: "color-mix(in srgb, var(--trustware-warn) 60%, transparent)"
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Blocked Bar */}
-            <div data-testid="dist-bar-blocked">
-              <div className="flex items-center justify-between mb-0.5">
-                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Bloqueado</span>
-                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.blocked}</span>
-              </div>
-              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${blockedPercent}%`,
-                    backgroundColor: "color-mix(in srgb, var(--trustware-blocked) 60%, transparent)"
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Insufficient Bar */}
-            <div data-testid="dist-bar-insufficient">
-              <div className="flex items-center justify-between mb-0.5">
-                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Insuficiente</span>
-                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.insufficient_data}</span>
-              </div>
-              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${insufficientPercent}%`,
-                    backgroundColor: "color-mix(in srgb, var(--trustware-insufficient) 60%, transparent)"
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Logs (collapsed) */}
-        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
-            Registros
-          </h3>
-          <p className="mt-1.5" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.5 }}>
-            Sistema operacional. Apenas leitura.
-          </p>
-        </section>
+        <div className="flex justify-between items-center text-[10px] font-mono text-gray-500">
+          <span>Trust Score</span>
+          <span className="text-green-400 font-bold">98/100</span>
+        </div>
       </div>
-    </aside>
+
+      {/* Navigation */}
+      <nav className="flex flex-col gap-1">
+        {menuItems.map((item) => (
+          <button
+            key={item.label}
+            className={`
+              group flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-mono uppercase tracking-wide transition-all
+              ${item.active
+                ? 'bg-white/10 text-white border border-white/10'
+                : 'text-gray-600 hover:text-gray-300 hover:bg-white/5'}
+            `}
+          >
+            <item.icon className={`w-4 h-4 ${item.active ? 'text-green-500' : 'text-gray-600 group-hover:text-gray-400'}`} />
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Footer Info */}
+      <div className="mt-auto pt-6 border-t border-white/5">
+        <div className="flex items-center gap-2 text-gray-700">
+          <Lock className="w-3 h-3" />
+          <span className="text-[10px] font-mono">E2E Encrypted</span>
+        </div>
+      </div>
+    </div>
   );
 }

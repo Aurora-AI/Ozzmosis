@@ -68,6 +68,11 @@ export type TokenSemantic = {
   success: string
   warn: string
   danger: string
+  // Trustware (WP-AG-GRAPH-001)
+  trustwarePass: string
+  trustwareWarn: string
+  trustwareBlocked: string
+  trustwareInsufficient: string
 }
 
 export type TokenSet = {

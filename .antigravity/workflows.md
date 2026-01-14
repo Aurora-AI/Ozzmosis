@@ -24,3 +24,17 @@ Commit:
 When requested:
 - collect relevant outputs into docs/* (not artifacts/)
 - reference artifact hashes and locations
+
+## /design_contract_check
+Validate UI components against:
+- `docs/Vault/FRONTEND/TRUSTWARE_DESIGN_CONTRACT.md`
+
+## /browser_allowlist_check
+Before using browser:
+- check against `.antigravity/browserAllowlist.example.txt`
+- check local environment `~/.gemini/antigravity/browserAllowlist.txt`
+
+## /os_close_policy
+Hard Rule:
+- OS-CLOSE artifact MUST be the final step after 100% completion
+- No partial closures allowed

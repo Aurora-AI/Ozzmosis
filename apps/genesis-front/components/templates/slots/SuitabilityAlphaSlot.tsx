@@ -14,6 +14,7 @@ export type SuitabilityAlphaSlotModel = {
   reasons?: Array<{ code: string; message: string; evidence?: string }>;
   missing_fields?: string[];
   explain?: { title?: string; body?: string };
+  metadata?: Record<string, unknown>;
 };
 
 export type SuitabilityAlphaSlotProps = {
@@ -69,7 +70,7 @@ export function SuitabilityAlphaSlot(props: SuitabilityAlphaSlotProps) {
 
   const metadata = [
     { label: "Slot Version", value: data.version },
-    { label: "Liquidez (R$)", value: data.liquidity != null ? String(data.liquidity) : "—" },
+    { label: "Policy", value: (data.metadata?.policy_version as string) || "—" },
     { label: "Missing Fields", value: String(missing.length) },
     { label: "Reasons Count", value: String(reasons.length) },
   ];

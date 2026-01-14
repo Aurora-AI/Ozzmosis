@@ -15,7 +15,7 @@ type TcoLineKey =
 export type TCOMirrorSlotModel = {
   slot_type: "TCOMirrorSlot";
   version: "1.0";
-  disclaimer: "valores estimados — cálculo não conectado";
+  disclaimer: string;
   headline?: string;
   lines: Array<{
     key: TcoLineKey;

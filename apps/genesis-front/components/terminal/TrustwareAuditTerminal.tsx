@@ -60,13 +60,13 @@ export function TrustwareAuditTerminal({ slots, sessionId, productContext, times
     >
       <AuditHeader sessionId={sessionId} productContext={productContext} timestamp={timestamp} />
 
-      <div className="g-container" style={{ paddingTop: "var(--space-8)", paddingBottom: "var(--space-16)" }}>
-        <div className="grid gap-8" style={{ gridTemplateColumns: "1fr 2fr 280px" }}>
+      <div className="g-container" style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--space-12)" }}>
+        <div className="grid gap-6" style={{ gridTemplateColumns: "1fr 2fr 280px" }}>
           {/* Left spacer for visual balance */}
           <div onClick={handleBackgroundClick} className="cursor-default" />
 
           {/* Main Audit Stack */}
-          <main className="space-y-6" onClick={(e) => e.stopPropagation()}>
+          <main className="space-y-4" onClick={(e) => e.stopPropagation()}>
             {slots.length === 0 ? (
               <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
                 <p style={{ fontSize: "var(--text-sm)", color: "var(--color-fg)", opacity: 0.6 }}>

@@ -42,8 +42,8 @@ export function TrustwareStateFrame({
 
   // Focus emphasis (stronger border + slight lift)
   const borderMix = isFocused
-    ? `color-mix(in srgb, ${colorVar} 60%, var(--color-border))`
-    : `color-mix(in srgb, ${colorVar} 20%, var(--color-border))`;
+    ? `color-mix(in srgb, ${colorVar} 50%, var(--color-border))`
+    : `color-mix(in srgb, ${colorVar} 15%, var(--color-border))`;
 
   const shadow = isFocused ? "0 4px 20px -10px rgba(0, 0, 0, 0.1)" : "none";
   const bg = isFocused
@@ -66,17 +66,18 @@ export function TrustwareStateFrame({
       }}
     >
       {title && (
-        <div className="border-b px-4 py-2">
-          <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="border-b px-4 py-1.5">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-80">
             {title}
           </h3>
         </div>
       )}
-      <div className="p-4">{children}</div>
+      <div className="px-4 py-3">{children}</div>
 
       {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
+      {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
       {isFocused && metadata && metadata.length > 0 && (
-        <div className="border-t bg-stone-50/50 p-4 animate-in fade-in slide-in-from-top-1 duration-200" style={{ borderColor: "var(--color-border)" }}>
+        <div className="border-t bg-stone-50/40 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200" style={{ borderColor: "var(--color-border)" }}>
           <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-70">
             Metadados de Auditoria
           </h4>

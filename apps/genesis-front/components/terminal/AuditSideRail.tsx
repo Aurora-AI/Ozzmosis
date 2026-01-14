@@ -23,41 +23,41 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
 
   return (
     <aside style={{ width: "280px" }}>
-      <div className="sticky" style={{ top: "var(--space-6)" }}>
+      <div className="sticky" style={{ top: "var(--space-4)" }}>
         {/* Telemetry Status */}
-        <section className="rounded-xl border p-3" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.6 }}>
+        <section className="rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Telemetria
           </h3>
-          <div className="mt-2">
+          <div className="mt-1.5">
             <TrustwareStateBadge state={telemetryStatus} />
           </div>
         </section>
 
         {/* Slot Summary */}
-        <section className="mt-4 rounded-xl border p-3" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.6 }}>
+        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Slots Auditados
           </h3>
-          <p className="mt-2 font-mono font-bold" style={{ fontSize: "var(--text-2xl)", color: "var(--color-fg)" }}>
+          <p className="mt-1.5 font-mono font-bold" style={{ fontSize: "var(--text-xl)", color: "var(--color-fg)" }}>
             {slotCount}
           </p>
         </section>
 
         {/* State Distribution */}
-        <section className="mt-4 rounded-xl border p-3" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.6 }}>
-            Distribuição de Estados
+        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
+            Distribuição
           </h3>
 
-          <div className="mt-3 space-y-2">
+          <div className="mt-2 space-y-2">
             {/* Pass Bar */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <span style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>Verificado</span>
-                <span className="font-mono" style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.pass}</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Verificado</span>
+                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.pass}</span>
               </div>
-              <div className="h-1.5 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
+              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -70,11 +70,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
 
             {/* Warn Bar */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <span style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>Atenção</span>
-                <span className="font-mono" style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.warn}</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Atenção</span>
+                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.warn}</span>
               </div>
-              <div className="h-1.5 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
+              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -87,11 +87,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
 
             {/* Blocked Bar */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <span style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>Bloqueado</span>
-                <span className="font-mono" style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.blocked}</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Bloqueado</span>
+                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.blocked}</span>
               </div>
-              <div className="h-1.5 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
+              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -104,11 +104,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
 
             {/* Insufficient Bar */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <span style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>Insuficiente</span>
-                <span className="font-mono" style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.insufficient_data}</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Insuficiente</span>
+                <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.insufficient_data}</span>
               </div>
-              <div className="h-1.5 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
+              <div className="h-1 rounded-full" style={{ backgroundColor: "var(--color-border)" }}>
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -122,11 +122,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
         </section>
 
         {/* Logs (collapsed) */}
-        <section className="mt-4 rounded-xl border p-3" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
-          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.6 }}>
+        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+          <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Registros
           </h3>
-          <p className="mt-2" style={{ fontSize: "var(--text-xs)", color: "var(--color-fg)", opacity: 0.5 }}>
+          <p className="mt-1.5" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.5 }}>
             Sistema operacional. Apenas leitura.
           </p>
         </section>

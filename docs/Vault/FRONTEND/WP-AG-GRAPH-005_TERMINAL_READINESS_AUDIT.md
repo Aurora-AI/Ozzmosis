@@ -47,6 +47,6 @@ A partir deste commit, alterações em:
 **SIM.** O sistema apresenta estabilidade visual, clareza hierárquica e comportamento previsível em cenários de estresse.
 
 ---
-**Commit:** (pending)
+**Commit:** `4470caa`
 
 *Assinado: Antigravity Governance Protocol*

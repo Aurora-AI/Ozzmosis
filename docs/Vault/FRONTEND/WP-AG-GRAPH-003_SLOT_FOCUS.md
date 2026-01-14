@@ -47,7 +47,7 @@ Implementar o controle cognitivo da atenção no Terminal Trustware através de 
 ## FECHAMENTO
 Terminal agora suporta "leitura profunda" (Deep Read) sem perder a verdade sistêmica.
 
-**Commit:** (pending)
+**Commit:** `6c1b901`
 **Integridade:** Validado via `lint`, `typecheck` e `build`.
 
 *Assinado: Antigravity Governance Protocol*

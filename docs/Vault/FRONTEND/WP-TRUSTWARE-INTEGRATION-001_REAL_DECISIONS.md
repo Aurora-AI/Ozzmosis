@@ -34,6 +34,6 @@ Caso o motor de cálculo (Toolbelt) retorne erro ou ausência de conexão, o slo
 **SIM.** O fluxo Toolbelt -> CLI -> Orchestrator -> Slot é puramente funcional e determinístico.
 
 ---
-**Commit:** (pending)
+**Commit:** `54886fc`
 
 *Assinado: Antigravity Governance Protocol*

@@ -48,6 +48,6 @@ Ajustar o **ritmo visual e a densidade informacional** do Terminal de Auditoria 
 **SIM.** A redução de ruído e compactação vertical aumentou a eficiência de leitura sem prejudicar a clareza dos estados de erro/alerta.
 
 ---
-**Commit:** (pending)
+**Commit:** `6b407b6`
 
 *Assinado: Antigravity Governance Protocol*

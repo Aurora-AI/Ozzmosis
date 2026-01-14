@@ -110,6 +110,6 @@ Os seguintes cenários **ainda** caem em `insufficient_data` (por design):
 - [audit/route.ts](file:///c:/Aurora/Ozzmosis/apps/genesis-front/app/api/trustware/audit/route.ts)
 - [page.tsx](file:///c:/Aurora/Ozzmosis/apps/genesis-front/app/_dev/trustware-slots/page.tsx)
 
-**Commit:** (pending)
+**Commit:** `e2566bf`
 
 *Assinado: Antigravity Governance Protocol*

@@ -25,7 +25,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
     <aside style={{ width: "280px" }}>
       <div className="sticky" style={{ top: "var(--space-4)" }}>
         {/* Telemetry Status */}
-        <section className="rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+        <section
+          className="rounded-xl border p-2.5"
+          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
+          data-testid="audit-status-section"
+        >
           <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Telemetria
           </h3>
@@ -35,7 +39,11 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
         </section>
 
         {/* Slot Summary */}
-        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+        <section
+          className="mt-3 rounded-xl border p-2.5"
+          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
+          data-testid="audit-summary-section"
+        >
           <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Slots Auditados
           </h3>
@@ -45,14 +53,18 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
         </section>
 
         {/* State Distribution */}
-        <section className="mt-3 rounded-xl border p-2.5" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}>
+        <section
+          className="mt-3 rounded-xl border p-2.5"
+          style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-surface)" }}
+          data-testid="audit-distribution-section"
+        >
           <h3 className="font-bold uppercase tracking-widest" style={{ fontSize: "9px", color: "var(--color-fg)", opacity: 0.6 }}>
             Distribuição
           </h3>
 
           <div className="mt-2 space-y-2">
             {/* Pass Bar */}
-            <div>
+            <div data-testid="dist-bar-pass">
               <div className="flex items-center justify-between mb-0.5">
                 <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Verificado</span>
                 <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.pass}</span>
@@ -69,7 +81,7 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
             </div>
 
             {/* Warn Bar */}
-            <div>
+            <div data-testid="dist-bar-warn">
               <div className="flex items-center justify-between mb-0.5">
                 <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Atenção</span>
                 <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.warn}</span>
@@ -86,7 +98,7 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
             </div>
 
             {/* Blocked Bar */}
-            <div>
+            <div data-testid="dist-bar-blocked">
               <div className="flex items-center justify-between mb-0.5">
                 <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Bloqueado</span>
                 <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.blocked}</span>
@@ -103,7 +115,7 @@ export function AuditSideRail({ telemetryStatus, slotCount, stateDistribution }:
             </div>
 
             {/* Insufficient Bar */}
-            <div>
+            <div data-testid="dist-bar-insufficient">
               <div className="flex items-center justify-between mb-0.5">
                 <span style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>Insuficiente</span>
                 <span className="font-mono" style={{ fontSize: "10px", color: "var(--color-fg)", opacity: 0.7 }}>{stateDistribution.insufficient_data}</span>

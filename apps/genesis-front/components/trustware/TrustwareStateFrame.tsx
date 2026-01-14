@@ -56,14 +56,15 @@ export function TrustwareStateFrame({
         e.stopPropagation(); // Prevent clearing focus immediately
         onFocus?.();
       }}
-      className={`rounded-2xl border transition-all duration-300 ease-out cursor-default ${bg}`}
+      className={`rounded-2xl border transition-all duration-200 ease-out cursor-default ${bg}`}
       style={{
         borderColor: borderMix,
         opacity,
         filter,
         boxShadow: shadow,
-        transform: isFocused ? "scale(1.005)" : "scale(1)",
+        // Removed persuasive scale transform
       }}
+      data-testid={`trustware-frame-${state}`}
     >
       {title && (
         <div className="border-b px-4 py-1.5">
@@ -75,9 +76,12 @@ export function TrustwareStateFrame({
       <div className="px-4 py-3">{children}</div>
 
       {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
-      {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
       {isFocused && metadata && metadata.length > 0 && (
-        <div className="border-t bg-stone-50/40 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200" style={{ borderColor: "var(--color-border)" }}>
+        <div
+          className="border-t bg-stone-50/40 px-4 py-3"
+          style={{ borderColor: "var(--color-border)" }}
+          data-testid="trustware-metadata-panel"
+        >
           <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-70">
             Metadados de Auditoria
           </h4>

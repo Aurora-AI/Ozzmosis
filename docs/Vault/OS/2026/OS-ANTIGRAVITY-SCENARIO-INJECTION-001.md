@@ -1,3 +1,20 @@
+# 🧬 OS-ANTIGRAVITY-SCENARIO-INJECTION-001
+
+**Tipo:** Injeção de Mock / Prototipagem Rápida
+**Foco:** Popular o Terminal com o Case "Scania"
+**Executor:** Antigravity (Aurora)
+
+#### 1. OBJETIVO
+
+Substituir o estado vazio do `TrustwareAuditTerminal` por um **Cenário de Demonstração Hardcoded** que exibe a auditoria de um consórcio de pesados.
+
+#### 2. PAYLOAD DE CÓDIGO (SOBRESCREVER)
+
+**Arquivo Alvo:** `apps/genesis-front/components/terminal/TrustwareAuditTerminal.tsx`
+
+O Executor deve substituir o conteúdo atual por este código, que implementa a estrutura de "Slots" com dados reais de mock:
+
+```tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -132,3 +149,4 @@ export function TrustwareAuditTerminal() {
     </div>
   );
 }
+```

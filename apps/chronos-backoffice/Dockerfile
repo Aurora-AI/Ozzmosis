@@ -36,4 +36,5 @@ COPY --from=build --chown=10001:10001 /repo/apps/chronos-backoffice ./apps/chron
 
 USER 10001:10001
 EXPOSE 3000
-CMD ["npm", "-w", "apps/chronos-backoffice", "run", "start"]
+# Run Node directly so PID1 receives SIGTERM/SIGINT reliably.
+CMD ["node", "node_modules/next/dist/bin/next", "start", "apps/chronos-backoffice", "-p", "3000", "-H", "0.0.0.0"]

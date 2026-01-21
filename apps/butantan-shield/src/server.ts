@@ -79,3 +79,34 @@ const app = new Elysia({ adapter: node() })
   .listen(port);
 
 console.log(`[butantan-shield] listening on :${port}`);
+
+let shutdownStarted = false;
+let shutdownTimer: NodeJS.Timeout | null = null;
+
+function registerShutdownHandlers() {
+  const timeoutMs = Number(process.env.SHUTDOWN_TIMEOUT_MS ?? '10000');
+
+  const startShutdown = (signal: 'SIGTERM' | 'SIGINT') => {
+    if (shutdownStarted) return;
+    shutdownStarted = true;
+
+    console.log('[butantan-shield] shutdown started', { signal });
+
+    shutdownTimer = setTimeout(() => {
+      console.error('[butantan-shield] shutdown timeout', { timeoutMs });
+      process.exit(1);
+    }, timeoutMs);
+    shutdownTimer.unref?.();
+  };
+
+  process.once('SIGTERM', () => startShutdown('SIGTERM'));
+  process.once('SIGINT', () => startShutdown('SIGINT'));
+
+  process.once('exit', (code) => {
+    if (!shutdownStarted) return;
+    if (shutdownTimer) clearTimeout(shutdownTimer);
+    console.log('[butantan-shield] shutdown complete', { code });
+  });
+}
+
+registerShutdownHandlers();

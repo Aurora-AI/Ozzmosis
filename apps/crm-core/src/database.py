@@ -32,3 +32,6 @@ async def get_db() -> AsyncIterator[AsyncSession]:
     async with get_db_session() as session:
         yield session
 
+
+async def close_engine() -> None:
+    await engine.dispose()

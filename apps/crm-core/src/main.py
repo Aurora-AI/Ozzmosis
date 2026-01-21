@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -12,9 +13,15 @@ from src.api.v1.life_map import router as life_map_router
 from src.api.v1.proposals import router as proposals_router
 from src.api.v1.proposal_acceptance import router as proposal_acceptance_router
 from src.api.v1.rbac import router as rbac_router
-from src.database import get_db_session
+from src.database import close_engine, get_db_session
 
-app = FastAPI(title="crm-core")
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    yield
+    await close_engine()
+
+
+app = FastAPI(title="crm-core", lifespan=lifespan)
 
 @app.get("/readiness")
 async def readiness():

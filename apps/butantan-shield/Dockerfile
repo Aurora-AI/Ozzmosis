@@ -22,6 +22,8 @@ WORKDIR /repo
 
 ENV NODE_ENV=production
 ENV SHIELD_PORT=4001
+ENV NO_COLOR=1
+ENV FORCE_COLOR=0
 
 # nonroot runtime
 RUN groupadd -g 10001 app && useradd -u 10001 -g 10001 -m -s /usr/sbin/nologin app \
@@ -37,4 +39,5 @@ COPY --from=build --chown=10001:10001 /repo/apps/butantan-shield/package.json ./
 
 USER 10001:10001
 EXPOSE 4001
-CMD ["npm", "-w", "apps/butantan-shield", "run", "start"]
+# Run Node directly so PID1 receives SIGTERM/SIGINT reliably.
+CMD ["node", "apps/butantan-shield/dist/server.js"]

@@ -14,6 +14,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 15
+    stop_grace_period: 20s
     restart: unless-stopped
 
   chronos-backoffice:
@@ -36,6 +37,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+    stop_grace_period: 20s
     restart: unless-stopped
 
   conductor-service:
@@ -56,6 +58,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 15
+    stop_grace_period: 20s
     restart: unless-stopped
 
 volumes:

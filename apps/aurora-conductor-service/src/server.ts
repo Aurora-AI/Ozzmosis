@@ -107,6 +107,36 @@ const app = new Elysia({ adapter: node() })
     return new Response(content, { headers: { 'content-type': 'application/json' } });
   });
 
+let shutdownStarted = false;
+let shutdownTimer: NodeJS.Timeout | null = null;
+
+function registerShutdownHandlers() {
+  const timeoutMs = Number(process.env.SHUTDOWN_TIMEOUT_MS ?? '10000');
+
+  const startShutdown = (signal: 'SIGTERM' | 'SIGINT') => {
+    if (shutdownStarted) return;
+    shutdownStarted = true;
+
+    console.log('[conductor-service] shutdown started', { signal });
+
+    shutdownTimer = setTimeout(() => {
+      console.error('[conductor-service] shutdown timeout', { timeoutMs });
+      process.exit(1);
+    }, timeoutMs);
+    shutdownTimer.unref?.();
+  };
+
+  process.once('SIGTERM', () => startShutdown('SIGTERM'));
+  process.once('SIGINT', () => startShutdown('SIGINT'));
+
+  process.once('exit', (code) => {
+    if (!shutdownStarted) return;
+    if (shutdownTimer) clearTimeout(shutdownTimer);
+    console.log('[conductor-service] shutdown complete', { code });
+  });
+}
+
 app.listen(env.CONDUCTOR_PORT);
+registerShutdownHandlers();
 
 console.log('[conductor-service] listening', { port: env.CONDUCTOR_PORT });

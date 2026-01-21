@@ -1,17 +1,25 @@
 from __future__ import annotations
 
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import trustware
 from api.routes.trustware import router as trustware_router
+from alvaro.ai.api import router as ai_router
 from alvaro.genesis.api import router as genesis_router
 
 logger = logging.getLogger("alvaro_core")
 
-app = FastAPI(title="Alvaro Core", version="0.1.0")
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    yield
+    logger.info("shutdown: complete")
+
+
+app = FastAPI(title="Alvaro Core", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,6 +33,7 @@ app.add_middleware(
 )
 
 app.include_router(trustware_router, prefix="/api/v1/trustware")
+app.include_router(ai_router)
 app.include_router(genesis_router)
 
 try:

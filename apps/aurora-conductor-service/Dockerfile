@@ -23,6 +23,8 @@ FROM node:20-alpine AS runner
 WORKDIR /repo
 ENV NODE_ENV=production
 ENV CONDUCTOR_PORT=4101
+ENV NO_COLOR=1
+ENV FORCE_COLOR=0
 
 # nonroot runtime
 RUN addgroup -S -g 10001 app && adduser -S -u 10001 -G app app \
@@ -39,4 +41,5 @@ COPY --from=build --chown=10001:10001 /repo/apps/aurora-conductor-service/packag
 
 USER 10001:10001
 EXPOSE 4101
-CMD ["npm", "-w", "apps/aurora-conductor-service", "run", "start"]
+# Run Node directly so PID1 receives SIGTERM/SIGINT reliably.
+CMD ["node", "apps/aurora-conductor-service/dist/server.js"]

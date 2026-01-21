@@ -24,13 +24,19 @@ WORKDIR /repo
 ENV NODE_ENV=production
 ENV CONDUCTOR_PORT=4101
 
-COPY --from=deps /repo/node_modules ./node_modules
-COPY --from=deps /repo/apps/aurora-conductor-service/node_modules ./apps/aurora-conductor-service/node_modules
+# nonroot runtime
+RUN addgroup -S -g 10001 app && adduser -S -u 10001 -G app app \
+  && mkdir -p /data/artifacts /repo \
+  && chown -R 10001:10001 /data /repo
 
-COPY --from=build /repo/package.json ./package.json
-COPY --from=build /repo/libs/aurora-conductor ./libs/aurora-conductor
-COPY --from=build /repo/apps/aurora-conductor-service/dist ./apps/aurora-conductor-service/dist
-COPY --from=build /repo/apps/aurora-conductor-service/package.json ./apps/aurora-conductor-service/package.json
+COPY --from=deps --chown=10001:10001 /repo/node_modules ./node_modules
+COPY --from=deps --chown=10001:10001 /repo/apps/aurora-conductor-service/node_modules ./apps/aurora-conductor-service/node_modules
 
+COPY --from=build --chown=10001:10001 /repo/package.json ./package.json
+COPY --from=build --chown=10001:10001 /repo/libs/aurora-conductor ./libs/aurora-conductor
+COPY --from=build --chown=10001:10001 /repo/apps/aurora-conductor-service/dist ./apps/aurora-conductor-service/dist
+COPY --from=build --chown=10001:10001 /repo/apps/aurora-conductor-service/package.json ./apps/aurora-conductor-service/package.json
+
+USER 10001:10001
 EXPOSE 4101
 CMD ["npm", "-w", "apps/aurora-conductor-service", "run", "start"]

@@ -32,3 +32,8 @@ async def genesis_decide_pdf(request: Dict[str, Any]):
             "X-Genesis-Verdict": decision.get("verdict", "UNKNOWN"),
         },
     )
+
+
+@app.get("/readiness")
+async def readiness():
+    return {"status": "ready"}

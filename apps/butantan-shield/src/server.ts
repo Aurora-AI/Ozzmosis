@@ -28,6 +28,7 @@ function isoWithOffsetNow() {
 
 const app = new Elysia({ adapter: node() })
   .get('/health', () => ({ ok: true }))
+  .get('/readiness', () => ({ status: 'ready' }))
   .get('/proxy/tasks', ({ request, set }) => {
     const auth = requireBearer(request.headers.get('authorization'));
     if (!auth.ok) {

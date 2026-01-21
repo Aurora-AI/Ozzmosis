@@ -48,3 +48,14 @@ async def health():
         "system": "Alvaro Core",
         "trustware": trustware.engine.health_snapshot(),
     }
+
+
+@app.get("/readiness")
+async def readiness():
+    try:
+        trustware.engine.health_snapshot()
+        return {"status": "ready"}
+    except Exception:
+        from fastapi.responses import JSONResponse
+
+        return JSONResponse(status_code=503, content={"status": "not_ready", "reason": "trustware_unavailable"})

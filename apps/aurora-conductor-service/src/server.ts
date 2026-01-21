@@ -1,5 +1,6 @@
 import { Elysia } from 'elysia';
 import { node } from '@elysiajs/node';
+import fs from 'fs';
 import { loadEnv } from './config.js';
 import { requireBearerAuth } from './auth.js';
 import { ComposeRequestSchema } from './types.js';
@@ -7,6 +8,22 @@ import { runCompose } from './conductor-adapter.js';
 import { writeJson, readJson } from './artifact-store.js';
 
 const env = loadEnv();
+
+async function checkArtifactDirReady(dir: string): Promise<{ ok: true } | { ok: false; reason: string }> {
+  try {
+    const stat = await fs.promises.stat(dir);
+    if (!stat.isDirectory()) return { ok: false, reason: 'artifact_dir_not_directory' };
+  } catch {
+    return { ok: false, reason: 'artifact_dir_missing' };
+  }
+
+  try {
+    await fs.promises.access(dir, fs.constants.W_OK);
+    return { ok: true };
+  } catch {
+    return { ok: false, reason: 'artifact_dir_not_writable' };
+  }
+}
 
 const app = new Elysia({ adapter: node() })
   .onError(({ error }) => {
@@ -26,6 +43,16 @@ const app = new Elysia({ adapter: node() })
     );
   })
   .get('/health', () => ({ ok: true, service: 'aurora-conductor-service', status: 'healthy' }))
+  .get('/readiness', async ({ set }) => {
+    const dir = env.CONDUCTOR_ARTIFACT_DIR;
+    const ready = await checkArtifactDirReady(dir);
+    if (!ready.ok) {
+      set.status = 503;
+      return { status: 'not_ready', reason: ready.reason };
+    }
+    set.status = 200;
+    return { status: 'ready' };
+  })
   .post('/compose', async ({ request, set }) => {
     const auth = requireBearerAuth(env, request.headers.get('authorization'));
     if (!auth.ok) {

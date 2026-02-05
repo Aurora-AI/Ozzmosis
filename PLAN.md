@@ -95,6 +95,19 @@ Nao inclui:
      - Exemplos ALLOW/BLOCK refletem v1.1.
      - URLs reais de artifacts documentadas.
 
+6) Vault: criar pasta Genesis + registrar fechamento SSOT (Vault-ready)
+   - Comandos:
+     - `cd C:\Aurora\Projetos Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+     - (se houver falha EPERM no Windows) `scripts\agents\run-gates-linux.ps1`
+   - Arquivos:
+     - `apps/ozzmosis/data/vault/genesis/README.md` (novo)
+     - `apps/ozzmosis/data/vault/genesis/_runs/.gitkeep` (novo)
+     - `apps/ozzmosis/data/vault/genesis/os/OS-CODEX-OZZMOSIS-SDK-AUDIT-AND-INTEGRATION-20260205-001_CLOSE.md` (novo)
+   - Criterios de aceite:
+     - Pasta `apps/ozzmosis/data/vault/genesis/` existe e entra no git.
+     - Registro de fechamento lista evidencias (docs/paths) + decisao arquitetural + commits.
+
 ## Gates
 - `scripts/agents/run-gates.ps1`
 - `scripts/agents/run-gates-linux.ps1` (canonico se EPERM no Windows)
@@ -164,4 +177,3 @@ Nao inclui:
 - Remover secret `GITHUB_TOKEN` do GitHub Actions.
 - Remover `GITHUB_TOKEN` de `.env.local`.
 - Rotacionar o token se houver suspeita de exposicao.
-

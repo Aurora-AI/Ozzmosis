@@ -7,7 +7,7 @@ relevante para integracao Backend <-> Frontend, com paths reais no repo.
 ## 0) Contexto de execucao
 - Repo: `C:\Aurora\Projetos Aurora\Ozzmosis`
 - Branch: `feat/wp5-slot-template-engine-20260112-005`
-- HEAD (na coleta): `bd36ab6`
+- HEAD (na coleta): `29a5290`
 
 ## 1) Endpoints (inventario)
 
@@ -15,6 +15,8 @@ relevante para integracao Backend <-> Frontend, com paths reais no repo.
 Arquivo: `apps/alvaro-core/src/alvaro/app.py`
 - `POST /genesis/decide`
 - `POST /genesis/decide.pdf`
+- `GET /genesis/artifacts/{request_sha256}/decision.json`
+- `GET /genesis/artifacts/{request_sha256}/decision.pdf`
 - `GET /readiness`
 
 Observacao:
@@ -28,8 +30,7 @@ Arquivo: `apps/alvaro-core/src/alvaro/genesis/api.py`
 - `POST /genesis/decide.pdf` (via `@router.post("/decide.pdf")`)
 
 Observacao:
-- O handler JSON neste caminho injeta `artifacts` no retorno (`return {**decision, "artifacts": artifacts}`),
-  enquanto `apps/alvaro-core/src/alvaro/app.py` atualmente nao injeta.
+- Este caminho esta alinhado com `apps/alvaro-core/src/alvaro/app.py` (mesmo payload retornado pelo engine).
 
 ### 1.3) Trustware (alvaro-core) — API publica para front
 Arquivos:
@@ -74,30 +75,38 @@ Arquivo: `apps/butantan-shield/src/server.ts`
 
 ## 2) Contratos reais (estado atual)
 
-### 2.1) Genesis Decide — backend (v1.0)
+### 2.1) Genesis Decide — backend (v1.1)
 Arquivo: `apps/alvaro-core/src/alvaro/genesis/engine.py`
-- `contract_version: "1.0"`
+- `contract_version: "1.1"` (mantem campos v1.0 no topo)
 - `endpoint: "/genesis/decide"`
 - `request_sha256: <sha256 hex do request canonico>`
+- `decision_id: <sha256 hex>` (== request_sha256)
 - `verdict: "ALLOW" | "BLOCK"`
 - `reasons: string[]`
 - `policy_version`, `policy_mode`, `policy_rule_ids_triggered`
+- `policy.*` (namespace)
+- `ui.*` (UI-ready; thin-client)
+- `artifacts.decision_json|decision_pdf` (URLs canonicas)
 
 Persistencia:
 Arquivo: `apps/alvaro-core/src/alvaro/genesis/artifacts.py`
 - Diretorio: `artifacts/genesis/<request_sha256>/`
 - Arquivos: `decision.json`, `decision.pdf`
-- Metadados retornados por `write_artifacts(...)`:
-  - `decision_json_path`
-  - `decision_pdf_path`
 
-### 2.2) Evidencia E2E (v1.0)
+Exposicao (host Genesis):
+Arquivo: `apps/alvaro-core/src/alvaro/app.py`
+- `GET /genesis/artifacts/{sha}/decision.json`
+- `GET /genesis/artifacts/{sha}/decision.pdf`
+
+### 2.2) Evidencia E2E (v1.1)
 Arquivo: `docs/GENESIS_E2E_SMOKE.md`
 - Exemplo ALLOW: request `{ "force_block": false }`
 - Exemplo BLOCK: request `{ "force_block": true }`
 - Evidencia de headers no `POST /genesis/decide.pdf`:
   - `X-Genesis-Request-SHA256`
   - `X-Genesis-Verdict`
+  - `X-Genesis-Decision-JSON-URL`
+  - `X-Genesis-Decision-PDF-URL`
 
 ### 2.3) Conductor Service contract (JSON artifacts do Conductor)
 Arquivo: `apps/aurora-conductor-service/docs/CONTRACT.md`
@@ -109,18 +118,13 @@ Arquivo: `apps/aurora-conductor-service/docs/CONTRACT.md`
 ### 3.1) Mycelium Front — client Genesis (fetch)
 Arquivo: `apps/mycelium-front/src/lib/genesis/client.ts`
 - `genesisDecide(payload)` chama `POST /genesis/decide`
-- `genesisDecidePdf(payload)` chama `POST /genesis/decide.pdf`
-- Response tipada atual espera (entre outros):
-  - `request_sha256`, `verdict`, `reasons`, `policy_rule_ids_triggered?`, `artifacts?`
+- FE abre PDF por URL em `ui.artifacts.decision_pdf` (via `resolveGenesisArtifactUrl(...)`).
+- Response tipada espera (entre outros):
+  - `ui.*`, `policy.*` + campos legacy v1.0
 
 ### 3.2) Mycelium Front — contracts Genesis (types)
 Arquivo: `apps/mycelium-front/src/lib/genesis/contracts.ts`
-- Define `GENESIS_CONTRACT_VERSION = "1.0"`
-- Tipos `GenesisIntent`, `DecisionStep`, `GenesisArtifact`
-
-Observacao:
-- Estes tipos nao correspondem ao payload real retornado hoje por `POST /genesis/decide` (backend v1.0),
-  que retorna `verdict/reasons/policy_*` e nao retorna `steps`/`verdict` como objeto arbitrario.
+- Tipos canônicos do contrato `POST /genesis/decide` v1.1 (request/response + `ui.*`).
 
 ## 4) Auth / seguranca (estado atual)
 - Genesis (`/genesis/decide`): sem auth explicita em `apps/alvaro-core/src/alvaro/app.py`.
@@ -133,6 +137,7 @@ Observacao:
   fazem healthcheck em `/health` e `/api/v1/system/status`, que nao existem em `apps/alvaro-core/src/alvaro/app.py`.
 - `apps/alvaro-core/main.py` expõe `GET /health` e inclui `genesis_router` (FastAPI), mas tambem importa `alvaro.ai.api`,
   e `apps/alvaro-core/src/alvaro/ai/api.py` nao existe no repo (import inconsistente).
-- Existem dois caminhos de execucao para Genesis Decide (FastAPI app vs APIRouter), com diferenca observavel no JSON:
-  `apps/alvaro-core/src/alvaro/app.py` nao injeta `artifacts`, enquanto `apps/alvaro-core/src/alvaro/genesis/api.py` injeta.
 
+Nota:
+- A divergencia anterior entre `apps/alvaro-core/src/alvaro/app.py` e `apps/alvaro-core/src/alvaro/genesis/api.py` foi removida:
+  ambos retornam o mesmo contrato (v1.1) e o Genesis agora hospeda artifacts por URL.

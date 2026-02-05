@@ -36,15 +36,91 @@ def decide(repo_root: Path, request_model: Any) -> Tuple[Dict[str, Any], bytes, 
     else:
         reasons = policy_eval["reason_codes"]
 
+    artifact_base_url = f"/genesis/artifacts/{req_hash}"
+    decision_json_url = f"{artifact_base_url}/decision.json"
+    decision_pdf_url = f"{artifact_base_url}/decision.pdf"
+
+    ui_status = "blocked" if verdict == "BLOCK" else "allowed"
+    ui_message = (
+        "Nao conseguimos avancar com a simulacao neste momento. Vamos ajustar alguns dados e tentar novamente."
+        if ui_status == "blocked"
+        else "Tudo certo. Posso montar a proxima etapa para voce."
+    )
+
+    steps = [
+        {
+            "id": "policy_check",
+            "title": "Validacao de politica",
+            "status": "done",
+            "summary": "Regras verificadas e avaliadas.",
+        }
+    ]
+
+    if ui_status == "blocked":
+        next_actions = [
+            {
+                "id": "retry",
+                "label": "Tentar novamente",
+                "type": "retry",
+            },
+            {
+                "id": "handoff_human",
+                "label": "Falar com um especialista",
+                "type": "handoff",
+                "channel": "whatsapp",
+            },
+        ]
+    else:
+        next_actions = [
+            {
+                "id": "collect_params",
+                "label": "Continuar",
+                "type": "collect_input",
+                "fields": ["produto", "valor", "prazo", "perfil"],
+            },
+            {
+                "id": "open_decision_pdf",
+                "label": "Baixar decisao (PDF)",
+                "type": "open_artifact",
+                "url": decision_pdf_url,
+            },
+        ]
+
     decision = {
-        "contract_version": "1.0",
+        # v1.0 compatibility (keep top-level fields)
+        "contract_version": "1.1",
         "endpoint": "/genesis/decide",
         "request_sha256": req_hash,
+        "decision_id": req_hash,
+        # Deterministic correlation id (avoid randomness so decision.json stays stable for same request).
+        "correlation_id": f"genesis:{req_hash}",
         "verdict": verdict,
         "reasons": reasons,
         "policy_version": policy_eval["policy_version"],
         "policy_mode": policy_eval["policy_mode"],
         "policy_rule_ids_triggered": policy_eval["triggered_rule_ids"],
+        # v1.1 namespaces
+        "policy": {
+            "verdict": verdict,
+            "reasons": reasons,
+            "version": policy_eval["policy_version"],
+            "mode": policy_eval["policy_mode"],
+            "rules_triggered": policy_eval["triggered_rule_ids"],
+        },
+        "artifacts": {
+            "decision_json": decision_json_url,
+            "decision_pdf": decision_pdf_url,
+        },
+        "ui": {
+            "status": ui_status,
+            "user_message": ui_message,
+            "steps": steps,
+            "next_actions": next_actions,
+            "artifacts": {
+                "decision_json": decision_json_url,
+                "decision_pdf": decision_pdf_url,
+            },
+        },
     }
 
     decision_bytes = canonical_json_bytes(decision)

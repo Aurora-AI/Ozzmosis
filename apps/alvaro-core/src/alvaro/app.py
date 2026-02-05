@@ -74,6 +74,8 @@ async def genesis_decide_pdf(request: Dict[str, Any]):
         headers={
             "X-Genesis-Request-SHA256": decision.get("request_sha256", ""),
             "X-Genesis-Verdict": decision.get("verdict", "UNKNOWN"),
+            "X-Genesis-Decision-JSON-URL": decision.get("ui", {}).get("artifacts", {}).get("decision_json", ""),
+            "X-Genesis-Decision-PDF-URL": decision.get("ui", {}).get("artifacts", {}).get("decision_pdf", ""),
         },
     )
 

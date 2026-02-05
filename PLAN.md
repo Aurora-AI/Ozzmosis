@@ -67,6 +67,67 @@ Nao inclui:
 - `git revert <sha>`
 
 ---
+# PLAN — OS-CONFIG-GITHUB-MODELS-TOKEN-20260116
+Data: 2026-01-16
+Autor: agent
+
+## Objetivo
+Configurar o token do GitHub para acesso a modelos no projeto, garantindo uso em
+dev local e CI sem commit de segredos.
+
+## Escopo
+Inclui:
+- Dev local: `.env.local` (nao commitado).
+- CI: GitHub Actions secrets (nao commitado).
+- Documentacao/runbook minimo de setup + validacao.
+
+Nao inclui:
+- Alteracoes em codigo de produto.
+- Mudanca de provider de modelos.
+
+## Riscos
+- R1: Exposicao do token em repo publico ou historico git.
+  Mitigacao: nunca commitar `.env.local`; garantir `.gitignore`; rotacionar se vazar.
+- R2: Misconfig causando falhas de acesso.
+  Mitigacao: escopos minimos; nome de env consistente; smoke check fail-fast.
+
+## Passos (executar 1 por vez)
+1) Dev local: configurar `.env.local`
+   - Comandos:
+     - N/A (edicao local; sem commit)
+   - Arquivos:
+     - `.env.local` (nao versionado)
+     - `.gitignore`
+   - Criterios de aceite:
+     - `.env.local` contem `GITHUB_TOKEN=<token>`.
+     - `.gitignore` inclui `.env.local` e `.env.*.local`.
+
+2) CI (GitHub Actions): configurar secret
+   - Comandos:
+     - N/A (GitHub UI)
+   - Arquivos:
+     - N/A
+   - Criterios de aceite:
+     - Secret `GITHUB_TOKEN` criado em Settings -> Secrets and variables -> Actions.
+     - Workflows referenciam `${{ secrets.GITHUB_TOKEN }}`.
+
+3) Validacao / smoke check
+   - Comandos:
+     - Comando minimo do projeto que exige o token (definir no runbook).
+   - Arquivos:
+     - `docs/runbooks/` (se houver runbook especifico)
+   - Criterios de aceite:
+     - Falha rapida quando `GITHUB_TOKEN` estiver ausente.
+     - Token nao aparece em logs.
+
+## Gates
+- N/A (configuracao e runbook)
+
+## Rollback
+- Remover secret `GITHUB_TOKEN` do GitHub Actions.
+- Remover `GITHUB_TOKEN` de `.env.local`.
+- Rotacionar o token se houver suspeita de exposicao.
+
 # PLAN — OS-20260205-003-GENESIS-UIREADY-ARTIFACTS
 Data: 2026-02-05
 Autor: agent

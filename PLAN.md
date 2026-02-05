@@ -67,6 +67,92 @@ Nao inclui:
 - `git revert <sha>`
 
 ---
+# PLAN — OS-20260205-003-GENESIS-UIREADY-ARTIFACTS
+Data: 2026-02-05
+Autor: agent
+
+## Objetivo
+Evoluir `POST /genesis/decide` para contrato v1.1 (UI-ready, thin-client) e
+expor artifacts do Genesis via URLs canônicas, mantendo compatibilidade v1.0.
+
+## Escopo
+Inclui:
+- Backend Genesis: contrato v1.1 (`ui.*` + `policy.*`), artifacts por URL.
+- Unificar resposta entre `app.py` e `genesis/api.py`.
+- Atualizar client e UI minima do frontend Genesis/Mycelium para consumir `ui.*`.
+- Atualizar docs de smoke/runbook com exemplos v1.1.
+
+Nao inclui:
+- Mudancas de arquitetura no Conductor.
+- Autenticacao avancada (apenas guardrails basicos na rota de artifacts).
+- Refactors fora dos arquivos listados.
+
+## Riscos
+- R1: Exposicao indevida de artifacts. Mitigacao: allowlist de filename e sha estrito.
+- R2: Quebra de compatibilidade com v1.0. Mitigacao: manter campos antigos no topo.
+- R3: Divergencia entre handlers (`app.py` vs `api.py`). Mitigacao: handler unico.
+
+## Passos (executar 1 por vez)
+1) Artifacts por URL (Genesis host)
+   - Comandos:
+     - `cd C:\Aurora\Projetos Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+     - (se houver falha EPERM no Windows) `scripts\agents\run-gates-linux.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/src/alvaro/app.py`
+     - `apps/alvaro-core/src/alvaro/genesis/artifacts.py`
+   - Criterios de aceite:
+     - `GET /genesis/artifacts/{sha}/decision.json` retorna JSON.
+     - `GET /genesis/artifacts/{sha}/decision.pdf` retorna PDF.
+     - Allowlist aplicada e path traversal bloqueado.
+
+2) Contrato v1.1 + handler unico
+   - Comandos:
+     - `cd C:\Aurora\Projetos Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+     - (se houver falha EPERM no Windows) `scripts\agents\run-gates-linux.ps1`
+   - Arquivos:
+     - `apps/alvaro-core/src/alvaro/app.py`
+     - `apps/alvaro-core/src/alvaro/genesis/api.py`
+     - `apps/alvaro-core/src/alvaro/genesis/engine.py`
+     - `apps/alvaro-core/src/alvaro/genesis/contracts.py` (se necessario)
+   - Criterios de aceite:
+     - `POST /genesis/decide` retorna v1.1 com `ui.*` e `policy.*`.
+     - Campos v1.0 permanecem no topo (compatibilidade).
+     - `app.py` e `api.py` retornam a mesma estrutura.
+
+3) Frontend thin-client (consumo de `ui.*`)
+   - Comandos:
+     - `cd C:\Aurora\Projetos Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+     - (se houver falha EPERM no Windows) `scripts\agents\run-gates-linux.ps1`
+   - Arquivos:
+     - `apps/mycelium-front/src/lib/genesis/client.ts`
+     - `apps/mycelium-front/src/lib/genesis/contracts.ts` (se necessario)
+     - `apps/mycelium-front/src/app/page.tsx` (UI minima)
+   - Criterios de aceite:
+     - Front renderiza `ui.status`, `ui.user_message`, `ui.steps`, `ui.next_actions`.
+     - PDF aberto via URL de `ui.artifacts`.
+
+4) Docs + smoke evidence v1.1
+   - Comandos:
+     - `cd C:\Aurora\Projetos Aurora\Ozzmosis`
+     - `scripts\agents\run-gates.ps1`
+     - (se houver falha EPERM no Windows) `scripts\agents\run-gates-linux.ps1`
+   - Arquivos:
+     - `docs/GENESIS_DEV_RUNBOOK.md`
+     - `docs/GENESIS_E2E_SMOKE.md`
+   - Criterios de aceite:
+     - Exemplos ALLOW/BLOCK refletem v1.1.
+     - Evidencia de artifacts por URL registrada.
+
+## Gates
+- `scripts/agents/run-gates.ps1`
+- `scripts/agents/run-gates-linux.ps1` (canônico em caso de EPERM)
+
+## Rollback
+- `git revert <sha>`
+
 
 # PLAN — OS-CONDUCTOR-GREEN-001
 Data: 2026-01-06

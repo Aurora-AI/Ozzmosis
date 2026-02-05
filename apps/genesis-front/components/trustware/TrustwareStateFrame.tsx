@@ -47,8 +47,8 @@ export function TrustwareStateFrame({
 
   const shadow = isFocused ? "0 4px 20px -10px rgba(0, 0, 0, 0.1)" : "none";
   const bg = isFocused
-    ? "color-mix(in srgb, var(--color-bg) 98%, var(--color-fg))"
-    : "bg-background";
+    ? "bg-white/5"
+    : "bg-transparent";
 
   return (
     <div
@@ -56,18 +56,19 @@ export function TrustwareStateFrame({
         e.stopPropagation(); // Prevent clearing focus immediately
         onFocus?.();
       }}
-      className={`rounded-2xl border transition-all duration-300 ease-out cursor-default ${bg}`}
+      className={`rounded-2xl border transition-all duration-200 ease-out cursor-default ${bg}`}
       style={{
         borderColor: borderMix,
         opacity,
         filter,
         boxShadow: shadow,
-        transform: isFocused ? "scale(1.005)" : "scale(1)",
+        // Removed persuasive scale transform
       }}
+      data-testid={`trustware-frame-${state}`}
     >
       {title && (
         <div className="border-b px-4 py-1.5">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-80">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest opacity-80" style={{ color: "var(--color-fg)" }}>
             {title}
           </h3>
         </div>
@@ -75,19 +76,22 @@ export function TrustwareStateFrame({
       <div className="px-4 py-3">{children}</div>
 
       {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
-      {/* Progressive Disclosure: Technical Metadata (Only on Focus) */}
       {isFocused && metadata && metadata.length > 0 && (
-        <div className="border-t bg-stone-50/40 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200" style={{ borderColor: "var(--color-border)" }}>
-          <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-70">
+        <div
+          className="border-t bg-white/5 px-4 py-3"
+          style={{ borderColor: "var(--color-border)" }}
+          data-testid="trustware-metadata-panel"
+        >
+          <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider opacity-70" style={{ color: "var(--color-fg)" }}>
             Metadados de Auditoria
           </h4>
           <div className="grid grid-cols-2 gap-y-2 gap-x-4">
             {metadata.map((item, idx) => (
               <div key={idx}>
-                <p className="text-[9px] uppercase tracking-wide text-muted-foreground opacity-60">
+                <p className="text-[9px] uppercase tracking-wide opacity-60" style={{ color: "var(--color-fg)" }}>
                   {item.label}
                 </p>
-                <p className="font-mono text-[10px] text-foreground opacity-80">
+                <p className="font-mono text-[10px] opacity-80" style={{ color: "var(--color-fg)" }}>
                   {item.value}
                 </p>
               </div>

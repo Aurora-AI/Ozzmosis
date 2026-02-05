@@ -93,13 +93,16 @@ jobs:
         run: |
           set -euo pipefail
 
+          curl -fsS http://localhost:4001/readiness | tee /tmp/shield_readiness.json
           curl -fsS http://localhost:4001/health | tee /tmp/shield_health.json
           curl -fsS -H "Authorization: Bearer local-dev-token" http://localhost:4001/proxy/projects | tee /tmp/shield_projects.json
           curl -fsS -H "Authorization: Bearer local-dev-token" http://localhost:4001/proxy/tasks | tee /tmp/shield_tasks.json
 
+          curl -fsS http://localhost:3000/readiness | tee /tmp/chronos_readiness.json
           curl -fsS http://localhost:3000/api/projects | tee /tmp/chronos_projects.json
           curl -fsS http://localhost:3000/api/tasks | tee /tmp/chronos_tasks.json
 
+          curl -fsS http://localhost:4101/readiness | tee /tmp/conductor_readiness.json
           curl -fsS http://localhost:4101/health | tee /tmp/conductor_health.json
 
           # Hard fail if Chronos surfaces shield_missing

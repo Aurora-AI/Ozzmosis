@@ -10,10 +10,11 @@ services:
     ports:
       - "4001:4001"
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:4001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4001/readiness').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 3s
       retries: 15
+    stop_grace_period: 20s
     restart: unless-stopped
 
   chronos-backoffice:
@@ -32,10 +33,11 @@ services:
       butantan-shield:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/projects').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/readiness').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 30
+    stop_grace_period: 20s
     restart: unless-stopped
 
   conductor-service:
@@ -52,10 +54,11 @@ services:
     ports:
       - "4101:4101"
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:4101/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4101/readiness').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 3s
       retries: 15
+    stop_grace_period: 20s
     restart: unless-stopped
 
 volumes:

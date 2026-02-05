@@ -25,11 +25,18 @@ WORKDIR /repo
 ENV NODE_ENV=production
 ENV PORT=3000
 
-COPY --from=deps /repo/node_modules ./node_modules
-COPY --from=deps /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
-COPY --from=build /repo/package.json ./package.json
-COPY --from=build /repo/libs/trustware ./libs/trustware
-COPY --from=build /repo/apps/chronos-backoffice ./apps/chronos-backoffice
+# nonroot runtime
+RUN groupadd -g 10001 app && useradd -u 10001 -g 10001 -m -s /usr/sbin/nologin app \
+  && mkdir -p /repo \
+  && chown -R 10001:10001 /repo
 
+COPY --from=deps --chown=10001:10001 /repo/node_modules ./node_modules
+COPY --from=deps --chown=10001:10001 /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
+COPY --from=build --chown=10001:10001 /repo/package.json ./package.json
+COPY --from=build --chown=10001:10001 /repo/libs/trustware ./libs/trustware
+COPY --from=build --chown=10001:10001 /repo/apps/chronos-backoffice ./apps/chronos-backoffice
+
+USER 10001:10001
 EXPOSE 3000
-CMD ["npm", "-w", "apps/chronos-backoffice", "run", "start"]
+# Run Node directly so PID1 receives SIGTERM/SIGINT reliably.
+CMD ["node", "node_modules/next/dist/bin/next", "start", "apps/chronos-backoffice", "-p", "3000", "-H", "0.0.0.0"]

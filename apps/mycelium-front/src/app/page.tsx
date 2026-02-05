@@ -1,11 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import { genesisDecide, genesisDecidePdf } from '@/lib/genesis/client';
+import { genesisDecide, resolveGenesisArtifactUrl } from '@/lib/genesis/client';
+import type { GenesisDecideResponse } from '@/lib/genesis/contracts';
 
 export default function GenesisPanel() {
   const [forceBlock, setForceBlock] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<GenesisDecideResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleDecide = async () => {
@@ -21,18 +22,12 @@ export default function GenesisPanel() {
     }
   };
 
-  const handlePdf = async () => {
+  const handleOpenPdf = async () => {
     setError(null);
     try {
-      const blob = await genesisDecidePdf({ force_block: forceBlock });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'genesis-decision.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      const url = resolveGenesisArtifactUrl(result?.ui?.artifacts?.decision_pdf ?? '');
+      if (!url) throw new Error('GENESIS_DECISION_PDF_URL_MISSING');
+      window.open(url, '_blank', 'noopener,noreferrer');
     } catch (e: any) {
       setError(String(e?.message ?? e));
     }
@@ -48,7 +43,9 @@ export default function GenesisPanel() {
 
       <div style={{ marginTop: 8 }}>
         <button onClick={handleDecide} disabled={loading}>{loading ? '...' : 'Decidir'}</button>
-        <button onClick={handlePdf} style={{ marginLeft: 8 }}>Baixar PDF stub</button>
+        <button onClick={handleOpenPdf} style={{ marginLeft: 8 }} disabled={!result?.ui?.artifacts?.decision_pdf}>
+          Abrir PDF
+        </button>
       </div>
 
       {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
@@ -57,17 +54,54 @@ export default function GenesisPanel() {
         <div style={{ marginTop: 12 }}>
           <div>
             <strong>verdict:</strong>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result.verdict ?? result.verdict, null, 2)}</pre>
+            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result.verdict, null, 2)}</pre>
           </div>
-          <div><strong>request_sha256:</strong> {result.request_sha256 ?? result.integrity_hash ?? '—'}</div>
+          <div><strong>decision_id:</strong> {result.decision_id ?? '—'}</div>
+          <div><strong>request_sha256:</strong> {result.request_sha256 ?? '—'}</div>
+          <div><strong>ui.status:</strong> {result.ui?.status ?? '—'}</div>
+          <div><strong>ui.user_message:</strong> {result.ui?.user_message ?? '—'}</div>
           <div>
-            <strong>reasons:</strong>
+            <strong>reasons (policy):</strong>
             <ul>
-              {(result.reasons ?? result.steps ?? []).map((r: any, i: number) => (
-                <li key={i}>{typeof r === 'string' ? r : JSON.stringify(r)}</li>
+              {(result.reasons ?? []).map((r, i) => (
+                <li key={i}>{r}</li>
               ))}
             </ul>
           </div>
+
+          {result.ui?.steps?.length ? (
+            <div>
+              <strong>ui.steps:</strong>
+              <ul>
+                {result.ui.steps.map((s) => (
+                  <li key={s.id}>
+                    {s.status} — {s.title}: {s.summary}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result.ui?.next_actions?.length ? (
+            <div>
+              <strong>ui.next_actions:</strong>
+              <ul>
+                {result.ui.next_actions.map((a) => (
+                  <li key={a.id}>
+                    {a.type} — {a.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result.ui?.artifacts ? (
+            <div>
+              <strong>ui.artifacts:</strong>
+              <div><code>{result.ui.artifacts.decision_json}</code></div>
+              <div><code>{result.ui.artifacts.decision_pdf}</code></div>
+            </div>
+          ) : null}
         </div>
       )}
     </section>

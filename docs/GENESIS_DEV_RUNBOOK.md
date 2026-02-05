@@ -15,6 +15,8 @@ uvicorn alvaro.app:app --reload --port 8010
 The backend exposes:
 - `POST /genesis/decide` (JSON decision)
 - `POST /genesis/decide.pdf` (PDF stub with headers)
+- `GET /genesis/artifacts/{request_sha256}/decision.json` (canonical decision JSON artifact)
+- `GET /genesis/artifacts/{request_sha256}/decision.pdf` (canonical decision PDF artifact)
 
 ## Frontend: run mycelium-front (same-origin, no CORS)
 
@@ -36,7 +38,7 @@ The Genesis Decide panel appears on the root page. Click "Decidir" to test.
 2. Browser requests `/genesis/decide` from the frontend origin.
 3. Next.js rewrites (server-side) route to `http://127.0.0.1:8010/genesis/decide` (backend).
 4. Backend responds with JSON decision.
-5. Frontend displays `verdict` + `request_sha256` + `reasons`.
+5. Frontend displays `ui.*` (thin-client) + legacy fields for debug.
 
 **No CORS issues**, no `NEXT_PUBLIC_*` required by default.
 
@@ -87,9 +89,9 @@ npm run dev
 
 **Expected results:**
 
-- **force_block=false:** verdict=ALLOW, request_sha256 displayed
-- **force_block=true:** verdict=BLOCK, reasons include "TW_FORCE_BLOCK_TRUE"
-- **"Baixar PDF stub":** Downloads PDF file
+- **force_block=false:** verdict=ALLOW, `ui.status=allowed`, `ui.artifacts.decision_pdf` present
+- **force_block=true:** verdict=BLOCK, reasons include "TW_FORCE_BLOCK_TRUE", `ui.status=blocked`
+- **"Abrir PDF":** Opens PDF via `GET /genesis/artifacts/<sha>/decision.pdf`
 
 ## Troubleshooting
 
@@ -120,11 +122,13 @@ npm run dev
 
 - **`next.config.js` rewrites:** Server-side proxy, eliminates CORS friction during local development
 - **`client.ts` baseUrl():** Defaults to same-origin (`""`), respects `NEXT_PUBLIC_ALVARO_CORE_BASE_URL` if set
-- **Policy enforcement:** Trustware v0 (`policy.yaml`) runs in backend; frontend displays reason codes
-- **Artifact persistence:** Decisions stored by `request_sha256` in `artifacts/genesis/<sha>/`
+- **Policy enforcement:** Trustware v0 (`genesis.v0.yaml`) runs in backend; frontend displays reason codes
+- **Contract v1.1:** Backend returns `ui.*` + `policy.*` while preserving v1.0 fields at top-level
+- **Artifact persistence:** Decisions stored by `request_sha256` in `artifacts/genesis/<sha>/` and served by URL
 
 ## Related Documentation
 
 - Genesis E2E Smoke: [docs/GENESIS_E2E_SMOKE.md](GENESIS_E2E_SMOKE.md)
+- Genesis Contract: [docs/GENESIS_CONTRACT.md](GENESIS_CONTRACT.md)
 - Trustware Policy: `apps/alvaro-core/src/alvaro/genesis/policies/genesis.v0.yaml`
-- Frontend Panel: `apps/mycelium-front/app/page.tsx` (Genesis Decide section)
+- Frontend Panel: `apps/mycelium-front/src/app/page.tsx` (Genesis Decide section)

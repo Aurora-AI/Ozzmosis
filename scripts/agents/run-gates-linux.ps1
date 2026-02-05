@@ -1,33 +1,38 @@
-#!/usr/bin/env pwsh
-# scripts/agents/run-gates-linux.ps1
-# Canonical Linux-container gate runner for Ozzmosis.
-# Purpose: avoid Windows EPERM/EBUSY locks on native Node addons (*.node) during npm ci.
-# Runs: npm ci + repo:check + audit:maturity (entrypoints_check + survival_check) inside node:20-slim.
+param(
+  [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
+)
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
-Write-Output "[gates-linux] repoRoot: $repoRoot"
+Write-Output "== Gates (Linux container): repo-root = $RepoRoot =="
 
-# Preconditions:
-# - Docker Desktop installed and running
-# - Access to pull node:20-slim image
+if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+  throw "Docker not found. Install Docker Desktop and retry."
+}
 
 docker run --rm -t `
-  -v "${repoRoot}:/repo" `
+  -v "${RepoRoot}:/repo" `
+  -v ozzmosis_root_node_modules:/repo/node_modules `
   -w /repo `
   node:20-slim bash -lc @"
 set -euo pipefail
+apt-get update -y >/dev/null
+apt-get install -y git python3 python3-pip ca-certificates >/dev/null
 
-apt-get update
-apt-get install -y --no-install-recommends git ca-certificates python3 >/dev/null
-
+echo '== npm ci =='
 npm ci
+
+echo '== repo:check =='
 npm run -w @aurora/tooling repo:check
 
+echo '== audit: entrypoints_check =='
 python3 scripts/audit/entrypoints_check.py --repo-root . --out artifacts/entrypoints_check.json
+
+echo '== audit: survival_check =='
 python3 scripts/audit/survival_check.py --repo-root . --out artifacts/survival_check.json
 
-echo '--- artifacts ---'
-ls -l artifacts/entrypoints_check.json artifacts/survival_check.json
+echo '== done =='
+ls -la artifacts/entrypoints_check.json artifacts/survival_check.json
 "@
+
+Write-Output "== Gates (Linux container): PASS =="

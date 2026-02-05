@@ -14,6 +14,8 @@ COPY --from=deps /repo/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY libs/trustware libs/trustware
 COPY apps/chronos-backoffice apps/chronos-backoffice
+COPY --from=deps /repo/libs/trustware/node_modules ./libs/trustware/node_modules
+COPY --from=deps /repo/apps/chronos-backoffice/node_modules ./apps/chronos-backoffice/node_modules
 
 RUN npm -w apps/chronos-backoffice run build
 

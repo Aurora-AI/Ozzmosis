@@ -7,7 +7,7 @@ export default function HeroSection() {
       style={{
         paddingTop: "var(--space-20)",
         paddingBottom: "var(--space-16)",
-        borderBottom: "1px solid var(--color-border)",
+        borderBottom: "var(--border-1) solid var(--color-border)",
       }}
     >
       <div className="g-container">

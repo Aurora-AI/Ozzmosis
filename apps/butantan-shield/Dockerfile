@@ -14,6 +14,7 @@ WORKDIR /repo
 COPY --from=deps /repo/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY apps/butantan-shield apps/butantan-shield
+COPY --from=deps /repo/apps/butantan-shield/node_modules ./apps/butantan-shield/node_modules
 
 RUN npm -w apps/butantan-shield run build
 

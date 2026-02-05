@@ -1,50 +1,61 @@
-export const GENESIS_CONTRACT_VERSION = "1.0" as const;
-
-export type ProductType = "consortium" | "insurance" | "mixed";
-
-export type GenesisIntent = {
-  contract_version: typeof GENESIS_CONTRACT_VERSION;
-  product_type: ProductType;
-  parameters: Record<string, number>;
-  user_session_id: string;
+export type GenesisDecideRequest = {
+  force_block?: boolean;
+  // Allow forwards-compatible fields (intent/channel/etc).
+  [k: string]: unknown;
 };
 
-export type DecisionStep = {
-  tool_used: string;
-  input_data: Record<string, unknown>;
-  output_data: Record<string, unknown>;
-  reasoning: string;
+export type GenesisPolicy = {
+  verdict: 'ALLOW' | 'BLOCK';
+  reasons: string[];
+  version: string;
+  mode: string;
+  rules_triggered: string[];
 };
 
-export type GenesisArtifact = {
-  contract_version: typeof GENESIS_CONTRACT_VERSION;
-  decision_id: string;
-  verdict: Record<string, unknown>;
-  steps: DecisionStep[];
-  integrity_hash: string;
-  pdf_ref?: string | null;
+export type GenesisUiStatus = 'allowed' | 'blocked' | 'needs_more_info' | 'handoff_required';
+
+export type GenesisUiStep = {
+  id: string;
+  title: string;
+  status: 'done' | 'pending' | 'error';
+  summary: string;
 };
 
-export function assertGenesisIntent(x: unknown): asserts x is GenesisIntent {
-  if (!x || typeof x !== "object") throw new Error("GENESIS_INTENT_INVALID");
-  const o = x as Record<string, unknown>;
+export type GenesisNextAction =
+  | { id: string; label: string; type: 'retry' }
+  | { id: string; label: string; type: 'handoff'; channel: string }
+  | { id: string; label: string; type: 'collect_input'; fields: string[] }
+  | { id: string; label: string; type: 'open_artifact'; url: string };
 
-  if (o.contract_version !== GENESIS_CONTRACT_VERSION) {
-    throw new Error("GENESIS_CONTRACT_VERSION_INVALID");
-  }
-  if (!["consortium", "insurance", "mixed"].includes(String(o.product_type))) {
-    throw new Error("GENESIS_PRODUCT_TYPE_INVALID");
-  }
-  if (!o.user_session_id || typeof o.user_session_id !== "string" || o.user_session_id.length < 6) {
-    throw new Error("GENESIS_SESSION_INVALID");
-  }
+export type GenesisUiArtifacts = {
+  decision_json: string;
+  decision_pdf: string;
+};
 
-  if (o.parameters == null || typeof o.parameters !== "object") {
-    throw new Error("GENESIS_PARAMS_INVALID");
-  }
-  for (const [key, value] of Object.entries(o.parameters as Record<string, unknown>)) {
-    if (typeof value !== "number" || Number.isNaN(value)) {
-      throw new Error(`GENESIS_PARAM_NOT_NUMBER:${key}`);
-    }
-  }
-}
+export type GenesisUi = {
+  status: GenesisUiStatus;
+  user_message: string;
+  steps: GenesisUiStep[];
+  next_actions: GenesisNextAction[];
+  artifacts: GenesisUiArtifacts;
+};
+
+export type GenesisDecideResponse = {
+  // v1.0 fields (kept for compatibility)
+  contract_version: string;
+  endpoint: string;
+  request_sha256: string;
+  verdict: 'ALLOW' | 'BLOCK';
+  reasons: string[];
+  policy_version?: string;
+  policy_mode?: string;
+  policy_rule_ids_triggered?: string[];
+
+  // v1.1 fields
+  decision_id?: string;
+  correlation_id?: string;
+  policy?: GenesisPolicy;
+  artifacts?: GenesisUiArtifacts;
+  ui?: GenesisUi;
+};
+
